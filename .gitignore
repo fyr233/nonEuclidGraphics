@@ -6,3 +6,5 @@ x64/
 *.exe
 *.ilk
 *.tlog
+nonEuclidGraphics/imgui.ini
+nonEuclidGraphics/imgui.ini
