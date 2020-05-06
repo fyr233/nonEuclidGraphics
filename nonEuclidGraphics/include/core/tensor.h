@@ -10,30 +10,7 @@ namespace cgcore
 
     //本来为了普遍性，这里可以实现一个任意阶的张量类型，和爱因斯坦求和。
     //但是在这个程序中需要的非常有限，只实现shape = (3,3,3) 的特例tensor更容易，并且运算也更快
-    /*template<typename T, int dims_>
-    struct tensor
-    {
-        T* data;
-        size_t* shape;
-        size_t* step;
-        
-        tensor()
-        {
 
-        }
-
-        T& operator()(const std::vector<size_t>& idx)
-        {
-            size_t i = 0;
-            for (size_t d = 0; d < dims; d++)
-                i += step[d] * idx[d];
-            return data[i];
-        }
-        
-        template<size_t dim1,>
-        sum(const std::vector<tensor<T>>&)
-            
-    };*/
 
     struct tensorf333
     {
@@ -61,6 +38,20 @@ namespace cgcore
         float& operator()(size_t i, size_t j, size_t k)
         {
             return data[9*i + 3*j + k];
+        }
+
+        //连续点乘 TODO
+        vecf3 dot_s(const vecf3& v1, const vecf3& v2)
+        {
+
+            float ret = 0;
+            for (size_t j = 0; j < 3; j++)
+            {
+                for (size_t k = 0; k < 3; k++)
+                {
+                    ret += v1.data[j] * v2.data[k];
+                }
+            }
         }
     };
 }
