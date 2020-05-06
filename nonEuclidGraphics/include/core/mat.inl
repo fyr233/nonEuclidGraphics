@@ -1,3 +1,5 @@
+#pragma once
+
 #include <core/mat.h>
 
 using namespace cgcore;
@@ -40,6 +42,39 @@ void mat<T, NRow, NCol>::DR(size_t i, T val)
 	assert(i < NRow & "mat::SR: Row index out of range");
 	for (T* p1 = data + i * NCol; p1 < pe; p1++)
 		*p1 *= val;
+}
+
+template<typename T, size_t NRow, size_t NCol>
+inline const T cgcore::mat<T, NRow, NCol>::dot_s(const vec<T, NRow>& v1, const vec<T, NCol>& v2)
+{
+	T ret = static_cast<T>(0);
+	for (size_t i = 0; i < NRow; i++)
+		for (size_t j = 0; j < NCol; j++)
+			ret += v1[i] * (*this)(i, j) * v2.data[j];
+	return ret;
+}
+
+
+template<typename T, size_t NRow, size_t NCol>
+const vec<T, NRow> mat<T, NRow, NCol>::dot(const vec<T, NCol>& v) const
+{
+	vec<T, NRow> ret;
+	for (size_t i = 0; i < NRow; i++)
+	{
+		ret.data[i] = static_cast<T>(0);
+		for (size_t j = 0; j < NCol; j++)
+			ret.data[i] += data[i * NCol + j] * v.data[j];
+	}
+	return ret;
+}
+
+template<typename T, size_t NRow, size_t NCol>
+inline const mat<T, NRow, NCol> cgcore::mat<T, NRow, NCol>::operator*(const T t) const
+{
+	mat<T, NRow, NCol> ret;
+	for (size_t i = 0; i < size; i++)
+		ret.data[i] = data[i] * t;
+	return ret;
 }
 
 template<typename T, size_t NRow, size_t NCol>
@@ -125,6 +160,7 @@ const mat<T, NCol, NRow> mat<T, NRow, NCol>::transpose() const
 
 namespace cgcore
 {
+	//输出矩阵内容，用于调试
 	template<typename T, size_t NRow, size_t NCol>
 	std::ostream& operator<<(std::ostream& ostrm, const mat<T, NRow, NCol>& m)
 	{
