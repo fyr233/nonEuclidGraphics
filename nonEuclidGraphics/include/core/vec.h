@@ -17,8 +17,7 @@ namespace cgcore
 		T& operator [](const size_t n) const { assert(n < N && "Index out of range"); return data[n]; }
 
 		vec(const vec<T, N>& v) {
-			for (size_t i = 0; i < N; i++)
-				data[i] = v.data[i];
+			memcpy(data, v.data, sizeof(T) * N);
 		}
 
 		vec(const std::initializer_list<T> elem_list)
@@ -33,21 +32,22 @@ namespace cgcore
 		vec(const vec<T, N1>& v1, const vec<T, N2>& v2)
 		{
 			static_assert(N1 + N2 == N, "Cannot combine two vecs");
-			size_t i = 0;
-			for (; i < N1; i++)
-				data[i] = v1.data[i];
-			for (; i < N; i++)
-				data[i] = v2.data[i - N1];
+			memcpy(data, v1.data, sizeof(T) * N1);
+			memcpy(data + N1, v2.data, sizeof(T) * N2);
 		}
 		
 		template<size_t N1>
 		vec(const vec<T, N1>& v1, const T v2)
 		{
 			static_assert(N1 + 1 == N, "Cannot combine two vec");
-			size_t i = 0;
-			for (; i < N1; i++)
-				data[i] = v1.data[i];
-			data[i] = v2;
+			memcpy(data, v1.data, sizeof(T) * N1);
+			data[N] = v2;
+		}
+
+		const vec<T, N>& operator=(const vec<T, N>& v)
+		{
+			memcpy(data, v.data, sizeof(T)*N);
+			return *this;
 		}
 
 		vec<T, N> operator+(const vec<T, N>& v2) const
@@ -117,7 +117,7 @@ namespace cgcore
 		{
 			T ret = static_cast<T>(0);
 			for (size_t i = 0; i < N; i++)
-				ret = v1[i] + v2[i];
+				ret += v1[i] * v2[i];
 			return ret;
 		}
 
@@ -144,12 +144,18 @@ namespace cgcore
 
 	//对vecf3部分成员函数的模板特例化
 
-	template<>
+	/*template<>
 	inline const float vec<float, 3>::dot(const vec<float, 3>& v1, const vec<float, 3>& v2)
 	{
 		return v1.data[0] * v2.data[0] + v1.data[1] * v2.data[1] + v1.data[2] * v2.data[2];
-	}
+	}*/
 
+	template<>
+	inline const vec<float, 3>& vec<float, 3>::operator=(const vec<float, 3>& v)
+	{
+		memcpy(data, v.data, sizeof(float) * 3);
+		return *this;
+	}
 	//对vecf2部分成员函数的模板特例化
 
 	template<>

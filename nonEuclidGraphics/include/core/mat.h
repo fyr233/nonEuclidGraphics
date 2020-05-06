@@ -10,13 +10,12 @@ namespace cgcore
 	struct mat
 	{
 		T* const data = new T[NRow*NCol];
-		const size_t size = NRow * NCol;
+		static const size_t size = NRow * NCol;
 
 		mat(){}
 		mat(const mat<T, NRow, NCol>& m)
 		{
-			for (size_t i = 0; i < size; i++)
-				data[i] = m.data[i];
+			memcpy(data, m.data, sizeof(T) * size);
 		}
 		mat(const T val)
 		{
@@ -47,11 +46,11 @@ namespace cgcore
 		}
 
 		//¸³ÖµÔËËã·û
-		const T& operator =(const mat<T, NRow, NCol>& m)
+		const mat<T, NRow, NCol>& operator =(const mat<T, NRow, NCol>& m)
 		{
 			for (size_t i = 0; i < size; i++)
 				data[i] = m.data[i];
-			return (*this)
+			return (*this);
 		}
 
 		void fill(T val);
@@ -61,13 +60,7 @@ namespace cgcore
 
 		const vec<T, NRow> dot(const vec<T, NCol>& v) const;
 
-		const mat<T, NRow, NCol> operator*(const T t) const
-		{
-			mat<T, NRow, NCol> ret;
-			for (size_t i = 0; i < size; i++)
-				ret.data[i] = data[i] * t;
-			return ret;
-		}
+		const mat<T, NRow, NCol> operator*(const T t) const;
 
 		const mat<T, NCol, NRow> transpose() const;
 		
