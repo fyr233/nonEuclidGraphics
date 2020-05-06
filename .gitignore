@@ -8,3 +8,4 @@ x64/
 *.tlog
 nonEuclidGraphics/imgui.ini
 nonEuclidGraphics/imgui.ini
+nonEuclidGraphics/include/_deps/ugl-src/
