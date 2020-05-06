@@ -99,7 +99,7 @@ mat<T, NCol, NRow> mat<T, NRow, NCol>::inverse() const
 
 //对matf3求逆的特例化实现
 template<>
-mat<float, 3, 3> mat<float, 3, 3>::inverse() const
+inline mat<float, 3, 3> mat<float, 3, 3>::inverse() const
 {
 	float det = (*this)(0, 0) * ((*this)(1, 1) * (*this)(2, 2) - (*this)(1, 2) * (*this)(2, 1))
 		- (*this)(0, 1) * ((*this)(1, 0) * (*this)(2, 2) - (*this)(1, 2) * (*this)(2, 0)) 
