@@ -122,7 +122,7 @@ namespace cgcore
 		}
 
 		template<typename T2>
-		vec<T2, N> cast_to_elemtype()
+		vec<T2, N> cast_to_elemtype() const
 		{
 			vec<T2, N> ret;
 			for (size_t i = 0; i < N; i++)
@@ -144,17 +144,48 @@ namespace cgcore
 
 	//对vecf3部分成员函数的模板特例化
 
-	/*template<>
+	template<>
 	inline const float vec<float, 3>::dot(const vec<float, 3>& v1, const vec<float, 3>& v2)
 	{
 		return v1.data[0] * v2.data[0] + v1.data[1] * v2.data[1] + v1.data[2] * v2.data[2];
-	}*/
+	}
 
 	template<>
-	inline const vec<float, 3>& vec<float, 3>::operator=(const vec<float, 3>& v)
+	inline vec<float, 3> vec<float, 3>::operator+(const vec<float, 3>& v2) const
 	{
-		memcpy(data, v.data, sizeof(float) * 3);
-		return *this;
+		vec<float, 3> ret;
+		ret.data[0] = data[0] + v2.data[0];
+		ret.data[1] = data[1] + v2.data[1];
+		ret.data[2] = data[2] + v2.data[2];
+		return ret;
+	}
+
+	template<>
+	inline vec<float, 3> vec<float, 3>::operator-(const vec<float, 3>& v2) const
+	{
+		vec<float, 3> ret;
+		ret.data[0] = data[0] - v2.data[0];
+		ret.data[1] = data[1] - v2.data[1];
+		ret.data[2] = data[2] - v2.data[2];
+		return ret;
+	}
+	template<>
+	inline vec<float, 3> vec<float, 3>::operator*(const float v2) const
+	{
+		vec<float, 3> ret;
+		ret.data[0] = data[0] * v2;
+		ret.data[1] = data[1] * v2;
+		ret.data[2] = data[2] * v2;
+		return ret;
+	}
+	template<>
+	inline vec<float, 3> vec<float, 3>::operator/(const float v2) const
+	{
+		vec<float, 3> ret;
+		ret.data[0] = data[0] / v2;
+		ret.data[1] = data[1] / v2;
+		ret.data[2] = data[2] / v2;
+		return ret;
 	}
 	//对vecf2部分成员函数的模板特例化
 
@@ -162,6 +193,40 @@ namespace cgcore
 	inline const float vec<float, 2>::dot(const vec<float, 2>& v1, const vec<float, 2>& v2)
 	{
 		return v1.data[0] * v2.data[0] + v1.data[1] * v2.data[1];
+	}
+
+	template<>
+	inline vec<float, 2> vec<float, 2>::operator+(const vec<float, 2>& v2) const
+	{
+		vec<float, 2> ret;
+		ret.data[0] = data[0] + v2.data[0];
+		ret.data[1] = data[1] + v2.data[1];
+		return ret;
+	}
+
+	template<>
+	inline vec<float, 2> vec<float, 2>::operator-(const vec<float, 2>& v2) const
+	{
+		vec<float, 2> ret;
+		ret.data[0] = data[0] - v2.data[0];
+		ret.data[1] = data[1] - v2.data[1];
+		return ret;
+	}
+	template<>
+	inline vec<float, 2> vec<float, 2>::operator*(const float v2) const
+	{
+		vec<float, 2> ret;
+		ret.data[0] = data[0] * v2;
+		ret.data[1] = data[1] * v2;
+		return ret;
+	}
+	template<>
+	inline vec<float, 2> vec<float, 2>::operator/(const float v2) const
+	{
+		vec<float, 2> ret;
+		ret.data[0] = data[0] / v2;
+		ret.data[1] = data[1] / v2;
+		return ret;
 	}
 
 	//需要的时候再在这里特例化模板以加速
