@@ -40,6 +40,7 @@ namespace cgcore
             return data[9*i + 3*j + k];
         }
 
+        /*
         //Á¬Ðøµã³Ë TODO
         vecf3 dot_s(const vecf3& v1, const vecf3& v2)
         {
@@ -53,5 +54,6 @@ namespace cgcore
                 }
             }
         }
+        */
     };
 }

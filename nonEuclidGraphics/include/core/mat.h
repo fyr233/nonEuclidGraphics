@@ -75,8 +75,9 @@ namespace cgcore
 		void DR(size_t i, T val);
 
 		//Á¬Ðøµã³Ë£ºv1^T.Self.v2
-		const T dot_s(const vec<T, NRow>& v1, const vec<T, NCol>& v2);
-		
+		const T dot_s(const vec<T, NRow>& v1, const vec<T, NCol>& v2) const;
+
+		static mat<T, NRow, NCol> Identity();
 	};
 	template<typename T, size_t NRow, size_t NCol>
 	std::ostream& operator << (std::ostream& ostrm, const mat<T, NRow, NCol>& m);
@@ -84,6 +85,7 @@ namespace cgcore
 
 	typedef mat<float, 3, 3> matf3;
 	typedef mat<float, 4, 4> matf4;
+	typedef mat<float, 4, 3> matf43;
 }
 
 #include <core/mat.inl>

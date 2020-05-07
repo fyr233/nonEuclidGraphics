@@ -11,7 +11,7 @@ namespace cgcore
 
 	
 	typedef std::function<matf3(const vecf3&)> Func3to33;
-	typedef std::function<mat<float, 4, 3>(const vecf3&)> Func3to43;
+	typedef std::function<matf43(const vecf3&)> Func3to43;
 	typedef std::function<tensorf333(const vecf3&)> Func3to333;
 	typedef std::function<vecf4(const vecf3&)> Func3to4;
 

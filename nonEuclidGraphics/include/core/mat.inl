@@ -45,13 +45,23 @@ void mat<T, NRow, NCol>::DR(size_t i, T val)
 }
 
 template<typename T, size_t NRow, size_t NCol>
-inline const T cgcore::mat<T, NRow, NCol>::dot_s(const vec<T, NRow>& v1, const vec<T, NCol>& v2)
+inline const T cgcore::mat<T, NRow, NCol>::dot_s(const vec<T, NRow>& v1, const vec<T, NCol>& v2) const
 {
 	T ret = static_cast<T>(0);
 	for (size_t i = 0; i < NRow; i++)
 		for (size_t j = 0; j < NCol; j++)
 			ret += v1[i] * (*this)(i, j) * v2.data[j];
 	return ret;
+}
+
+template<typename T, size_t NRow, size_t NCol>
+inline mat<T, NRow, NCol> cgcore::mat<T, NRow, NCol>::Identity()
+{
+	mat<T, NRow, NCol> m;
+	m.fill(static_cast<T>(0));
+	for (T* p = m.data, *pe = m.data + size; p < pe; p += NCol + 1)
+		*p = static_cast<T>(1);
+	return m;
 }
 
 

@@ -28,6 +28,12 @@ namespace cgcore
 				data[i++] = it;
 		}
 
+		vec(const T v)
+		{
+			for (T* p = data, *pend = data + N; p != pend; p++)
+				*p = v;
+		}
+
 		template<size_t N1, size_t N2>
 		vec(const vec<T, N1>& v1, const vec<T, N2>& v2)
 		{
@@ -84,6 +90,12 @@ namespace cgcore
 			for (size_t i = 0; i < N; i++)
 				v3[i] = data[i] * v2[i];
 			return v3;
+		}
+
+		void fill(const T v)
+		{
+			for (T* p = data, *pend = data + N; p != pend; p++)
+				*p = v;
 		}
 
 		T norm2() const

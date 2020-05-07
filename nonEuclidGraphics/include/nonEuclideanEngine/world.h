@@ -1,8 +1,10 @@
 #pragma once
 
+
 #include <core/mat.h>
 #include <core/func.h>
 #include <core/Mesh.h>
+#include <core/Obj.h>
 
 namespace nonEuc
 {
@@ -20,12 +22,12 @@ namespace nonEuc
 		//度量的Christoffel记号
 		Func3to333 gamma;
 	
-		std::vector<Mesh *> objectPtrs;
+		std::vector<std::shared_ptr<Obj>> objectPtrs;
 
 	public:
 		World();
 		~World();
-		void AddMesh(Mesh * newMesh);
+		void AddObj(std::shared_ptr<Mesh> newMesh, vecf3 center, matf3 rotation);
 	};
 
 	inline World::World()
@@ -36,12 +38,6 @@ namespace nonEuc
 	inline World::~World()
 	{
 
-	}
-
-	inline void World::AddMesh(Mesh* newMesh)
-	{
-		// TODO:在这里要更改newMesh的参数坐标
-		objectPtrs.push_back(newMesh);
 	}
 }
 
