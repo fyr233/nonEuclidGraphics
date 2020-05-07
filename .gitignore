@@ -2,10 +2,9 @@
 Debug/
 x64/
 *.pdb
-*.obj
+
 *.exe
 *.ilk
 *.tlog
-nonEuclidGraphics/imgui.ini
 nonEuclidGraphics/imgui.ini
 nonEuclidGraphics/include/_deps/ugl-src/
