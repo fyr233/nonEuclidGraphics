@@ -2,6 +2,7 @@
 
 #include <core/mat.h>
 #include <core/func.h>
+#include <core/Mesh.h>
 
 namespace nonEuc
 {
@@ -19,6 +20,28 @@ namespace nonEuc
 		//度量的Christoffel记号
 		Func3to333 gamma;
 	
-		
+		std::vector<Mesh *> objectPtrs;
+
+	public:
+		World();
+		~World();
+		void AddMesh(Mesh * newMesh);
 	};
+
+	inline World::World()
+	{
+
+	}
+
+	inline World::~World()
+	{
+
+	}
+
+	inline void World::AddMesh(Mesh* newMesh)
+	{
+		// TODO:在这里要更改newMesh的参数坐标
+		objectPtrs.push_back(newMesh);
+	}
 }
+
