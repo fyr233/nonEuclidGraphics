@@ -34,24 +34,24 @@ class Mesh
 
 public:
 	Mesh();
-	Mesh(std::string path);	// ³õÊ¼»¯µÄÊ±ºò¿ÉÒÔÄ¬ÈÏ²ÎÊý×ø±êÊÇ×ÔÉí×ø±êÏµÏÂµÄÅ·Ê½×ø±ê
+	Mesh(std::string path);	// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ï²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½Âµï¿½Å·Ê½ï¿½ï¿½ï¿½ï¿½
 	~Mesh();
 
 	void LoadObj(std::string path);
-	void Transform(vecf3 center, matf3 S, matf3 R);	//±ä»»½á¹û´æÔÚParaCoordÖÐ
+	void Transform(vecf3 center, matf3 S, matf3 R);	//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ParaCoordï¿½ï¿½
 
-	void LoadMesh();				// ÏòOpenGLÖÐ¼ÓÔØÍø¸ñÊý¾Ý
+	void LoadMesh();				// ï¿½ï¿½OpenGLï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//void ParaReset();
-	void Draw(GLuint programID);	// ÓÃ×ÅÉ«Æ÷»æÖÆ
+	void Draw(GLuint programID);	// ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 private:
 	std::vector<std::string> SplitString(const std::string& s, const std::string& spliter);
 
 public:
 	/*  Mesh Data  */
-	std::vector<Vertex> vertices;	//µã
-	std::vector<unsigned int> indices;	//Ãæ
-	std::vector<TextureInfo> textureInfos;	//ÌùÍ¼
+	std::vector<Vertex> vertices;	//ï¿½ï¿½
+	std::vector<unsigned int> indices;	//ï¿½ï¿½
+	std::vector<TextureInfo> textureInfos;	//ï¿½ï¿½Í¼
 
 	/*  Render data  */
 	unsigned int VAO = 0;
