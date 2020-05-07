@@ -74,7 +74,7 @@ bool Engine::Init()
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // 初始化着色器
-    programID = LoadShaders("D:/USTC/CODE/Github/nonEuclidGraphics/nonEuclidGraphics/include/Shader/vertex.vert", "D:/USTC/CODE/Github/nonEuclidGraphics/nonEuclidGraphics/include/Shader/fragment.frag");
+    programID = LoadShaders("../nonEuclidGraphics/include/Shader/vertex.vert", "../nonEuclidGraphics/include/Shader/fragment.frag");
 
     return true;
 }

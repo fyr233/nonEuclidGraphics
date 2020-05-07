@@ -28,7 +28,7 @@ int main()
     nonEuc::World world;
 
     // 添加网格
-    world.AddMesh(new Mesh("cube.obj"));
+    world.AddMesh(new Mesh("../data/cube.obj"));
     //std::cout << sizeof(vecf3) << " " << sizeof(float) << std::endl;
 
     engine.SetWorld(&world);
