@@ -1,4 +1,4 @@
-#include "Engine.h"
+#include <nonEuclideanEngine/Engine.h>
 #include <fstream>
 
 using namespace nonEuc;
