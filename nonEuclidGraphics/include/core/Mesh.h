@@ -35,8 +35,7 @@ public:
 	~Mesh();
 
 	void LoadObj(std::string path);
-	void Transform(vecf3 center, matf3 S);
-	void Transform_Mesh(vecf3 center, matf3 S);
+	void Transform(vecf3 center, matf3 S);	//变换结果存在ParaCoord中
 
 private:
 	std::vector<std::string> SplitString(const std::string& s, const std::string& spliter);
@@ -155,10 +154,10 @@ inline void Mesh::LoadObj(std::string path)
 
 inline void Mesh::Transform(vecf3 center, matf3 S)
 {
-}
-
-inline void Mesh::Transform_Mesh(vecf3 center, matf3 S)
-{
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		vertices[i].ParaCoord = S.dot(vertices[i].Position - center);
+	}
 }
 
 inline std::vector<std::string> Mesh::SplitString(const std::string& s, const std::string& spliter)
