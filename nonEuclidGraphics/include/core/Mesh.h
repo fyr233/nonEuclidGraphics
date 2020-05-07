@@ -33,11 +33,12 @@ class Mesh
 	};
 
 public:
+	Mesh();
 	Mesh(std::string path);	// 初始化的时候可以默认参数坐标是自身坐标系下的欧式坐标
 	~Mesh();
 
 	void LoadObj(std::string path);
-	void Transform(vecf3 center, matf3 S);	//变换结果存在ParaCoord中
+	void Transform(vecf3 center, matf3 S, matf3 R);	//变换结果存在ParaCoord中
 
 	void LoadMesh();				// 向OpenGL中加载网格数据
 	//void ParaReset();
@@ -61,6 +62,10 @@ private:
 	std::vector<vecf3> normals;
 	std::vector<vecf2> texcoords;
 };
+
+inline Mesh::Mesh()
+{
+}
 
 inline Mesh::Mesh(std::string path)
 {
@@ -164,11 +169,11 @@ inline void Mesh::LoadObj(std::string path)
 	}
 }
 
-inline void Mesh::Transform(vecf3 center, matf3 S)
+inline void Mesh::Transform(vecf3 center, matf3 S, matf3 R)
 {
 	for (int i = 0; i < vertices.size(); i++)
 	{
-		vertices[i].ParaCoord = S.dot(vertices[i].Position - center);
+		vertices[i].ParaCoord = matf3::dot(S, R).dot(vertices[i].Position) + center;
 	}
 }
 

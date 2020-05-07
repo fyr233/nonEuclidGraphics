@@ -11,6 +11,7 @@
 
 #include<nonEuclideanEngine/world.h>
 #include <core/Mesh.h>
+#include <core/Obj.h>
 #include <nonEuclideanEngine/shader.hpp>
 
 namespace nonEuc
