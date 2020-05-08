@@ -115,6 +115,7 @@ namespace cgcore
 			vec<T, N> ret;
 			for (size_t i = 0; i < N; i++)
 				ret[i] = data[i] / nrm;
+			return ret;
 		}
 
 		static const vec<T, 3> cross(vec<T, 3> v1, vec<T, 3>v2)
