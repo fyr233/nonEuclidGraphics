@@ -1,5 +1,6 @@
 #include <nonEuclideanEngine/Engine.h>
 #include <fstream>
+#include <core/geometry.h>
 
 using namespace nonEuc;
 
@@ -146,7 +147,7 @@ void Engine::Loop()
 
         // TODO:ªÊ÷∆≥°æ∞
         UpdateCamera();
-        matf4 perspective = Perspective(3.14f / 2, (float)scrwidth / (float)scrheight, 1.f, 100.0f);
+        matf4 perspective = Perspective(PI<float> / 2, (float)scrwidth / (float)scrheight, 1.f, 100.0f);
 
         glUseProgram(programID);
         int Location = glGetUniformLocation(programID, "cameraPos");

@@ -5,6 +5,7 @@
 
 #include <core/mat.h>
 #include <core/vec.h>
+#include <core/geometry.h>
 
 using namespace cgcore;
 
@@ -26,6 +27,6 @@ public:
 	float pitch = 0.0f; // ¸©Ñö½Ç
 
 private:
-	float toRad(float degree){ return degree / 180 * 3.14159265f; }	
+	float toRad(float degree){ return degree / 180 * PI<float>; }	
 	//matf3 R;
 };
