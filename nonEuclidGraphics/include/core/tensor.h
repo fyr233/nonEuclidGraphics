@@ -19,6 +19,12 @@ namespace cgcore
         
         tensorf333() {}
 
+        tensorf333(const float val)
+        {
+            for (float* p = data, *pe = data + size; p != pe; p++)
+                *p = val;
+        }
+
         tensorf333(const tensorf333& t2)
         {
             for (float* p1 = data, *p2 = t2.data, *pe = data + size; p1 < pe; p1++, p2++)
@@ -29,13 +35,14 @@ namespace cgcore
         {
             assert(elem_list.size() <= size);
             size_t i = 0;
+            float* p = data;
             for (float it : elem_list)
-                data[i++] = it;
+                *(p++) = it;
         }
 
         ~tensorf333() { delete[] data; }
 
-        float& operator()(size_t i, size_t j, size_t k)
+        float& operator()(size_t i, size_t j, size_t k) const
         {
             return data[9*i + 3*j + k];
         }

@@ -9,7 +9,8 @@ namespace cgcore
 
 	//简化常用函数类型的名称。这是为了避免太长的类型名。
 
-	
+	typedef std::function<vecf3(const vecf3&)> Func3to3;
+	typedef std::function<void(vecf3&)> Func3;
 	typedef std::function<matf3(const vecf3&)> Func3to33;
 	typedef std::function<matf43(const vecf3&)> Func3to43;
 	typedef std::function<tensorf333(const vecf3&)> Func3to333;

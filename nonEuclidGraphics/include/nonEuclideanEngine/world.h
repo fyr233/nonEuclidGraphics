@@ -13,11 +13,15 @@ namespace nonEuc
 	public:
 		//描述整个空间（三维流形）的性质
 
+		//规范化坐标（限制每个点参数坐标唯一）
+		Func3 regularize_ref;
+		Func3to3 regularize;
+		
 		//三维流形曲纹坐标->四维空间的映射(不一定用到)
 		Func3to4 coord;
 		//度规矩阵
 		Func3to33 metric;
-		//Jacobi矩阵
+		//Jacobi矩阵(不一定用到)
 		Func3to43 jacobi;
 		//度量的Christoffel记号
 		Func3to333 gamma;
