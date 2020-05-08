@@ -35,7 +35,7 @@ bool Engine::Init()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
+    window = glfwCreateWindow(scrwidth, scrheight, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (window == NULL)
         return false;
     glfwMakeContextCurrent(window);
@@ -75,6 +75,11 @@ bool Engine::Init()
 
     // 初始化着色器
     programID = LoadShaders("../nonEuclidGraphics/include/Shader/vertex.vert", "../nonEuclidGraphics/include/Shader/fragment.frag");
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // 开启深度测试
+    glEnable(GL_DEPTH_TEST);
+    // Accept fragment if it closer to the camera than the former one
+    glDepthFunc(GL_LESS);
 
     return true;
 }
@@ -90,6 +95,8 @@ void Engine::Loop()
         // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
+
+        // TODO:处理键盘事件，在允许鼠标移动时能够隐藏鼠标
 
         // 加载Imgui的窗口
         ImGui_ImplOpenGL3_NewFrame();
@@ -126,15 +133,34 @@ void Engine::Loop()
             // TODO: 创建一个控制台来调整一些参数
             ImGui::Begin("World");
             ImGui::Text("Information about the scene.(TODO)");
+            ImGui::SetWindowSize(ImVec2(200, 100));
+            ImGui::Checkbox("Mouse", &mouseIO);
             ImGui::End();
         }
 
         // Rendering
         ImGui::Render();
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // TODO:绘制场景
+        UpdateCamera();
+        matf4 perspective = Perspective(3.14f / 2, (float)scrwidth / (float)scrheight, 1.f, 100.0f);
+
+        glUseProgram(programID);
+        int Location = glGetUniformLocation(programID, "cameraPos");
+        glUniform3f(Location, current_world->camera.paraPos[0], current_world->camera.paraPos[1], current_world->camera.paraPos[2]);
+        Location = glGetUniformLocation(programID, "cameraX");
+        glUniform3f(Location, current_world->camera.Right[0], current_world->camera.Right[1], current_world->camera.Right[2]);
+        Location = glGetUniformLocation(programID, "cameraY");
+        glUniform3f(Location, current_world->camera.Up[0], current_world->camera.Up[1], current_world->camera.Up[2]);
+        Location = glGetUniformLocation(programID, "cameraZ");
+        glUniform3f(Location, current_world->camera.Front[0], current_world->camera.Front[1], current_world->camera.Front[2]);
+        Location = glGetUniformLocation(programID, "G");
+        glUniformMatrix3fv(Location, 1, GL_FALSE, matf3::Identity().data);
+        Location = glGetUniformLocation(programID, "P");
+        glUniformMatrix4fv(Location, 1, GL_FALSE, perspective.data);
         for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
             current_world->objectPtrs[i]->mesh->Draw(programID);
 
@@ -168,4 +194,42 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
+}
+
+void Engine::UpdateCamera()
+{
+    static double lastTime = glfwGetTime();
+    double currentTime = glfwGetTime();
+    float deltaTime = float(currentTime - lastTime);
+
+    // Get mouse position
+    if (mouseIO)
+    {
+        current_world->camera.yaw -= mouse_speed * ImGui::GetIO().MouseDelta.x;
+        current_world->camera.pitch += mouse_speed * ImGui::GetIO().MouseDelta.y;
+        if (current_world->camera.pitch > 89.0f) current_world->camera.pitch = 89.0f;
+        if (current_world->camera.pitch < -89.0f) current_world->camera.pitch = -89.0f;
+    }
+    // TODO: Get keyboard input
+
+    current_world->camera.UpdateDirection(current_world->camera.paraPos, matf3::Identity());
+}
+
+matf4 Engine::Perspective(float fovY, float aspect, float zNear, float zFar) {
+    assert(fovY > 0 && aspect > 0 && zNear >= 0 && zFar > zNear);
+
+    float tanHalfFovY = std::tan(fovY / static_cast<float>(2));
+    float cotHalfFovY = 1 / tanHalfFovY;
+
+    float m00 = cotHalfFovY / aspect;
+    float m11 = cotHalfFovY;
+    float m22 = (zFar + zNear) / (zNear - zFar);
+    float m23 = (2 * zFar * zNear) / (zNear - zFar);
+
+    return matf4{
+            m00, 0, 0, 0,
+            0, m11, 0, 0,
+            0, 0, m22, m23,
+            0, 0, -1, 0,
+    };
 }

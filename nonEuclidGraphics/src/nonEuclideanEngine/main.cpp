@@ -34,7 +34,6 @@ int main()
 
     // 添加网格
     world.AddObj(std::make_shared<Mesh>("../data/balls.obj"), {0.f, 0.f, 0.f}, matf3::Identity());
-    //std::cout << sizeof(vecf3) << " " << sizeof(float) << std::endl;
 
     engine.SetWorld(&world);
     engine.Loop();

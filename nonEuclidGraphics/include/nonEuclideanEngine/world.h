@@ -5,6 +5,7 @@
 #include <core/func.h>
 #include <core/Mesh.h>
 #include <core/Obj.h>
+#include <nonEuclideanEngine/camera.h>
 
 namespace nonEuc
 {
@@ -23,6 +24,7 @@ namespace nonEuc
 		Func3to333 gamma;
 	
 		std::vector<std::shared_ptr<Obj>> objectPtrs;
+		Camera camera;
 
 	public:
 		World();
@@ -32,7 +34,7 @@ namespace nonEuc
 
 	inline World::World()
 	{
-
+		camera = Camera(cgcore::vecf3{0.0f, 0.0f, -10.0f}, cgcore::matf3::Identity());
 	}
 
 	inline World::~World()
