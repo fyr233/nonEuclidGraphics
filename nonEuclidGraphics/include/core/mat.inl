@@ -64,6 +64,15 @@ inline mat<T, NRow, NCol> cgcore::mat<T, NRow, NCol>::Identity()
 	return m;
 }
 
+template<typename T, size_t NRow, size_t NCol>
+mat<T, NRow, NRow> cgcore::mat<T, NRow, NCol>::Diag(const vec<T, NRow> diag)
+{
+	mat<T, NRow, NRow> ret(0.f);
+	for (size_t i = 0; i < NRow; i++)
+		ret(i, i) = diag[i];
+	return ret;
+}
+
 
 template<typename T, size_t NRow, size_t NCol>
 const vec<T, NRow> mat<T, NRow, NCol>::dot(const vec<T, NCol>& v) const

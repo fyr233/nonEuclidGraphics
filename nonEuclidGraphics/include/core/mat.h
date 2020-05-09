@@ -78,6 +78,7 @@ namespace cgcore
 		const T dot_s(const vec<T, NRow>& v1, const vec<T, NCol>& v2) const;
 
 		static mat<T, NRow, NCol> Identity();
+		static mat<T, NRow, NRow> Diag(const vec<T, NRow> diag);
 	};
 	template<typename T, size_t NRow, size_t NCol>
 	std::ostream& operator << (std::ostream& ostrm, const mat<T, NRow, NCol>& m);
