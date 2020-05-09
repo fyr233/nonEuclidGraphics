@@ -29,3 +29,12 @@ void Camera::UpdateDirection(vecf3 position, matf3 S)
 	Up = S.dot(vecf3::cross(right, front).normalize());
 }
 
+void Camera::UpdatePosition(const tensorf333& gamma, vecf3 du)
+{
+	// 根据位置变化调整相应的三个坐标轴向量
+	paraPos = paraPos + du;
+	Front = Translate(gamma, du, Front).normalize();
+	Right = Translate(gamma, du, Right).normalize();
+	Up = Translate(gamma, du, Up).normalize();
+}
+

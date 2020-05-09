@@ -5,6 +5,7 @@
 
 #include <core/mat.h>
 #include <core/vec.h>
+#include <core/transform.h>
 #include <core/geometry.h>
 
 using namespace cgcore;
@@ -16,6 +17,7 @@ public:
 	~Camera();
 
 	void UpdateDirection(vecf3 position, matf3 S);
+	void UpdatePosition(const tensorf333& gamma, vecf3 du);
 
 public:
 	vecf3 paraPos;		// 参数坐标下的位置

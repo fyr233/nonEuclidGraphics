@@ -58,7 +58,6 @@ bool Engine::Init()
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -67,7 +66,7 @@ bool Engine::Init()
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
-
+    
     // Load Font
 
     // Our state
@@ -82,7 +81,7 @@ bool Engine::Init()
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
-
+    
     return true;
 }
 
@@ -234,16 +233,36 @@ void Engine::UpdateCamera()
     static double lastTime = glfwGetTime();
     double currentTime = glfwGetTime();
     float deltaTime = float(currentTime - lastTime);
+    lastTime = currentTime;
+    ImGuiIO & io = ImGui::GetIO();
+    Camera & camera = current_world->camera;
 
     // Get mouse position
     if (mouseIO)
     {
-        current_world->camera.yaw -= mouse_speed * ImGui::GetIO().MouseDelta.x;
-        current_world->camera.pitch += mouse_speed * ImGui::GetIO().MouseDelta.y;
-        if (current_world->camera.pitch > 89.0f) current_world->camera.pitch = 89.0f;
-        if (current_world->camera.pitch < -89.0f) current_world->camera.pitch = -89.0f;
+        camera.yaw -= mouse_speed * io.MouseDelta.x;
+        camera.pitch += mouse_speed * io.MouseDelta.y;
+        if (camera.pitch > 89.0f) camera.pitch = 89.0f;
+        if (camera.pitch < -89.0f) camera.pitch = -89.0f;
+        matf3 S = cgcore::SchmidtOrthogonalize(current_world->metric(camera.paraPos));
+        current_world->camera.UpdateDirection(camera.paraPos, S);
     }
-    // TODO: Get keyboard input
 
-    current_world->camera.UpdateDirection(current_world->camera.paraPos, matf3::Identity());
+    // Get keyboard input
+    auto keyboardInput = io.KeysDown;
+    vecf3 du = vecf3(0.0f);             // 相机的参数坐标变化量
+    if (keyboardInput['A'])
+        du = camera.Right * (-move_speed) * deltaTime;
+    else if (keyboardInput['S'])
+        du = camera.Front * (move_speed) * deltaTime;
+    else if (keyboardInput['D'])
+        du = camera.Right * (move_speed) * deltaTime;
+    else if (keyboardInput['W'])
+        du = camera.Front * (-move_speed) * deltaTime;
+    else if (keyboardInput['Q'])
+        du = camera.Up * (move_speed) * deltaTime;
+    else if (keyboardInput['E'])
+        du = camera.Up * (-move_speed) * deltaTime;
+
+    camera.UpdatePosition(current_world->gamma(camera.paraPos), du);
 }
