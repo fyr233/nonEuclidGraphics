@@ -93,6 +93,6 @@ namespace cgcore
 	vecf3 Translate(const tensorf333& gamma, vecf3 du, vecf3 v);
 	
 	//¼ÆËãĞı×ª¾ØÕóÆ½ÒÆ TODO
-	void Translate(const matf3& g, const tensorf333& gamma, vecf3 du, matf3 R);
+	matf3 Translate(const matf3& S_u1, const matf3& S_u2, const tensorf333& gamma, vecf3 du, const matf3& R);
 
 }
