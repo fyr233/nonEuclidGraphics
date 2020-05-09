@@ -1,7 +1,7 @@
 #include <core/transform.h>
 
-//计算向量平移(返回v+dv)
-vecf3 Translate(const tensorf333& gamma, vecf3 du, vecf3 v)
+
+vecf3 cgcore::Translate(const tensorf333& gamma, vecf3 du, vecf3 v)
 {
 	vecf3 dv;
 	for (size_t i = 0; i < 3; i++)
@@ -14,8 +14,8 @@ vecf3 Translate(const tensorf333& gamma, vecf3 du, vecf3 v)
 	return v + dv;
 }
 
-//计算旋转矩阵平移
-void Translate(const matf3& g, const tensorf333& gamma, vecf3 du, matf3 R)
+
+void cgcore::Translate(const matf3& g, const tensorf333& gamma, vecf3 du, matf3 R)
 {
 	//TODO
 }
