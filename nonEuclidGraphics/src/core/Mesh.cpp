@@ -132,7 +132,7 @@ void Mesh::LoadMesh()
 	{
 		// TODO:如果要传其他信息，在这里添加，注意还要修改后面的glVertexAttribPointer
 		for (size_t j = 0; j < 3; j++)
-			vertice_data.push_back(vertices[i].ParaCoord[j]);
+			vertice_data.push_back(vertices[i].Position[j]);
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -175,13 +175,15 @@ void Mesh::LoadMesh()
 	glBindVertexArray(0);
 }
 
-void Mesh::Draw(GLuint programID)
+void Mesh::Draw(GLuint programID, const matf4& m2paraTransform)
 {
 	// TODO:加载纹理贴图
 	// TODO:传入度量矩阵
 
 
 	// draw
+	GLint Location = glGetUniformLocation(programID, "M");
+	glUniformMatrix4fv(Location, 1, GL_TRUE, m2paraTransform.data);
 	glUseProgram(programID);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

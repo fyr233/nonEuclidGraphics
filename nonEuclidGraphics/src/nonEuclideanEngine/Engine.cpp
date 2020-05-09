@@ -164,7 +164,7 @@ void Engine::Loop()
         Location = glGetUniformLocation(programID, "P");
         glUniformMatrix4fv(Location, 1, GL_TRUE, perspective.data);
         for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
-            current_world->objectPtrs[i]->mesh->Draw(programID);
+            current_world->objectPtrs[i]->Draw(programID);
 
         // 绘制Imgui的窗口,放在这里可以使其浮于最上方
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

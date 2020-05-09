@@ -42,7 +42,7 @@ public:
 
 	void LoadMesh();				// 向OpenGL中加载网格数据
 	//void ParaReset();
-	void Draw(GLuint programID);	// 用着色器绘制
+	void Draw(GLuint programID, const matf4& m2paraTransform);	// 用着色器绘制
 
 private:
 	std::vector<std::string> SplitString(const std::string& s, const std::string& spliter);

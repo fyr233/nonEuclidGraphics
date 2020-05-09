@@ -8,10 +8,11 @@ uniform vec3 cameraY;
 uniform vec3 cameraZ;
 uniform mat3 G;
 uniform mat4 P;
+uniform mat4 M;
 
 void main(){
     
-    vec3 a = vertexPosition - cameraPos;
+    vec3 a = (M * vec4(vertexPosition, 1)).xyz - cameraPos;
     float px = dot(a, G * cameraX);
     float py = dot(a, G * cameraY);
     float pz = dot(a, G * cameraZ);

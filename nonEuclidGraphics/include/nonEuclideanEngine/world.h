@@ -1,14 +1,21 @@
 #pragma once
 
-
+#include <type_traits>
 #include <core/mat.h>
 #include <core/func.h>
 #include <core/Mesh.h>
+namespace cgcore
+{
+	class Obj;
+}
 #include <core/Obj.h>
 #include <nonEuclideanEngine/camera.h>
+#include <nonEuclideanEngine/WorldExample.h>
+#include <core/transform.h>
 
 namespace nonEuc
 {
+
 	class World
 	{
 	public:
@@ -31,19 +38,37 @@ namespace nonEuc
 		Camera camera;
 
 	public:
-		World();
+
+		World() {};
+
+		//使用一个WorldExample来设置世界
+		template<typename TWorldExample>
+		void SetWorldExample();
+
 		~World();
-		void AddObj(std::shared_ptr<Mesh> newMesh, vecf3 center, matf3 rotation);
+		void AddObj(std::shared_ptr<Mesh> newMesh, vecf3 center, vecf3 scale, matf3 rotation);
 	};
 
-	inline World::World()
+	template<typename TWorldExample>
+	void World::SetWorldExample()
 	{
-		camera = Camera(cgcore::vecf3{0.0f, 0.0f, -10.0f}, cgcore::matf3::Identity());
+		//从WorldExample中应用世界
+		static_assert(std::is_base_of<WorldExample::WorldExampleBase, TWorldExample>::value);
+		coord = TWorldExample::coord;
+		jacobi = TWorldExample::jacobi;
+		gamma = TWorldExample::gamma;
+		regularize_ref = TWorldExample::regularize_ref;
+		regularize = TWorldExample::regularize;
+		metric = TWorldExample::metric;
+
+		//初始化Camera (初始化方法可以修改)
+		vecf3 camera_position = regularize(vecf3{ 0.0f, 0.0f, -10.0f });
+		camera = Camera(camera_position, cgcore::SchmidtOrthogonalize(metric(camera_position)));
 	}
 
 	inline World::~World()
 	{
-
+		
 	}
 }
 

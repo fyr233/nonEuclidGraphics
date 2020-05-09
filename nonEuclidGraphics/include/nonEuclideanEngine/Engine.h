@@ -22,7 +22,7 @@ namespace nonEuc
 		Engine();
 		~Engine();
 
-		void SetWorld(World *world){ current_world = world; }
+		void SetWorld(std::shared_ptr<World> world){ current_world = world; }
 		bool Init();	// 初始化OpenGL和Imgui
 		void Loop();	// 主要的循环
 		void Clear();	// 在结束的时候调用
@@ -35,7 +35,7 @@ namespace nonEuc
 		//	1.所有的Obj(Mesh)
 		//	2.一个Camera
 		//	3.合适的变换
-		World *current_world = nullptr;
+		std::shared_ptr<World> current_world = nullptr;
 
 
 		GLFWwindow* window = nullptr;		// 窗口
