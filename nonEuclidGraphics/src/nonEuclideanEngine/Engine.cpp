@@ -1,6 +1,7 @@
 #include <nonEuclideanEngine/Engine.h>
 #include <fstream>
 #include <core/geometry.h>
+#include <core/transform.h>
 
 using namespace nonEuc;
 
@@ -147,7 +148,7 @@ void Engine::Loop()
 
         // TODO:ªÊ÷∆≥°æ∞
         UpdateCamera();
-        matf4 perspective = Perspective(PI<float> / 2, (float)scrwidth / (float)scrheight, 1.f, 100.0f);
+        matf4 perspective = Perspective(PI<float> / 4, (float)scrwidth / (float)scrheight, 0.0001f, 100.0f);
 
         glUseProgram(programID);
         int Location = glGetUniformLocation(programID, "cameraPos");
@@ -159,9 +160,9 @@ void Engine::Loop()
         Location = glGetUniformLocation(programID, "cameraZ");
         glUniform3f(Location, current_world->camera.Front[0], current_world->camera.Front[1], current_world->camera.Front[2]);
         Location = glGetUniformLocation(programID, "G");
-        glUniformMatrix3fv(Location, 1, GL_FALSE, matf3::Identity().data);
+        glUniformMatrix3fv(Location, 1, GL_TRUE, matf3::Identity().data);
         Location = glGetUniformLocation(programID, "P");
-        glUniformMatrix4fv(Location, 1, GL_FALSE, perspective.data);
+        glUniformMatrix4fv(Location, 1, GL_TRUE, perspective.data);
         for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
             current_world->objectPtrs[i]->mesh->Draw(programID);
 
@@ -214,23 +215,4 @@ void Engine::UpdateCamera()
     // TODO: Get keyboard input
 
     current_world->camera.UpdateDirection(current_world->camera.paraPos, matf3::Identity());
-}
-
-matf4 Engine::Perspective(float fovY, float aspect, float zNear, float zFar) {
-    assert(fovY > 0 && aspect > 0 && zNear >= 0 && zFar > zNear);
-
-    float tanHalfFovY = std::tan(fovY / static_cast<float>(2));
-    float cotHalfFovY = 1 / tanHalfFovY;
-
-    float m00 = cotHalfFovY / aspect;
-    float m11 = cotHalfFovY;
-    float m22 = (zFar + zNear) / (zNear - zFar);
-    float m23 = (2 * zFar * zNear) / (zNear - zFar);
-
-    return matf4{
-            m00, 0, 0, 0,
-            0, m11, 0, 0,
-            0, 0, m22, m23,
-            0, 0, -1, 0,
-    };
 }

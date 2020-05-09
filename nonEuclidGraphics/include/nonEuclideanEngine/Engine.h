@@ -28,7 +28,6 @@ namespace nonEuc
 		void Clear();	// 在结束的时候调用
 
 		void UpdateCamera();
-		matf4 Perspective(float fovY, float aspect, float zNear, float zFar);	// 透视投影变换，需要的话可以写进transform.h
 
 	private:
 		// 目的就是把这个场景的东西显示出来

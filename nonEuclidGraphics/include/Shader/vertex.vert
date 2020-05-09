@@ -16,8 +16,6 @@ void main(){
     float py = dot(a, G * cameraY);
     float pz = dot(a, G * cameraZ);
     
-    //vec4 view_pos = vec4(-px / pz, -py / pz, 0.0f, 1.0f);
-    //gl_Position = view_pos;
     vec4 view_pos = vec4(px, py, pz, 1.0f);
     gl_Position = P * view_pos;
 }
