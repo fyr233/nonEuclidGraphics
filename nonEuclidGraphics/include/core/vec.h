@@ -47,7 +47,7 @@ namespace cgcore
 		{
 			static_assert(N1 + 1 == N, "Cannot combine two vec");
 			memcpy(data, v1.data, sizeof(T) * N1);
-			data[N] = v2;
+			data[N1] = v2;
 		}
 
 		const vec<T, N>& operator=(const vec<T, N>& v)
