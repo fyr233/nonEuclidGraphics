@@ -31,11 +31,27 @@ namespace nonEuc
 			*/
 		};
 
+		
+		class Gaussian : public WorldExampleBase
+		{
+		public:
+			static void regularize_ref(vecf3& u);
+
+			static vecf3 regularize(const vecf3& u);
+
+			static vecf4 coord(const vecf3& u);
+
+			static matf43 jacobi(const vecf3& u);
+
+			static matf3 metric(const vecf3& u);
+
+			static tensorf333 gamma(const vecf3& u);
+		};
 
 		/*
 		3次超球面空间（由于参数表示问题：存在若干奇点）
 		*/
-		class HyperSphere : WorldExampleBase
+		class HyperSphere : public WorldExampleBase
 		{
 		public:
 			static void regularize_ref(vecf3& u);
