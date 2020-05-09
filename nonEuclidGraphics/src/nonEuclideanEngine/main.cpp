@@ -8,6 +8,7 @@
 #include <core/mat.h>
 
 #include <core/transform.h>
+#include <nonEuclideanEngine/WorldExample.h>
 
 using namespace cgcore;
 
@@ -30,12 +31,13 @@ int main()
     std::cout << SchmidtOrthogonalize(g) << std::endl;
 
     nonEuc::Engine engine;      // 这个最好放在最开始
-    nonEuc::World world;
+    std::shared_ptr<nonEuc::World> pworld = std::make_shared<nonEuc::World>();
 
+    pworld->SetWorldExample<nonEuc::WorldExample::Euclidean>();
     // 添加网格
-    world.AddObj(std::make_shared<Mesh>("../data/balls.obj"), {0.f, 0.f, 0.f}, matf3::Identity());
+    pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), { 0.f, 0.f, 0.f }, {0.3f, 0.3f, 0.3f}, matf3::Identity());
 
-    engine.SetWorld(&world);
+    engine.SetWorld(pworld);
     engine.Loop();
     engine.Clear();
 
