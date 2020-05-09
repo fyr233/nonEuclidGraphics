@@ -15,36 +15,60 @@ using namespace cgcore;
 
 namespace nonEuc
 {
-	class WorldExample
+	namespace WorldExample
 	{
-	public:
-		virtual void regularize_ref(vecf3& v) = 0;
-		virtual vecf3 regularize(const vecf3& v) = 0;
+		class WorldExampleBase
+		{
+		public:
+			/*
+			virtual void regularize_ref(vecf3& v) = 0;
+			virtual vecf3 regularize(const vecf3& v) = 0;
 
-		virtual vecf4 coord(const vecf3& v) = 0;
-		virtual matf43 jacobi(const vecf3& v) = 0;
-		virtual	matf3 metric(const vecf3& v) = 0;
-		virtual tensorf333 gamma(const vecf3& v) = 0;
-	};
+			virtual vecf4 coord(const vecf3& v) = 0;
+			virtual matf43 jacobi(const vecf3& v) = 0;
+			virtual	matf3 metric(const vecf3& v) = 0;
+			virtual tensorf333 gamma(const vecf3& v) = 0;
+			*/
+		};
 
 
-	/*
-	3次超球面空间（由于参数表示问题：存在若干奇点）
-	*/
-	class HyperSphere : WorldExample
-	{
-	public:
-		void regularize_ref(vecf3& u);
+		/*
+		3次超球面空间（由于参数表示问题：存在若干奇点）
+		*/
+		class HyperSphere : WorldExampleBase
+		{
+		public:
+			static void regularize_ref(vecf3& u);
 
-		vecf3 regularize(const vecf3& u);
+			static vecf3 regularize(const vecf3& u);
 
-		vecf4 coord(const vecf3& u);
+			static vecf4 coord(const vecf3& u);
 
-		matf43 jacobi(const vecf3& u);
+			static matf43 jacobi(const vecf3& u);
 
-		matf3 metric(const vecf3& u);
+			static matf3 metric(const vecf3& u);
 
-		tensorf333 gamma(const vecf3& u);
-	};
+			static tensorf333 gamma(const vecf3& u);
+		};
 
+		/*
+		欧式空间：这个用于测试
+		*/
+		class Euclidean : WorldExampleBase
+		{
+		public:
+			static void regularize_ref(vecf3& u);
+
+			static vecf3 regularize(const vecf3& u);
+
+			static vecf4 coord(const vecf3& u);
+
+			static matf43 jacobi(const vecf3& u);
+
+			static matf3 metric(const vecf3& u);
+
+			static tensorf333 gamma(const vecf3& u);
+		};
+	}
+	
 }
