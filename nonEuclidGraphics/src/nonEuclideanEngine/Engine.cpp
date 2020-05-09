@@ -264,5 +264,5 @@ void Engine::UpdateCamera()
     else if (keyboardInput['E'])
         du = camera.Up * (-move_speed) * deltaTime;
 
-    camera.UpdatePosition(current_world->gamma(camera.paraPos), du);
+    camera.UpdatePosition(current_world->gamma(camera.paraPos), du, current_world->metric(camera.paraPos));
 }

@@ -17,7 +17,7 @@ public:
 	~Camera();
 
 	void UpdateDirection(vecf3 position, matf3 S);
-	void UpdatePosition(const tensorf333& gamma, vecf3 du);
+	void UpdatePosition(const tensorf333& gamma, vecf3 du, matf3 G);
 
 public:
 	vecf3 paraPos;		// 参数坐标下的位置
