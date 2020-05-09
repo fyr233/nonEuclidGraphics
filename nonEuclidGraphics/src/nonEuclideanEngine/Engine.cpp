@@ -77,7 +77,7 @@ bool Engine::Init()
 
     // 初始化着色器
     programID = LoadShaders("../nonEuclidGraphics/include/Shader/vertex.vert", "../nonEuclidGraphics/include/Shader/fragment.frag");
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
     // 开启深度测试
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
@@ -97,6 +97,17 @@ void Engine::Loop()
         // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
+        if (mouseIO)
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        if (mouseIO && ImGui::GetIO().KeysDown['M'])
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            mouseIO = false;
+        }
+        if (status_line)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        else
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         // TODO:处理键盘事件，在允许鼠标移动时能够隐藏鼠标
 
@@ -133,10 +144,30 @@ void Engine::Loop()
 
         {
             // TODO: 创建一个控制台来调整一些参数
-            ImGui::Begin("World");
+            ImGui::Begin("Engine");
             ImGui::Text("Information about the scene.(TODO)");
-            ImGui::SetWindowSize(ImVec2(200, 100));
-            ImGui::Checkbox("Mouse", &mouseIO);
+            //ImGui::SetWindowSize(ImVec2(200, 100));
+            if (ImGui::CollapsingHeader("Objects"))
+            {
+                for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
+                    ImGui::Text("Object%d", i);
+            }
+            if (ImGui::CollapsingHeader("Camera"))
+            {
+                ImGui::SliderFloat("FarPlane", &far_plane, 10.f, 100.f);
+                ImGui::SliderFloat("NearPlane", &near_plane, 0.001f, 1.0f);
+            }
+            if (ImGui::CollapsingHeader("Mesh"))
+            {
+                ImGui::Checkbox("Line", &status_line);
+            }
+            if (ImGui::CollapsingHeader("Controller"))
+            {
+                ImGui::Checkbox("Mouse", &mouseIO);
+                ImGui::SameLine();
+                ImGui::Text("(Press M to make the mouse unfocused)");
+            }
+            
             ImGui::End();
         }
 
@@ -148,7 +179,7 @@ void Engine::Loop()
 
         // TODO:绘制场景
         UpdateCamera();
-        matf4 perspective = Perspective(PI<float> / 4, (float)scrwidth / (float)scrheight, 0.0001f, 100.0f);
+        matf4 perspective = Perspective(PI<float> / 4, (float)scrwidth / (float)scrheight, near_plane, far_plane);
 
         glUseProgram(programID);
         int Location = glGetUniformLocation(programID, "cameraPos");

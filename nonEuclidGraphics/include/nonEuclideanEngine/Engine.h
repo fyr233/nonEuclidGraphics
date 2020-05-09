@@ -42,8 +42,12 @@ namespace nonEuc
 		GLuint programID = 0;				// ×ÅÉ«Æ÷
 		int scrwidth = 1280;
 		int scrheight = 720;
+		float far_plane = 100.f;
+		float near_plane = 0.1f;
+
 		bool show_demo_window = false;
 		bool mouseIO = false;
+		bool status_line = false;
 		float mouse_speed = 0.05f;
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 	};
