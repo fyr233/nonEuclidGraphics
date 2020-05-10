@@ -106,6 +106,12 @@ inline const mat<T, NRow, NCol> cgcore::mat<T, NRow, NCol>::operator+(const mat<
 }
 
 template<typename T, size_t NRow, size_t NCol>
+inline const mat<T, NRow, NCol> cgcore::mat<T, NRow, NCol>::operator*(const mat<T, NRow, NCol>& m2) const
+{
+	return dot(*(this), m2);
+}
+
+template<typename T, size_t NRow, size_t NCol>
 template<size_t L>
 static const mat<T, NRow, L> mat<T, NRow, NCol>::dot(const mat<T, NRow, NCol>& m1, const mat<T, NCol, L>& m2)
 {

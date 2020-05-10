@@ -64,6 +64,8 @@ namespace cgcore
 
 		const mat<T, NRow, NCol> operator+(const mat<T, NRow, NCol>& m2) const;
 
+		const mat<T, NRow, NCol> operator*(const mat<T, NRow, NCol>& m2) const;
+
 		const mat<T, NCol, NRow> transpose() const;
 		
 		//求矩阵的逆。（ ! 除了3x3矩阵以外，求逆运算是否正确还没有验证）
