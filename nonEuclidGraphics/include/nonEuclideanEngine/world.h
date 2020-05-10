@@ -8,13 +8,16 @@ namespace cgcore
 {
 	class Obj;
 }
+
 #include <core/Obj.h>
+
 #include <nonEuclideanEngine/camera.h>
 #include <nonEuclideanEngine/WorldExample.h>
 #include <core/transform.h>
 
 namespace nonEuc
 {
+	class Camera;
 
 	class World
 	{
@@ -35,11 +38,11 @@ namespace nonEuc
 		Func3to333 gamma;
 	
 		std::vector<std::shared_ptr<Obj>> objectPtrs;
-		Camera camera;
+		Camera* camera = nullptr;
 
 	public:
 
-		World() {};
+		World();
 
 		//使用一个WorldExample来设置世界
 		template<typename TWorldExample>
@@ -62,13 +65,13 @@ namespace nonEuc
 		metric = TWorldExample::metric;
 
 		//初始化Camera (初始化方法可以修改)
-		vecf3 camera_position = regularize(vecf3{ 0.0f, 0.0f, -10.0f });
-		camera = Camera(camera_position, cgcore::SchmidtOrthogonalize(metric(camera_position)));
+		delete camera;
+		camera = new Camera({ 0.f, 0.f, 3.f }, *this);
 	}
 
 	inline World::~World()
 	{
-		
+		delete camera;
 	}
 }
 

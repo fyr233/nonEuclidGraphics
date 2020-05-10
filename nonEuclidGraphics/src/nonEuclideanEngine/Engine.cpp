@@ -182,7 +182,7 @@ void Engine::Loop()
         // TODO:绘制场景
         UpdateCamera();
         matf4 perspective = Perspective(PI<float> / 4, (float)scrwidth / (float)scrheight, near_plane, far_plane);
-        matf4 view = current_world->camera.GetView(current_world->metric(current_world->camera.paraPos));
+        matf4 view = current_world->camera->GetView();
 
         glUseProgram(programID);
         int Location = glGetUniformLocation(programID, "V");
@@ -231,25 +231,22 @@ void Engine::UpdateCamera()
     float deltaTime = float(currentTime - lastTime);
     lastTime = currentTime;
     ImGuiIO & io = ImGui::GetIO();
-    Camera & camera = current_world->camera;
+    Camera & camera = *(current_world->camera);
 
     // Get mouse position
     if (mouseIO)
     {
-        camera.yaw += mouse_speed * io.MouseDelta.x;
-        camera.pitch += mouse_speed * io.MouseDelta.y;
-        if (camera.pitch > 89.0f) camera.pitch = 89.0f;
-        if (camera.pitch < -89.0f) camera.pitch = -89.0f;
-        matf3 S = cgcore::SchmidtOrthogonalize(current_world->metric(camera.paraPos));
-        current_world->camera.UpdateDirection(camera.paraPos, S);
+        float dyaw = -mouse_speed * io.MouseDelta.x;
+        float dpitch = mouse_speed * io.MouseDelta.y;
+        current_world->camera->UpdateDirection(dyaw, dpitch);
     }
 
     // Get keyboard input
     auto keyboardInput = io.KeysDown;
     vecf3 du = vecf3(0.0f);             // 相机的参数坐标变化量
-    vecf3 Front = vecf3{ camera.Position(0, 2), camera.Position(1, 2), camera.Position(2, 2) };
-    vecf3 Right = vecf3{ camera.Position(0, 0), camera.Position(1, 0), camera.Position(2, 0) };
-    vecf3 Up = vecf3{ camera.Position(0, 1), camera.Position(1, 1), camera.Position(2, 1) };
+    vecf3 Front = vecf3{ camera.T(2, 0), camera.T(2, 1), camera.T(2, 2) };
+    vecf3 Right = vecf3{ camera.T(0, 0), camera.T(0, 1), camera.T(0, 2) };
+    vecf3 Up = vecf3{ camera.T(1, 0), camera.T(1, 1), camera.T(1, 2) };
 
     if (keyboardInput['A'])
         du = Right * (-move_speed) * deltaTime;
@@ -264,9 +261,6 @@ void Engine::UpdateCamera()
     else if (keyboardInput['E'])
         du = Up * (-move_speed) * deltaTime;
 
-    matf3 G1 = current_world->metric(camera.paraPos);
-    matf3 G2 = current_world->metric(camera.paraPos + du);
-    matf3 S1 = SchmidtOrthogonalize(G1);
-    matf3 S2 = SchmidtOrthogonalize(G2);
-    camera.UpdatePosition(current_world->gamma(camera.paraPos), du, G1, S1, S2);
+    if(du.norm2() > 0.0f)
+        camera.UpdatePosition(du);
 }
