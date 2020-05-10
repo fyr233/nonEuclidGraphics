@@ -115,3 +115,55 @@ tensorf333 Euclidean::gamma(const vecf3& u)
 
 //                                                                                     //
 /////////////////////////////////////////////////////////////////////////////////////////
+
+void nonEuc::WorldExample::Gaussian::regularize_ref(vecf3& u)
+{
+}
+
+vecf3 nonEuc::WorldExample::Gaussian::regularize(const vecf3& u)
+{
+	return u;
+}
+
+vecf4 nonEuc::WorldExample::Gaussian::coord(const vecf3& u)
+{
+	return {u[0], u[1], u[2], exp(-u.norm2())};
+}
+
+matf43 nonEuc::WorldExample::Gaussian::jacobi(const vecf3& u)
+{
+	matf43 ret(0.f);
+	ret(0, 0) = 1.f;
+	ret(1, 1) = 1.f;
+	ret(2, 2) = 1.f;
+	float e2unrm = -2 * exp(-u.norm2());
+	for (size_t i = 0; i < 3; i++)
+		ret(3, i) = e2unrm * u[i];
+	return ret;
+}
+
+matf3 nonEuc::WorldExample::Gaussian::metric(const vecf3& u)
+{
+	float e2unrm = exp(-2 * u.norm2());
+	matf3 ret;
+	for (size_t i = 0; i < 3; i++)
+		for (size_t j = 0; j < 3; j++)
+			ret(i, j) = 4 * e2unrm * u[i] * u[j] + (i == j ? 1 : 0);
+	return ret;
+}
+
+tensorf333 nonEuc::WorldExample::Gaussian::gamma(const vecf3& u)
+{
+	float usqr[3] = {u[0]*u[0], u[1]*u[1], u[2]*u[2]};
+	float nrm = u.norm2();
+	float fract = exp(2 * nrm) + 4 * nrm;
+	tensorf333 ret;
+	for (size_t k = 0; k < 3; k++)
+		for (size_t i = 0; i < 3; i++)
+			for (size_t l = 0; l < 3; l++)
+				if (i == l)
+					ret(k, i, l) = u[k] * (4 - 8 * usqr[i]) / fract;
+				else
+					ret(k, i, l) = -8 * u[i] * u[l] * u[k] / fract;
+	return ret;
+}
