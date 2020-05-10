@@ -25,6 +25,7 @@ int main()
     std::cout << vecf3::cross(v1, v2) << std::endl;
     std::cout << mat1.inverse() << std::endl;
     std::cout << matf3::dot(mat1.inverse(), mat1) << std::endl;
+    std::cout << mat1 * mat1.inverse() << std::endl;
     std::cout << "Hello World!\n";
     matf3 g = matf3::dot(mat1.transpose(), mat1);
     std::cout << g << std::endl;
@@ -35,7 +36,7 @@ int main()
 
     pworld->SetWorldExample<nonEuc::WorldExample::Euclidean>();
     // 添加网格
-    pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), { 0.f, 0.f, 0.f }, {0.3f, 0.3f, 0.3f}, matf3::Identity());
+    pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), { 0.0f, 0.0f, 0.0f }, {0.3f, 0.3f, 0.3f}, matf3::Identity());
 
     engine.SetWorld(pworld);
     engine.Loop();

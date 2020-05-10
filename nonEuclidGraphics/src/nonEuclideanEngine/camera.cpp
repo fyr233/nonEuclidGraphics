@@ -21,24 +21,39 @@ void Camera::UpdateDirection(vecf3 position, matf3 S)
 	float y = toRad(yaw);
 	float p = toRad(pitch);
 	
-	vecf3 front = vecf3{ cos(y) * cos(p), sin(p), sin(y) * cos(p) };
-	vecf3 right = vecf3{ -sin(y), 0.0f, cos(y) };
+	Rotation = matf3{
+		sin(y),		-sin(p)*cos(y),	cos(y)*cos(p),
+		0,			cos(p),			sin(p),
+		-cos(y),	-sin(y)*sin(p),	sin(y)*cos(p),
+	};
 
-	Front = S.dot(front);
-	Right = S.dot(right);
-	Up = S.dot(vecf3::cross(right, front).normalize());
+	Position = S * Rotation;
 }
 
-void Camera::UpdatePosition(const tensorf333& gamma, vecf3 du, matf3 G)
+void Camera::UpdatePosition(const tensorf333& gamma, vecf3 du, matf3& G, matf3& S1, matf3& S2)
 {
-	// 根据位置变化调整相应的三个坐标轴向量
+	
 	paraPos = paraPos + du;
-	Front = Translate(gamma, du, Front);
-	Right = Translate(gamma, du, Right);
-	Up = Translate(gamma, du, Up);
+	Rotation = Translate(S1, S2, gamma, du, Rotation);
+	Position = S2 * Rotation;
+}
 
-	Front = Front / sqrt(G.dot_s(Front, Front));
-	Right = Right / sqrt(G.dot_s(Right, Right));
-	Up = Up / sqrt(G.dot_s(Up, Up));
+matf4 Camera::GetView(matf3 G)
+{
+	// Vp = TG(p - camera.p)
+	matf4 m1{
+		1.0f, 0.0f, 0.0f, -paraPos[0],
+		0.0f, 1.0f, 0.0f, -paraPos[1],
+		0.0f, 0.0f, 1.0f, -paraPos[2],
+		0.0f, 0.0f, 0.0f, 1.0f,
+	};
+	matf3 tmp = Position * G;
+	matf4 m2{
+		tmp(0, 0), tmp(1, 0), tmp(2, 0), 0.0f,
+		tmp(0, 1), tmp(1, 1), tmp(2, 1), 0.0f,
+		tmp(0, 2), tmp(1, 2), tmp(2, 2), 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f,
+	};
+	return m2 * m1;
 }
 

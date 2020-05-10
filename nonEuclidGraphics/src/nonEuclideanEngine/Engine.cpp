@@ -179,18 +179,11 @@ void Engine::Loop()
         // TODO:绘制场景
         UpdateCamera();
         matf4 perspective = Perspective(PI<float> / 4, (float)scrwidth / (float)scrheight, near_plane, far_plane);
+        matf4 view = current_world->camera.GetView(current_world->metric(current_world->camera.paraPos));
 
         glUseProgram(programID);
-        int Location = glGetUniformLocation(programID, "cameraPos");
-        glUniform3f(Location, current_world->camera.paraPos[0], current_world->camera.paraPos[1], current_world->camera.paraPos[2]);
-        Location = glGetUniformLocation(programID, "cameraX");
-        glUniform3f(Location, current_world->camera.Right[0], current_world->camera.Right[1], current_world->camera.Right[2]);
-        Location = glGetUniformLocation(programID, "cameraY");
-        glUniform3f(Location, current_world->camera.Up[0], current_world->camera.Up[1], current_world->camera.Up[2]);
-        Location = glGetUniformLocation(programID, "cameraZ");
-        glUniform3f(Location, current_world->camera.Front[0], current_world->camera.Front[1], current_world->camera.Front[2]);
-        Location = glGetUniformLocation(programID, "G");
-        glUniformMatrix3fv(Location, 1, GL_TRUE, matf3::Identity().data);
+        int Location = glGetUniformLocation(programID, "V");
+        glUniformMatrix4fv(Location, 1, GL_TRUE, view.data);
         Location = glGetUniformLocation(programID, "P");
         glUniformMatrix4fv(Location, 1, GL_TRUE, perspective.data);
         for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
@@ -240,7 +233,7 @@ void Engine::UpdateCamera()
     // Get mouse position
     if (mouseIO)
     {
-        camera.yaw -= mouse_speed * io.MouseDelta.x;
+        camera.yaw += mouse_speed * io.MouseDelta.x;
         camera.pitch += mouse_speed * io.MouseDelta.y;
         if (camera.pitch > 89.0f) camera.pitch = 89.0f;
         if (camera.pitch < -89.0f) camera.pitch = -89.0f;
@@ -251,18 +244,26 @@ void Engine::UpdateCamera()
     // Get keyboard input
     auto keyboardInput = io.KeysDown;
     vecf3 du = vecf3(0.0f);             // 相机的参数坐标变化量
-    if (keyboardInput['A'])
-        du = camera.Right * (-move_speed) * deltaTime;
-    else if (keyboardInput['S'])
-        du = camera.Front * (move_speed) * deltaTime;
-    else if (keyboardInput['D'])
-        du = camera.Right * (move_speed) * deltaTime;
-    else if (keyboardInput['W'])
-        du = camera.Front * (-move_speed) * deltaTime;
-    else if (keyboardInput['Q'])
-        du = camera.Up * (move_speed) * deltaTime;
-    else if (keyboardInput['E'])
-        du = camera.Up * (-move_speed) * deltaTime;
+    vecf3 Front = vecf3{ camera.Position(0, 2), camera.Position(1, 2), camera.Position(2, 2) };
+    vecf3 Right = vecf3{ camera.Position(0, 0), camera.Position(1, 0), camera.Position(2, 0) };
+    vecf3 Up = vecf3{ camera.Position(0, 1), camera.Position(1, 1), camera.Position(2, 1) };
 
-    camera.UpdatePosition(current_world->gamma(camera.paraPos), du, current_world->metric(camera.paraPos));
+    if (keyboardInput['A'])
+        du = Right * (-move_speed) * deltaTime;
+    else if (keyboardInput['S'])
+        du = Front * (move_speed) * deltaTime;
+    else if (keyboardInput['D'])
+        du = Right * (move_speed) * deltaTime;
+    else if (keyboardInput['W'])
+        du = Front * (-move_speed) * deltaTime;
+    else if (keyboardInput['Q'])
+        du = Up * (move_speed) * deltaTime;
+    else if (keyboardInput['E'])
+        du = Up * (-move_speed) * deltaTime;
+
+    matf3 G1 = current_world->metric(camera.paraPos);
+    matf3 G2 = current_world->metric(camera.paraPos + du);
+    matf3 S1 = SchmidtOrthogonalize(G1);
+    matf3 S2 = SchmidtOrthogonalize(G2);
+    camera.UpdatePosition(current_world->gamma(camera.paraPos), du, G1, S1, S2);
 }
