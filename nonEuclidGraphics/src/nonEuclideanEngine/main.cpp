@@ -25,7 +25,6 @@ int main()
     std::cout << vecf3::cross(v1, v2) << std::endl;
     std::cout << mat1.inverse() << std::endl;
     std::cout << matf3::dot(mat1.inverse(), mat1) << std::endl;
-    std::cout << mat1 * mat1.inverse() << std::endl;
     std::cout << "Hello World!\n";
     matf3 g = matf3::dot(mat1.transpose(), mat1);
     std::cout << g << std::endl;
@@ -34,9 +33,14 @@ int main()
     nonEuc::Engine engine;      // 这个最好放在最开始
     std::shared_ptr<nonEuc::World> pworld = std::make_shared<nonEuc::World>();
 
-    pworld->SetWorldExample<nonEuc::WorldExample::Euclidean>();
+    pworld->SetWorldExample<nonEuc::WorldExample::Gaussian>();
     // 添加网格
-    pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), { 0.0f, 0.0f, 0.0f }, {0.3f, 0.3f, 0.3f}, matf3::Identity());
+    pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), {0.f,0.f,0.f }, { 0.05f, 0.05f, 0.05f }, matf3::Identity());
+    for(int i = -1; i <=1; i+=2)
+        for (int j = -1; j <= 1; j += 2)
+            for (int k = -1; k <= 1; k += 2)
+                pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), { (float)i/2.f, (float)j/2.f, (float)k/2.f }, {0.05f, 0.05f, 0.05f}, matf3::Identity());
+    //pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), { 0.5f, 0.f, 0.f }, { 0.05f, 0.05f, 0.05f }, matf3::Identity());
 
     engine.SetWorld(pworld);
     engine.Loop();
