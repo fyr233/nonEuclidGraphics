@@ -58,7 +58,7 @@ namespace cgcore
 		}
 	}
 
-	vecf3 Texture2D::Sample(vecf2 uv)//u, v in [0,1)
+	vecf3 Texture2D::Sample(vecf2 uv)//
 	{
 		if (img.empty())
 		{
@@ -66,6 +66,10 @@ namespace cgcore
 				<< "\t" << "img is empty" << std::endl;
 			return vecf3({ 0, 1, 0 });
 		}
+
+		//repeat mode
+		uv[0] -= int(uv[0]) / 1.0;
+		uv[1] -= int(uv[1]) / 1.0;
 
 		int xidx = int(uv[0] * img.cols);
 		int yidx = int(uv[1] * img.rows);
