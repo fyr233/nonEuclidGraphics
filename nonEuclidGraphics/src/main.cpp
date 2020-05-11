@@ -34,14 +34,16 @@ int main()
     std::shared_ptr<nonEuc::World> pworld = std::make_shared<nonEuc::World>();
 
     pworld->SetWorldExample<nonEuc::WorldExample::Gaussian>();
+    std::shared_ptr<Texture2D> tex = std::make_shared<Texture2D>();
+    tex->Load("../data/test.png");
+    tex->SetTextureImage();
     // 添加网格
-    pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), {0.f,0.f,0.f }, { 0.05f, 0.05f, 0.05f }, matf3::Identity());
+    pworld->AddObj(std::make_shared<Mesh>("../data/ball-fix.obj", tex), {0.f,0.f,0.f }, { 0.05f, 0.05f, 0.05f }, matf3::Identity());
     for(int i = -1; i <=1; i+=2)
         for (int j = -1; j <= 1; j += 2)
             for (int k = -1; k <= 1; k += 2)
-                pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), { (float)i/2.f, (float)j/2.f, (float)k/2.f }, {0.05f, 0.05f, 0.05f}, matf3::Identity());
-    //pworld->AddObj(std::make_shared<Mesh>("../data/balls.obj"), { 0.5f, 0.f, 0.f }, { 0.05f, 0.05f, 0.05f }, matf3::Identity());
-
+                pworld->AddObj(std::make_shared<Mesh>("../data/ball-fix.obj", tex), { (float)i/2.f, (float)j/2.f, (float)k/2.f }, {0.05f, 0.05f, 0.05f}, matf3::Identity());
+    
     engine.SetWorld(pworld);
     engine.Loop();
     engine.Clear();
