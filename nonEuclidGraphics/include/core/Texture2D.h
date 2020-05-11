@@ -73,8 +73,8 @@ namespace cgcore
 		float ylambda = uv[1] * img.rows - yidx;
 		//双线性插值
 		cv::Vec3b result = (1 - ylambda) * ((1 - xlambda) * img.at<cv::Vec3b>(yidx, xidx) + xlambda * img.at<cv::Vec3b>(yidx, (xidx + 1) % img.cols))
-			+ ylambda * ((1 - xlambda) * img.at<cv::Vec3b>((yidx + 1) % img.rows, xidx) + xlambda * img.at<cv::Vec3b>((yidx + 1) % img.rows, (xidx + 1) % img.cols))；
+			+ ylambda * ((1 - xlambda) * img.at<cv::Vec3b>((yidx + 1) % img.rows, xidx) + xlambda * img.at<cv::Vec3b>((yidx + 1) % img.rows, (xidx + 1) % img.cols));
 
-		return vecf3({result[2], result[1] , result[0] });//转换为RGB
+		return vecf3({(float)result[2], (float)result[1] , (float)result[0] });//转换为RGB
 	}
 }
