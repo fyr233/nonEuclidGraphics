@@ -1,4 +1,5 @@
 #include <nonEuclideanEngine/camera.h>
+//#include <cmath>
 
 using namespace nonEuc;
 
@@ -32,12 +33,12 @@ void Camera::UpdateDirection(float dyaw, float dpitch)
 {
 	float y = toRad(dyaw);
 	float p = toRad(dpitch);
-	
-	Rotation = matf3{
+	Rotation = Rotation * matf3{
 		cos(y),		-sin(y)*sin(p),	sin(y)*cos(p),
 		0,			cos(p),			sin(p),
 		-sin(y),	-cos(y)*sin(p),	cos(y)*cos(p),
-	} * Rotation;
+	};
+	
 	T = (SchmidtOrthogonalize(world.metric(paraPos)) * Rotation).transpose();
 }
 
@@ -49,7 +50,7 @@ void Camera::UpdatePosition(vecf3 du)
 	matf3 S2 = SchmidtOrthogonalize(G2);
 
 	Rotation = Translate(S1, S2, world.gamma(paraPos), du, Rotation);
-	std::cout << "Rotation" << std::endl<< Rotation;
+	//std::cout << "Rotation" << std::endl<< Rotation;
 	paraPos = paraPos + du;
 	T = (S2 * Rotation).transpose();
 }

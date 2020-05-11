@@ -97,14 +97,14 @@ void Engine::Loop()
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
         glfwGetFramebufferSize(window, &scrwidth, &scrheight);
-        if (mouseIO)
+        if (Roam_status)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         else
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        if (mouseIO && ImGui::GetIO().KeysDown['M'])
+        if (Roam_status && ImGui::GetIO().KeysDown['M'])
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            mouseIO = false;
+            Roam_status = false;
         }
         if (status_line)
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -118,37 +118,11 @@ void Engine::Loop()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
-
         {
             // TODO: 创建一个控制台来调整一些参数
             ImGui::Begin("Engine");
             ImGui::Text("Information about the scene.(TODO)");
-            //ImGui::SetWindowSize(ImVec2(200, 100));
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             if (ImGui::CollapsingHeader("Objects"))
             {
                 for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
@@ -165,22 +139,22 @@ void Engine::Loop()
             }
             if (ImGui::CollapsingHeader("Controller"))
             {
-                ImGui::Checkbox("Mouse", &mouseIO);
+                ImGui::Checkbox("Roam", &Roam_status);
                 ImGui::SameLine();
                 ImGui::Text("(Press M to make the mouse unfocused)");
             }
-            
+
             ImGui::End();
         }
 
         // Rendering
         ImGui::Render();
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        //glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // TODO:绘制场景
-        UpdateCamera();
+        if (Roam_status)
+            UpdateCamera();
         matf4 perspective = Perspective(PI<float> / 4, (float)scrwidth / (float)scrheight, near_plane, far_plane);
         matf4 view = current_world->camera->GetView();
 
@@ -234,12 +208,9 @@ void Engine::UpdateCamera()
     Camera & camera = *(current_world->camera);
 
     // Get mouse position
-    if (mouseIO)
-    {
-        float dyaw = -mouse_speed * io.MouseDelta.x;
-        float dpitch = mouse_speed * io.MouseDelta.y;
-        current_world->camera->UpdateDirection(dyaw, dpitch);
-    }
+    float dyaw = -mouse_speed * io.MouseDelta.x;
+    float dpitch = mouse_speed * io.MouseDelta.y;
+    current_world->camera->UpdateDirection(dyaw, dpitch);
 
     // Get keyboard input
     auto keyboardInput = io.KeysDown;
@@ -261,6 +232,5 @@ void Engine::UpdateCamera()
     else if (keyboardInput['E'])
         du = Up * (-move_speed) * deltaTime;
 
-    if(du.norm2() > 0.0f)
-        camera.UpdatePosition(du);
+    camera.UpdatePosition(du);
 }

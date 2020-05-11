@@ -45,8 +45,7 @@ namespace nonEuc
 		float far_plane = 100.f;
 		float near_plane = 0.1f;
 
-		bool show_demo_window = false;
-		bool mouseIO = false;
+		bool Roam_status = false;
 		bool status_line = false;
 		float mouse_speed = 0.05f;
 		float move_speed = 2.5f;
