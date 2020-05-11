@@ -12,8 +12,8 @@ namespace cgcore
 	{
 	public:
 		AreaLight();
-		AreaLight(float intensity = 1.f, const vecf3& color = vecf3{ 1.f }) //, Texture2D* texture = nullptr)
-			: intensity{ intensity }, color{ color }{}
+		AreaLight(float intensity = 1.f, const vecf3& color = vecf3{ 1.f }, Texture2D* texture = nullptr)
+			: intensity{ intensity }, color{ color }, texture{ texture } {}
 		~AreaLight();
 
 		vecf3 RadianceFactor() { return  color * intensity; }
