@@ -1,6 +1,7 @@
 
 #include<core/Mesh.h>
 
+
 using namespace cgcore;
 
 
@@ -84,7 +85,8 @@ void Mesh::LoadObj(std::string path)
 			vertices[i].Normal = normals[i];
 		}
 	}
-	if (texcoords.size() == vertices.size())
+	//std::cout << vertices.size() << " " <<texcoords.size() << " " << std::endl;
+	if (texcoords.size() >= vertices.size())
 	{
 		for (int i = 0; i < vertices.size(); i++)
 		{
@@ -133,7 +135,11 @@ void Mesh::LoadMesh()
 		// TODO:如果要传其他信息，在这里添加，注意还要修改后面的glVertexAttribPointer
 		for (size_t j = 0; j < 3; j++)
 			vertice_data.push_back(vertices[i].Position[j]);
+		for (size_t j = 0; j < 2; j++)
+			vertice_data.push_back(vertices[i].TexCoord[j]);
 	}
+
+	GLsizei vdata_stride = 5 * sizeof(float);	//每个顶点属性数据的大小为步长
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertice_data.size() * sizeof(float), &vertice_data[0], GL_STATIC_DRAW);
@@ -142,16 +148,26 @@ void Mesh::LoadMesh()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
 	// 把需要的数据传给OpenGL（可以追加）
-	glEnableVertexAttribArray(0);
+
 	glVertexAttribPointer(
 		0,									// 0->paracoord,即传给着色器的是它的全局参数坐标
 		3,									// 3个float的长度
 		GL_FLOAT,
 		GL_FALSE,
-		3 * sizeof(float),					// 步长
-		(void*)0	// 起始位置
+		vdata_stride,						// 步长
+		(void*)0							// 起始位置
 	);
+	glEnableVertexAttribArray(0);
 
+	glVertexAttribPointer(
+		1,									// 1->texcoord
+		2,
+		GL_FLOAT,
+		GL_FALSE,
+		vdata_stride,
+		(void*)(3*sizeof(float))
+	);
+	glEnableVertexAttribArray(1);
 	// Unavailable
 	/*glEnableVertexAttribArray(1);
 	glVertexAttribPointer(
@@ -163,29 +179,39 @@ void Mesh::LoadMesh()
 		(void*)offsetof(Vertex, Normal)
 	);*/
 
-	/*glEnableVertexAttribArray(2);
-	glVertexAttribPointer(
-		2,					// 2->texcoord
-		2,
-		GL_FLOAT,
-		GL_FALSE,
-		sizeof(Vertex),
-		(void*)offsetof(Vertex, TexCoord)
-	);*/
+
 	glBindVertexArray(0);
+}
+
+void Mesh::LoadTexture(std::string path, std::string type)
+{
+	if (type == "Albedo")
+	{
+		AlbedoTexture = std::make_shared<Texture2D>();
+		AlbedoTexture->Load(path);
+		AlbedoTexture->SetTextureImage();
+	}
+	else
+	{
+		std::cout << "Mesh::LoadTexture : Inavailable texutre type" <<std::endl;
+	}
 }
 
 void Mesh::Draw(GLuint programID, const matf4& m2paraTransform)
 {
-	// TODO:加载纹理贴图
+	// TODO:加载纹理贴图 DOING
 	// TODO:传入度量矩阵
 
 
 	// draw
+	glUseProgram(programID);
+
 	GLint Location = glGetUniformLocation(programID, "M");
 	glUniformMatrix4fv(Location, 1, GL_TRUE, m2paraTransform.data);
-	glUseProgram(programID);
+	glActiveTexture(GL_TEXTURE0);
+	AlbedoTexture->Bind();
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+	AlbedoTexture->BindReset();
 }

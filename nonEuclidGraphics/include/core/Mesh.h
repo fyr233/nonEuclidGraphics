@@ -10,6 +10,7 @@
 
 #include <GL/gl3w.h>            // Initialize with gl3wInit()
 #include <GLFW/glfw3.h>
+#include <core/Texture2D.h>
 
 class Mesh
 {
@@ -26,21 +27,20 @@ class Mesh
 		matf3 TBN;
 	};
 
-	struct TextureInfo {
-		unsigned id;
-		std::string type;
-		std::string path;
-	};
-
 public:
 	Mesh();
 	Mesh(std::string path);	// 初始化的时候可以默认参数坐标是自身坐标系下的欧式坐标
+	// 加载obj和加载纹理图片
+	Mesh(std::string path, std::string texImagePath);	
+	// 加载obj，并使用提供的纹理
+	Mesh(std::string path, std::shared_ptr<Texture2D> pTex);	
 	~Mesh();
 
 	void LoadObj(std::string path);
 	void Transform(vecf3 center, matf3 S, matf3 R);	//变换结果存在ParaCoord中
 
 	void LoadMesh();				// 向OpenGL中加载网格数据
+	void LoadTexture(std::string path, std::string type = "Albedo");
 	//void ParaReset();
 	void Draw(GLuint programID, const matf4& m2paraTransform);	// 用着色器绘制
 
@@ -49,9 +49,9 @@ private:
 
 public:
 	/*  Mesh Data  */
-	std::vector<Vertex> vertices;	//点
+	std::vector<Vertex> vertices;		//点
 	std::vector<unsigned int> indices;	//面
-	std::vector<TextureInfo> textureInfos;	//贴图
+	std::shared_ptr<Texture2D> AlbedoTexture;		//贴图
 
 	/*  Render data  */
 	unsigned int VAO = 0;
@@ -72,6 +72,20 @@ inline Mesh::Mesh(std::string path)
 {
 	LoadObj(path);
 	LoadMesh();
+}
+
+inline Mesh::Mesh(std::string path, std::string texImagePath)
+{
+	LoadObj(path);
+	LoadMesh();
+	LoadTexture(texImagePath, "Albedo");
+}
+
+inline Mesh::Mesh(std::string path, std::shared_ptr<Texture2D> pTex)
+{
+	LoadObj(path);
+	LoadMesh();
+	AlbedoTexture = pTex;
 }
 
 inline Mesh::~Mesh()
