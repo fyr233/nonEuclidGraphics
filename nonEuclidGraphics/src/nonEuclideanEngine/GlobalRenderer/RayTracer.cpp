@@ -1,5 +1,8 @@
-
+/*
 #include <nonEuclideanEngine/GlobalRenderer/RayTracer.h>
+#include <core/geometry.h>
+
+using namespace cgcore;
 
 void nonEuc::RayTracer::BuildBVH()
 {
@@ -24,6 +27,9 @@ void nonEuc::RayTracer::BuildBVH()
 
 rgbf nonEuc::RayTracer::shader(FastBVH::Ray<float> ray, float distance, int times)
 {
+	Intersector intersector;
+	FastBVH::Traverser<float, Triangle, Intersector> traverser(bvh, intersector);
 	
-	
+	return { 0.f,0.f,0.f };
 }
+*/

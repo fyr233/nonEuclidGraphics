@@ -11,11 +11,13 @@ namespace cgcore
 	//三角形
 	struct Triangle
 	{
-		//参数坐标的位置（paraCoord）
+		// pos[0]是0号点的参数坐标，pos[1]、pos[2] 是相对参数坐标 
 		vecf3 pos[3];
-		//在world中所属的物体编号
+		// 纹理坐标
+		vecf2 uv[3];
+		// 在world中所属的物体编号
 		size_t obj_id;
-		//所属物体的顶点编号（如果是光源的话，0, 1, 2 即可）
-		size_t idx[3];
+		// 在对应obj中面id
+		size_t face_id;
 	};
 }

@@ -21,7 +21,7 @@ struct Intersection final {
   const Primitive* object = nullptr;
 
   //! The normal at the point of intersection.
-  Vec3 normal = {0, 0, 1};
+  //Vec3 normal = {0, 0, 1};
 
   //! The UV coordinates at the position of intersection.
   Float uv[2] = {0, 0};

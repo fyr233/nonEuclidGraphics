@@ -11,6 +11,8 @@
 namespace nonEuc
 {
 
+
+
 	class RayTracer
 	{
 	public:
@@ -25,7 +27,7 @@ namespace nonEuc
 	private:
 		
 		// 生成world中的所有三角形，生成BVH
-		void BuildBVH();
+		//void BuildBVH();
 
 		//求解一条光线的着色器
 		//ray:射线及其方向, distance:光线已走距离（距离发出为止）, times 光线反射的次数

@@ -127,7 +127,8 @@ bool BBox<Float>::intersect(const Ray<Float>& ray, Float* tnear, Float* tfar) co
   *tnear = tmin;
   *tfar = tmax;
 
-  return true;
+  // 这是为我们的程序专门修改的
+  return tmax > 0.0f && tmin < 1.0f;
 }
 
 template <typename Float>
