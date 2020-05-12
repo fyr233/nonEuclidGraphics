@@ -28,13 +28,13 @@ void Texture2D::Load(const std::string& path)
 	image_path = path;
 }
 
-vecf3 Texture2D::Sample(vecf2 uv)
+rgbf Texture2D::Sample(vecf2 uv)
 {
 	if (img.empty())
 	{
 		std::cout << "ERROR::Texture2D::Sample:" << std::endl
 			<< "\t" << "img is empty" << std::endl;
-		return vecf3({ 0, 1, 0 });
+		return rgbf( 0, 255, 0 );
 	}
 	//repeat mode
 	uv[0] -= float(int(uv[0]));
@@ -45,10 +45,10 @@ vecf3 Texture2D::Sample(vecf2 uv)
 	float xlambda = uv[0] * img.cols - xidx;
 	float ylambda = uv[1] * img.rows - yidx;
 	//双线性插值
-	cv::Vec3b result = (1 - ylambda) * ((1 - xlambda) * img.at<cv::Vec3b>(yidx, xidx) + xlambda * img.at<cv::Vec3b>(yidx, (xidx + 1) % img.cols))
+	cv::Vec3f result = (1 - ylambda) * ((1 - xlambda) * img.at<cv::Vec3b>(yidx, xidx) + xlambda * img.at<cv::Vec3b>(yidx, (xidx + 1) % img.cols))
 		+ ylambda * ((1 - xlambda) * img.at<cv::Vec3b>((yidx + 1) % img.rows, xidx) + xlambda * img.at<cv::Vec3b>((yidx + 1) % img.rows, (xidx + 1) % img.cols));
 
-	return vecf3({ (float)result[2], (float)result[1] , (float)result[0] });//转换为RGB
+	return rgbf(result[2], result[1], result[0]);//转换为RGB
 }
 
 void cgcore::Texture2D::SetTextureImage()

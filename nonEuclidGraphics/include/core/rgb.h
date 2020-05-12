@@ -2,6 +2,8 @@
 
 #include <initializer_list>
 
+typedef unsigned char uchar;
+
 namespace cgcore
 {
 	template<typename T>

@@ -1,15 +1,15 @@
 
-#include<core/Obj.h>
+#include<core/Object.h>
 #include<nonEuclideanEngine/world.h>
 
 using namespace cgcore;
 
-void Obj::Transform(matf3 S)
+void Object::Transform(matf3 S)
 {
 	mesh->Transform(center, S, R);
 }
 
-void Obj::Draw(GLuint programID)
+void Object::Draw(GLuint programID)
 {
 	// º∆À„±‰ªª
 	matf3 S = cgcore::SchmidtOrthogonalize(world.metric(center));

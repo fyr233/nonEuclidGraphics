@@ -6,10 +6,10 @@
 #include <core/Mesh.h>
 namespace cgcore
 {
-	class Obj;
+	class Object;
 }
 
-#include <core/Obj.h>
+#include <core/Object.h>
 
 #include <nonEuclideanEngine/camera.h>
 #include <nonEuclideanEngine/WorldExample.h>
@@ -37,7 +37,7 @@ namespace nonEuc
 		//度量的Christoffel记号
 		Func3to333 gamma;
 	
-		std::vector<std::shared_ptr<Obj>> objectPtrs;
+		std::vector<std::shared_ptr<Object>> objectPtrs;
 		Camera* camera = nullptr;
 
 	public:

@@ -5,6 +5,7 @@ openCV: 修改工程的包含目录、库目录、附加依赖项
 
 #include <core/vec.h>
 #include <core/mat.h>
+#include <core/rgb.h>
 #include <core/transform.h>
 
 #include <GL/gl3w.h>            // Initialize with gl3wInit()
@@ -21,7 +22,7 @@ namespace cgcore
 		~Texture2D();
 
 		void Load(const std::string& path);
-		vecf3 Sample(vecf2 uv);
+		rgbf Sample(vecf2 uv);
 
 	private:
 		std::string image_path;

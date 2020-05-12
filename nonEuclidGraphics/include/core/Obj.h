@@ -2,6 +2,7 @@
 
 #include <core/vec.h>
 #include <core/mat.h>
+#include <core/rgb.h>
 #include <core/Mesh.h>
 #include <core/transform.h>
 
@@ -12,39 +13,45 @@ namespace nonEuc
 
 #include <nonEuclideanEngine/world.h>
 
-
 namespace cgcore
 {
 	class Obj
 	{
 	public:
+		Obj();
 		~Obj();
 
-		Obj(std::shared_ptr<Mesh> _mesh, vecf3 _center, vecf3 _scale, matf3 _rotation, nonEuc::World& _world)
-			:mesh{ _mesh }, center{ _center }, R{ _rotation }, world{ _world }
-		{
-			scale = matf3::Diag(_scale);
-		}
+		virtual void Draw(GLuint programID);
 
-		void Transform(matf3 S);
-		void Draw(GLuint programID);
 	private:
 
 
 	public:
-		std::shared_ptr<Mesh> mesh;
-		vecf3 center;
-		matf3 R;
-		matf3 scale;
-		vecf3 color;	//在没有贴图时使用
-		nonEuc::World& world;
+		enum ObjType
+		{
+			_Object,
+			_AreaLight
+		};
+
+		ObjType obj_type;
+
+		//在world中所属的物体编号
+		size_t obj_id;
 
 	private:
 
 
 	};
 
+	inline Obj::Obj()
+	{
+	}
+
 	inline Obj::~Obj()
+	{
+	}
+	
+	inline void Obj::Draw(GLuint programID)
 	{
 
 	}
