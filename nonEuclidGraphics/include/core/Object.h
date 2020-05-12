@@ -15,14 +15,15 @@ namespace cgcore
 	public:
 		~Object();
 
-		Object(std::shared_ptr<Mesh> _mesh, vecf3 _center, vecf3 _scale, matf3 _rotation, nonEuc::World& _world)
-			:mesh{ _mesh }, center{ _center }, R{ _rotation }, world{ _world }
+		Object(nonEuc::World* _world, std::shared_ptr<Mesh> _mesh, vecf3 _center, vecf3 _scale, matf3 _rotation)
+			: Obj(_world), mesh{ _mesh }, center{ _center }, R{ _rotation }
 		{
 			scale = matf3::Diag(_scale);
+			obj_type = _Object;
 		}
 
 		void Transform(matf3 S);
-		virtual void Draw(GLuint programID);
+		void Draw(GLuint programID);
 
 	private:
 
@@ -33,7 +34,6 @@ namespace cgcore
 		matf3 R;
 		matf3 scale;
 		vecf3 color;	//在没有贴图时使用
-		nonEuc::World& world;
 
 	private:
 
@@ -42,6 +42,6 @@ namespace cgcore
 
 	inline Object::~Object()
 	{
-		this->obj_type = _Object;
+		
 	}
 }
