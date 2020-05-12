@@ -4,11 +4,8 @@
 #include <core/mat.h>
 #include <core/func.h>
 #include <core/Mesh.h>
-namespace cgcore
-{
-	class Object;
-}
 
+#include <core/Obj.h>
 #include <core/Object.h>
 
 #include <nonEuclideanEngine/camera.h>
@@ -25,20 +22,16 @@ namespace nonEuc
 		//描述整个空间（三维流形）的性质
 
 		//规范化坐标（限制每个点参数坐标唯一）
-		Func3 regularize_ref;
-		Func3to3 regularize;
+		Func3i regularize_ref;
+		Func3ito3 regularize;
 		
-		//三维流形曲纹坐标->四维空间的映射(不一定用到)
-		Func3to4 coord;
 		//度规矩阵
 		Func3to33 metric;
-		//Jacobi矩阵(不一定用到)
-		Func3to43 jacobi;
 		//度量的Christoffel记号
 		Func3to333 gamma;
 	
-		std::vector<std::shared_ptr<Object>> objectPtrs;
-		Camera* camera = nullptr;
+		std::vector<std::shared_ptr<Obj>> objectPtrs;
+		Camera camera;
 
 	public:
 
@@ -57,21 +50,18 @@ namespace nonEuc
 	{
 		//从WorldExample中应用世界
 		static_assert(std::is_base_of<WorldExample::WorldExampleBase, TWorldExample>::value);
-		coord = TWorldExample::coord;
-		jacobi = TWorldExample::jacobi;
 		gamma = TWorldExample::gamma;
 		regularize_ref = TWorldExample::regularize_ref;
 		regularize = TWorldExample::regularize;
 		metric = TWorldExample::metric;
 
 		//初始化Camera (初始化方法可以修改)
-		delete camera;
-		camera = new Camera({ 0.f, 0.f, 3.f }, *this);
+		camera = Camera({ 0.f, 0.f, 2.f }, this);
 	}
 
 	inline World::~World()
 	{
-		delete camera;
+
 	}
 }
 

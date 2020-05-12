@@ -97,7 +97,7 @@ void Mesh::LoadObj(std::string path)
 			vertices[i].Normal = normals[i];
 		}
 	}
-	//std::cout << vertices.size() << " " <<texcoords.size() << " " << std::endl;
+	
 	if (texcoords.size() >= vertices.size())
 	{
 		for (int i = 0; i < vertices.size(); i++)
@@ -153,10 +153,10 @@ void Mesh::LoadMesh()
 				vertice_data.push_back(positions[faces[i].v_idx[j]][k]);
 
 			for (int k = 0; k < 2; k++)//texcoord
-				vertice_data.push_back(texcoords[faces[i].v_idx[j]][k]);
+				vertice_data.push_back(texcoords[faces[i].vt_idx[j]][k]);
 
 			for (int k = 0; k < 3; k++)//normal
-				vertice_data.push_back(normals[faces[i].v_idx[j]][k]);
+				vertice_data.push_back(normals[faces[i].vn_idx[j]][k]);
 		}
 	}
 	
