@@ -37,6 +37,7 @@ matf3 cgcore::Translate(const matf3& S_u1, const matf3& S_u2, const tensorf333& 
 	for (size_t i = 0; i < 3; i++)
 		for (size_t j = 0; j < 3; j++)
 			a[i][j] = rstR(j, i);
+	a[0] = a[0].normalize();
 	a[1] = vecf3::cross(a[2], a[0]).normalize();
 	a[2] = vecf3::cross(a[0], a[1]).normalize();
 	for (size_t i = 0; i < 3; i++)

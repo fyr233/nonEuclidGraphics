@@ -155,7 +155,7 @@ void Engine::Loop()
         // TODO:ªÊ÷∆≥°æ∞
         if (Roam_status)
             UpdateCamera();
-        matf4 perspective = Perspective(PI<float> / 4, (float)scrwidth / (float)scrheight, near_plane, far_plane);
+        matf4 perspective = Perspective(PI<float> / 4, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, near_plane, far_plane);
         matf4 view = current_world->camera->GetView();
 
         glUseProgram(programID);

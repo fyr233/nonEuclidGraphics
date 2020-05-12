@@ -211,7 +211,7 @@ void Mesh::Draw(GLuint programID, const matf4& m2paraTransform)
 	glActiveTexture(GL_TEXTURE0);
 	AlbedoTexture->Bind();
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	AlbedoTexture->BindReset();
 }
