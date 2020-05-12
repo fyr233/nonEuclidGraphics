@@ -156,15 +156,20 @@ void Engine::Loop()
         if (Roam_status)
             UpdateCamera();
         matf4 perspective = Perspective(PI<float> / 4, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, near_plane, far_plane);
-        matf4 view = current_world->camera->GetView();
-
+        
         glUseProgram(programID);
-        int Location = glGetUniformLocation(programID, "V");
-        glUniformMatrix4fv(Location, 1, GL_TRUE, view.data);
-        Location = glGetUniformLocation(programID, "P");
-        glUniformMatrix4fv(Location, 1, GL_TRUE, perspective.data);
-        for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
-            current_world->objectPtrs[i]->Draw(programID);
+
+        for (int j = -2; j <= 2; j++)
+        {
+            matf4 view = current_world->camera.GetView(j);
+
+            int Location = glGetUniformLocation(programID, "V");
+            glUniformMatrix4fv(Location, 1, GL_TRUE, view.data);
+            Location = glGetUniformLocation(programID, "P");
+            glUniformMatrix4fv(Location, 1, GL_TRUE, perspective.data);
+            for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
+                current_world->objectPtrs[i]->Draw(programID);
+        }
 
         // 绘制Imgui的窗口,放在这里可以使其浮于最上方
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -205,12 +210,12 @@ void Engine::UpdateCamera()
     float deltaTime = float(currentTime - lastTime);
     lastTime = currentTime;
     ImGuiIO & io = ImGui::GetIO();
-    Camera & camera = *(current_world->camera);
+    Camera & camera = current_world->camera;
 
     // Get mouse position
     float dyaw = -mouse_speed * io.MouseDelta.x;
     float dpitch = mouse_speed * io.MouseDelta.y;
-    current_world->camera->UpdateDirection(dyaw, dpitch);
+    current_world->camera.UpdateDirection(dyaw, dpitch);
 
     // Get keyboard input
     auto keyboardInput = io.KeysDown;

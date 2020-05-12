@@ -1,13 +1,17 @@
 #include <nonEuclideanEngine/camera.h>
-//#include <cmath>
+#include <nonEuclideanEngine/world.h>
 
 using namespace nonEuc;
 
-Camera::Camera(vecf3 position, nonEuc::World& _world) : world {_world}
+nonEuc::Camera::Camera()
+{
+}
+
+Camera::Camera(vecf3 position, nonEuc::World* _world) : world {_world}
 {
 	paraPos = position;
 	Rotation = matf3::Identity();
-	T = (SchmidtOrthogonalize(world.metric(paraPos)) * Rotation).transpose();
+	T = (SchmidtOrthogonalize(world->metric(paraPos)) * Rotation).transpose();
 }
 
 Camera::~Camera()
@@ -26,7 +30,7 @@ void nonEuc::Camera::ResetCamera(vecf3 position, float yaw, float pitch)
 		0,			cos(p),			sin(p),
 		-cos(y),	-sin(y) * sin(p),	sin(y) * cos(p),
 	};
-	T = (SchmidtOrthogonalize(world.metric(paraPos)) * Rotation).transpose();
+	T = (SchmidtOrthogonalize(world->metric(paraPos)) * Rotation).transpose();
 }
 
 void Camera::UpdateDirection(float dyaw, float dpitch)
@@ -39,31 +43,32 @@ void Camera::UpdateDirection(float dyaw, float dpitch)
 		-sin(y),	-cos(y)*sin(p),	cos(y)*cos(p),
 	};
 	
-	T = (SchmidtOrthogonalize(world.metric(paraPos)) * Rotation).transpose();
+	T = (SchmidtOrthogonalize(world->metric(paraPos)) * Rotation).transpose();
 }
 
 void Camera::UpdatePosition(vecf3 du)
 {
-	matf3 G1 = world.metric(paraPos);
-	matf3 G2 = world.metric(paraPos + du);
+	matf3 G1 = world->metric(paraPos);
+	matf3 G2 = world->metric(paraPos + du);
 	matf3 S1 = SchmidtOrthogonalize(G1);
 	matf3 S2 = SchmidtOrthogonalize(G2);
 
-	Rotation = Translate(S1, S2, world.gamma(paraPos), du, Rotation);
+	Rotation = Translate(S1, S2, world->gamma(paraPos), du, Rotation);
 	//std::cout << "Rotation" << std::endl<< Rotation;
 	paraPos = paraPos + du;
+	world->regularize_ref(paraPos, 0);
 	T = (S2 * Rotation).transpose();
 }
 
-matf4 Camera::GetView()
+matf4 Camera::GetView(int i)
 {
 	// Vp = TG(p - camera.p)
-	matf3 G = world.metric(paraPos);
-
+	matf3 G = world->metric(paraPos);
+	auto paraPostemp = world->regularize(paraPos, i);
 	matf4 m1{
-		1.0f, 0.0f, 0.0f, -paraPos[0],
-		0.0f, 1.0f, 0.0f, -paraPos[1],
-		0.0f, 0.0f, 1.0f, -paraPos[2],
+		1.0f, 0.0f, 0.0f, -paraPostemp[0],
+		0.0f, 1.0f, 0.0f, -paraPostemp[1],
+		0.0f, 0.0f, 1.0f, -paraPostemp[2],
 		0.0f, 0.0f, 0.0f, 1.0f,
 	};
 	matf3 tmp = T * G ;

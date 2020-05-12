@@ -14,7 +14,7 @@ namespace nonEuc
 	class Camera;
 }
 
-#include <nonEuclideanEngine/world.h>
+//#include <nonEuclideanEngine/world.h>
 
 using namespace cgcore;
 
@@ -24,16 +24,17 @@ namespace nonEuc
 
 	class Camera {
 	public:
-		Camera(vecf3 position, nonEuc::World& _world);
+		Camera();
+		Camera(vecf3 position, nonEuc::World* _world);
 		~Camera();
 
 		void ResetCamera(vecf3 position, float yaw, float pitch);
 		void UpdateDirection(float dyaw, float dpitch);
 		void UpdatePosition(vecf3 du);
-		matf4 GetView();
+		matf4 GetView(int i);
 
 	public:
-		nonEuc::World& world;	//对世界的引用（让camera按需自己去计算S、G，省得总是传递）
+		nonEuc::World* world;	//对世界的引用（让camera按需自己去计算S、G，省得总是传递）
 
 		vecf3 paraPos;		// 参数坐标下的位置
 		//vecf3 Front;		// z轴向量(参数坐标)
