@@ -1,6 +1,7 @@
 #pragma once
 
 #include <initializer_list>
+#include <assert.h>
 
 typedef unsigned char uchar;
 
