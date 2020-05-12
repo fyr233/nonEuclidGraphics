@@ -3,6 +3,7 @@
 // Input vertex data, different for all executions of this shader.
 layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec2 vertexTexCoord;
+layout(location = 2) in vec3 vertexNormal;
 
 uniform mat4 V;
 uniform mat4 P;

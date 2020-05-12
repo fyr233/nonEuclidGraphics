@@ -167,3 +167,23 @@ tensorf333 nonEuc::WorldExample::Gaussian::gamma(const vecf3& u)
 					ret(k, i, l) = -8 * u[i] * u[l] * u[k] / fract;
 	return ret;
 }
+
+void nonEuc::WorldExample::OneRecursive::regularize_ref(vecf3& u, int i)
+{
+	u[0] = std::fmod(std::fmod(u[0], 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>) + i * 2 * PI<float>;
+}
+
+vecf3 nonEuc::WorldExample::OneRecursive::regularize(const vecf3& u, int i)
+{
+	return { std::fmod(std::fmod(u[0], 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>) + i * 2 * PI<float>, u[1], u[2] };
+}
+
+matf3 nonEuc::WorldExample::OneRecursive::metric(const vecf3& u)
+{
+	return matf3::Identity();
+}
+
+tensorf333 nonEuc::WorldExample::OneRecursive::gamma(const vecf3& u)
+{
+	return tensorf333(0.f);
+}
