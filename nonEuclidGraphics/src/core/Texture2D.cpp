@@ -25,6 +25,7 @@ void Texture2D::Load(const std::string& path)
 		std::cout << "ERROR::Texture2D::Load:" << std::endl
 			<< "\t" << "open file (" << path << ") fail" << std::endl;
 	}
+	cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
 	image_path = path;
 }
 
@@ -48,7 +49,7 @@ rgbf Texture2D::Sample(vecf2 uv)
 	cv::Vec3f result = (1 - ylambda) * ((1 - xlambda) * img.at<cv::Vec3b>(yidx, xidx) + xlambda * img.at<cv::Vec3b>(yidx, (xidx + 1) % img.cols))
 		+ ylambda * ((1 - xlambda) * img.at<cv::Vec3b>((yidx + 1) % img.rows, xidx) + xlambda * img.at<cv::Vec3b>((yidx + 1) % img.rows, (xidx + 1) % img.cols));
 
-	return rgbf(result[2], result[1], result[0]);//×ª»»ÎªRGB
+	return rgbf(result[0], result[1], result[2]);
 }
 
 void cgcore::Texture2D::SetTextureImage()
