@@ -32,13 +32,16 @@ void Mesh::LoadObj(std::string path)
 				{
 				case 'n': {
 					vecf3 pos;
-					ss >> pos[0] >> pos[1] >> pos[2];
+					ss >> pos[0];
+					ss >> pos[1];
+					ss >> pos[2];
 					normals.push_back(pos);
 				}
 						break;
 				case 't': {
 					vecf2 pos;
-					ss >> pos[0] >> pos[1];
+					ss >> pos[0];
+					ss >> pos[1];
 					texcoords.push_back(pos);
 				}
 						break;
@@ -57,13 +60,21 @@ void Mesh::LoadObj(std::string path)
 		}
 				break;
 		case 'f': {
+			Face f;
 			for (int i = 0; i < 3; i++)
 			{
 				std::string temp;
 				ss >> temp;
 				auto splitresult = SplitString(temp, "/");
-				indices.push_back(std::stoi(splitresult[0]) - 1);	// EBO中的顶点索引从0开始
+				if (splitresult.size() >= 3)
+				{
+					// EBO中的顶点索引从0开始
+					f.v_idx[i] = std::stoi(splitresult[0]) - 1;
+					f.vt_idx[i] = std::stoi(splitresult[1]) - 1;
+					f.vn_idx[i] = std::stoi(splitresult[2]) - 1;
+				}
 			}
+			faces.push_back(f);
 		}
 				break;
 		default:
@@ -71,6 +82,7 @@ void Mesh::LoadObj(std::string path)
 		}
 	}
 
+	/*
 	for (int i = 0; i < positions.size(); i++)
 	{
 		Vertex v;
@@ -93,13 +105,14 @@ void Mesh::LoadObj(std::string path)
 			vertices[i].TexCoord = texcoords[i];
 		}
 	}
+	*/
 }
 
 void Mesh::Transform(vecf3 center, matf3 S, matf3 R)
 {
-	for (int i = 0; i < vertices.size(); i++)
+	for (int i = 0; i < positions.size(); i++)
 	{
-		vertices[i].ParaCoord = matf3::dot(S, R).dot(vertices[i].Position) + center;
+		positions[i] = matf3::dot(S, R).dot(positions[i]) + center;
 	}
 }
 
@@ -130,16 +143,29 @@ void Mesh::LoadMesh()
 
 	// vecf3类型里面包含的似乎是一个指针，不太方便直接将vertices数组传到buffer里面
 	std::vector<float> vertice_data;
-	for (size_t i = 0; i < vertices.size(); i++)
+	for (size_t i = 0; i < faces.size(); i++)//遍历所有面
 	{
-		// TODO:如果要传其他信息，在这里添加，注意还要修改后面的glVertexAttribPointer
-		for (size_t j = 0; j < 3; j++)
-			vertice_data.push_back(vertices[i].Position[j]);
-		for (size_t j = 0; j < 2; j++)
-			vertice_data.push_back(vertices[i].TexCoord[j]);
+		for (int j = 0; j < 3; j++)//遍历面的三个点
+		{
+			// TODO:如果要传其他信息，在这里添加，注意还要修改后面的glVertexAttribPointer
+
+			for (int k = 0; k < 3; k++)//position
+				vertice_data.push_back(positions[faces[i].v_idx[j]][k]);
+
+			for (int k = 0; k < 2; k++)//texcoord
+				vertice_data.push_back(texcoords[faces[i].v_idx[j]][k]);
+
+			for (int k = 0; k < 3; k++)//normal
+				vertice_data.push_back(normals[faces[i].v_idx[j]][k]);
+		}
+	}
+	
+	for (size_t i = 0; i < faces.size() * 3; i++)
+	{
+		indices.push_back(i);
 	}
 
-	GLsizei vdata_stride = 5 * sizeof(float);	//每个顶点属性数据的大小为步长
+	GLsizei vdata_stride = 8 * sizeof(float);	//每个顶点属性数据的大小为步长
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertice_data.size() * sizeof(float), &vertice_data[0], GL_STATIC_DRAW);
@@ -168,17 +194,16 @@ void Mesh::LoadMesh()
 		(void*)(3*sizeof(float))
 	);
 	glEnableVertexAttribArray(1);
-	// Unavailable
-	/*glEnableVertexAttribArray(1);
+	
 	glVertexAttribPointer(
-		1,					// 1->normal
+		2,									// 2->normal
 		3,
 		GL_FLOAT,
 		GL_FALSE,
-		sizeof(Vertex),
-		(void*)offsetof(Vertex, Normal)
-	);*/
-
+		vdata_stride,
+		(void*)(5 * sizeof(float))
+	);
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
 }

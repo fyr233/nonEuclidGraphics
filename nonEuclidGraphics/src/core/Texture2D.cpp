@@ -48,8 +48,9 @@ rgbf Texture2D::Sample(vecf2 uv)
 	//双线性插值
 	cv::Vec3f result = (1 - ylambda) * ((1 - xlambda) * img.at<cv::Vec3b>(yidx, xidx) + xlambda * img.at<cv::Vec3b>(yidx, (xidx + 1) % img.cols))
 		+ ylambda * ((1 - xlambda) * img.at<cv::Vec3b>((yidx + 1) % img.rows, xidx) + xlambda * img.at<cv::Vec3b>((yidx + 1) % img.rows, (xidx + 1) % img.cols));
+	result /= 255.0;//0到1
 
-	return rgbf(result[0], result[1], result[2]);
+	return rgbf(result[0], result[1], result[2]) ;
 }
 
 void cgcore::Texture2D::SetTextureImage()

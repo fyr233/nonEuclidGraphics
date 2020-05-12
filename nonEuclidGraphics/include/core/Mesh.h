@@ -8,6 +8,7 @@
 #include <core/vec.h>
 #include <core/mat.h>
 
+
 #include <GL/gl3w.h>            // Initialize with gl3wInit()
 #include <GLFW/glfw3.h>
 #include <core/Texture2D.h>
@@ -25,6 +26,16 @@ class Mesh
 		vecf2 TexCoord;
 		// TBN
 		matf3 TBN;
+	};
+
+	struct Face
+	{
+		//position index
+		unsigned int v_idx[3];
+		//texture index
+		unsigned int vt_idx[3];
+		//normal index
+		unsigned int vn_idx[3];
 	};
 
 public:
@@ -49,8 +60,15 @@ private:
 
 public:
 	/*  Mesh Data  */
-	std::vector<Vertex> vertices;		//点
-	std::vector<unsigned int> indices;	//面
+
+	std::vector<vecf3> positions;
+	std::vector<vecf3> normals;
+	std::vector<vecf2> texcoords;
+
+	std::vector<unsigned int> indices;//仅用于OpenGL
+
+	//std::vector<Vertex> vertices;		//点
+	std::vector<Face> faces;	//面
 	std::shared_ptr<Texture2D> AlbedoTexture;		//贴图
 
 	/*  Render data  */
@@ -58,9 +76,7 @@ public:
 	unsigned int VBO = 0, EBO = 0;
 
 private:
-	std::vector<vecf3> positions;
-	std::vector<vecf3> normals;
-	std::vector<vecf2> texcoords;
+	
 };
 
 
