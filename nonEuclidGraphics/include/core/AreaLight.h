@@ -15,9 +15,12 @@ namespace cgcore
 	{
 	public:
 		//AreaLight();
-		AreaLight(nonEuc::World* _world, float intensity = 1.f, const rgbf& color = rgbf{ 1.f }, Texture2D* texture = nullptr);
+		AreaLight(nonEuc::World* _world, float intensity = 1.f, const rgbf& color = rgbf(1.f), Texture2D* texture = nullptr);
+		AreaLight(nonEuc::World* _world, vecf3 position, float intensity = 1.f, const rgbf& color = rgbf(1.f), Texture2D* texture = nullptr);
 			
 		~AreaLight();
+
+		vecf3 getLightPos() { return tri.pos[0]; }
 
 		rgbf RadianceFactor() { return  color * intensity; }
 		rgbf Radiance(const vecf2& uv) ;

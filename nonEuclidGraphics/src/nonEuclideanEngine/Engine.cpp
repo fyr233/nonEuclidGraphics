@@ -130,7 +130,7 @@ void Engine::Loop()
             }
             if (ImGui::CollapsingHeader("Camera"))
             {
-                ImGui::SliderFloat("FarPlane", &far_plane, 10.f, 100.f);
+                ImGui::SliderFloat("FarPlane", &far_plane, 5.f, 20.f);
                 ImGui::SliderFloat("NearPlane", &near_plane, 0.001f, 1.0f);
             }
             if (ImGui::CollapsingHeader("Mesh"))
@@ -167,6 +167,18 @@ void Engine::Loop()
             glUniformMatrix4fv(Location, 1, GL_TRUE, view.data);
             Location = glGetUniformLocation(programID, "P");
             glUniformMatrix4fv(Location, 1, GL_TRUE, perspective.data);
+
+            auto LightColor = current_world->light_as_point->color;
+            auto LightPos = current_world->light_as_point->getLightPos();
+            auto ViewPos = current_world->camera.paraPos;
+
+            Location = glGetUniformLocation(programID, "lightColor");
+            glUniform3f(Location, LightColor.r, LightColor.g, LightColor.b);
+            Location = glGetUniformLocation(programID, "lightPos");
+            glUniform3f(Location, LightPos[0], LightPos[1], LightPos[2]);
+            Location = glGetUniformLocation(programID, "viewPos");
+            glUniform3f(Location, ViewPos[0], ViewPos[1], ViewPos[2]);
+
             for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
                 current_world->objectPtrs[i]->Draw(programID);
         }

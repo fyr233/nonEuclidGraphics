@@ -8,6 +8,8 @@
 #include <core/Obj.h>
 #include <core/Object.h>
 
+#include <core/AreaLight.h>
+
 #include <nonEuclideanEngine/camera.h>
 #include <nonEuclideanEngine/WorldExample.h>
 #include <core/transform.h>
@@ -32,6 +34,7 @@ namespace nonEuc
 	
 		std::vector<std::shared_ptr<Obj>> objectPtrs;
 		Camera camera;
+		AreaLight *light_as_point;
 
 	public:
 
@@ -43,6 +46,7 @@ namespace nonEuc
 
 		~World();
 		void AddObj(std::shared_ptr<Mesh> newMesh, vecf3 center, vecf3 scale, matf3 rotation);
+
 	};
 
 	template<typename TWorldExample>
@@ -57,11 +61,13 @@ namespace nonEuc
 
 		//初始化Camera (初始化方法可以修改)
 		camera = Camera({ 0.f, 0.f, 2.f }, this);
+		//初始化实时渲染用的光源
+		light_as_point = new AreaLight(this, vecf3({ 0.f, 0.f, 0.f }));
 	}
 
 	inline World::~World()
 	{
-
+		delete light_as_point;
 	}
 }
 

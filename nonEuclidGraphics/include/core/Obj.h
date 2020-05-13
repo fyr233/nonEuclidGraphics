@@ -18,6 +18,7 @@ namespace cgcore
 	class Obj
 	{
 	public:
+		//Obj() {}
 		Obj(nonEuc::World* _world);
 		~Obj();
 

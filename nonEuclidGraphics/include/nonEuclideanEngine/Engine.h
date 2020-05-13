@@ -42,7 +42,7 @@ namespace nonEuc
 		GLuint programID = 0;				// ×ÅÉ«Æ÷
 		int scrwidth = 1280;
 		int scrheight = 720;
-		float far_plane = 100.f;
+		float far_plane = 10.f;
 		float near_plane = 0.1f;
 
 		bool Roam_status = false;

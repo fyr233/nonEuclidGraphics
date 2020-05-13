@@ -47,7 +47,7 @@ int main()
         for (int j = -1; j <= 1; j += 2)
             for (int k = -1; k <= 1; k += 2)
                 pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex), { (float)i/2.f + PI<float>, (float)j/2.f, (float)k/2.f }, {0.05f, 0.05f, 0.05f}, matf3::Identity());
-    
+    //pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex), { 0.5f,0.f,0.f }, { 0.1f, 0.1f, 0.1f }, matf3::Identity());
     engine.SetWorld(pworld);
     engine.Loop();
     engine.Clear();
