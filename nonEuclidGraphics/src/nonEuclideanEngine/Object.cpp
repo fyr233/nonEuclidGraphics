@@ -12,7 +12,7 @@ void Object::Transform(matf3 S)
 void Object::Draw(GLuint programID)
 {
 	// ¼ÆËã±ä»»
-	matf3 S = cgcore::SchmidtOrthogonalize(world.metric(center));
+	matf3 S = cgcore::SchmidtOrthogonalize(world->metric(center));
 	matf4 transform = cgcore::MakeTransform(S, R, scale, center);
 	mesh->Draw(programID, transform);
 }

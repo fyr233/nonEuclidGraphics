@@ -42,6 +42,7 @@ void Mesh::LoadObj(std::string path)
 					vecf2 pos;
 					ss >> pos[0];
 					ss >> pos[1];
+					pos[1] = 1 - pos[1];//·­×ª
 					texcoords.push_back(pos);
 				}
 						break;
