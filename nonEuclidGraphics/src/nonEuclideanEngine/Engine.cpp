@@ -170,7 +170,7 @@ void Engine::Loop()
 
             auto LightColor = current_world->light_as_point->color;
             auto LightPos = current_world->light_as_point->getLightPos();
-            auto ViewPos = current_world->camera.paraPos;
+            auto ViewPos = current_world->regularize(current_world->camera.paraPos, j);
 
             Location = glGetUniformLocation(programID, "lightColor");
             glUniform3f(Location, LightColor.r, LightColor.g, LightColor.b);
