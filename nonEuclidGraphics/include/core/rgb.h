@@ -65,6 +65,7 @@ namespace cgcore
 		const rgb<T>& operator=(const rgb<T>& c2)
 		{
 			r = c2.r; g = c2.g; b = c2.b;
+			return *this;
 		}
 		const rgb<T>& operator+=(const rgb<T>& c2)
 		{
