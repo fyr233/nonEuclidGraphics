@@ -234,8 +234,25 @@ void Mesh::Draw(GLuint programID, const matf4& m2paraTransform)
 
 	GLint Location = glGetUniformLocation(programID, "M");
 	glUniformMatrix4fv(Location, 1, GL_TRUE, m2paraTransform.data);
-	glActiveTexture(GL_TEXTURE0);
-	AlbedoTexture->Bind();
+	Location = glGetUniformLocation(programID, "useTexture");
+	if (AlbedoTexture != nullptr)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		AlbedoTexture->Bind();
+		glUniform1i(Location, 1);
+	}
+	else
+		glUniform1i(Location, 0);
+	
+	Location = glGetUniformLocation(programID, "material.ambient");
+	glUniform3f(Location, material.ambient[0], material.ambient[1], material.ambient[2]);
+	Location = glGetUniformLocation(programID, "material.diffuse");
+	glUniform3f(Location, material.diffuse[0], material.diffuse[1], material.diffuse[2]);
+	Location = glGetUniformLocation(programID, "material.specular");
+	glUniform3f(Location, material.specular[0], material.specular[1], material.specular[2]);
+	Location = glGetUniformLocation(programID, "material.shininess");
+	glUniform1f(Location, material.shininess);
+
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

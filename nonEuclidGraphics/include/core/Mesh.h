@@ -12,6 +12,7 @@
 #include <GL/gl3w.h>            // Initialize with gl3wInit()
 #include <GLFW/glfw3.h>
 #include <core/Texture2D.h>
+#include <core/Material.h>
 
 class Mesh
 {
@@ -40,11 +41,11 @@ class Mesh
 
 public:
 	Mesh();
-	Mesh(std::string path);	// 初始化的时候可以默认参数坐标是自身坐标系下的欧式坐标
+	Mesh(std::string path, Material::MaterialType mtype = Material::MaterialType::DEFAULT);	// 初始化的时候可以默认参数坐标是自身坐标系下的欧式坐标
 	// 加载obj和加载纹理图片
-	Mesh(std::string path, std::string texImagePath);	
+	Mesh(std::string path, std::string texImagePath, Material::MaterialType mtype = Material::MaterialType::DEFAULT);
 	// 加载obj，并使用提供的纹理
-	Mesh(std::string path, std::shared_ptr<Texture2D> pTex);	
+	Mesh(std::string path, std::shared_ptr<Texture2D> pTex, Material::MaterialType mtype = Material::MaterialType::DEFAULT);
 	~Mesh();
 
 	void LoadObj(std::string path);
@@ -70,6 +71,8 @@ public:
 	//std::vector<Vertex> vertices;		//点
 	std::vector<Face> faces;	//面
 	std::shared_ptr<Texture2D> AlbedoTexture;		//贴图
+	Material material;
+
 
 	/*  Render data  */
 	unsigned int VAO = 0;
@@ -84,24 +87,27 @@ inline Mesh::Mesh()
 {
 }
 
-inline Mesh::Mesh(std::string path)
+inline Mesh::Mesh(std::string path, Material::MaterialType mtype)
 {
 	LoadObj(path);
 	LoadMesh();
+	material = Material(mtype);
 }
 
-inline Mesh::Mesh(std::string path, std::string texImagePath)
+inline Mesh::Mesh(std::string path, std::string texImagePath, Material::MaterialType mtype)
 {
 	LoadObj(path);
 	LoadMesh();
 	LoadTexture(texImagePath, "Albedo");
+	material = Material(mtype);
 }
 
-inline Mesh::Mesh(std::string path, std::shared_ptr<Texture2D> pTex)
+inline Mesh::Mesh(std::string path, std::shared_ptr<Texture2D> pTex, Material::MaterialType mtype)
 {
 	LoadObj(path);
 	LoadMesh();
 	AlbedoTexture = pTex;
+	material = Material(mtype);
 }
 
 inline Mesh::~Mesh()

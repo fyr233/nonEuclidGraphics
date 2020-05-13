@@ -5,6 +5,7 @@
 #include <core/Mesh.h>
 #include <core/Obj.h>
 #include <core/transform.h>
+#include <core/Material.h>
 
 
 
