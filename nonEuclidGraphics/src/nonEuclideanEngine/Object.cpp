@@ -14,6 +14,7 @@ void Object::Draw(GLuint programID)
 	// ¼ÆËã±ä»»
 	matf3 G = world->metric(center);
 	matf3 S = cgcore::SchmidtOrthogonalize(G);
+
 	matf4 transform = cgcore::MakeTransform(S, R, scale, center);
 
 	glUseProgram(programID);
