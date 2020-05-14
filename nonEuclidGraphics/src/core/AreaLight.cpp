@@ -86,5 +86,4 @@ void cgcore::AreaLight::genNormal()
 	auto S = SchmidtOrthogonalize(G);
 	auto Sinv = S.inverse();
 	tri.normal = S.dot(vecf3::cross(Sinv.dot(tri.pos[1]), Sinv.dot(tri.pos[2])).normalize());
-	std::cout << tri.normal;
 }

@@ -91,7 +91,7 @@ Intersection<Float, Primitive> Traverser<Float, Primitive, Intersector, Flags>::
     Float near = todo[stackptr].mint;
     stackptr--;
     const auto& node(nodes[ni]);
-
+    
     // If this node is further than the closest found intersection, continue
     if (near > intersection.t) continue;
 
@@ -100,7 +100,7 @@ Intersection<Float, Primitive> Traverser<Float, Primitive, Intersector, Flags>::
       for (uint32_t o = 0; o < node.primitive_count; ++o) {
         const auto& obj = build_prims[node.start + o];
 
-        auto current = intersector(obj, ray);
+        Intersection<Float, Primitive> current = intersector(obj, ray);
         if (current) {
           // If we're only looking for occlusion, then any hit is good enough to return true
           if (Flags & TraverserFlags::OnlyTestOcclusion) {

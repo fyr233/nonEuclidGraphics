@@ -12,6 +12,13 @@ namespace cgcore
 	{
 		T r, g, b;
 
+		rgb()
+		{
+			r = static_cast<T>(0);
+			g = static_cast<T>(0);
+			b = static_cast<T>(0);
+		}
+
 		rgb(const rgb<T>& c)
 		{
 			r = c.r;

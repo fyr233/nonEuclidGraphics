@@ -14,6 +14,10 @@ namespace cgcore
 		T* const data = new T[N];
 
 		vec() { }
+		vec(const T* _data)
+		{
+			memcpy(data, _data, sizeof(T) * N);
+		}
 		T& operator [](const size_t n) const { assert(n < N && "Index out of range"); return data[n]; }
 
 		vec(const vec<T, N>& v) {

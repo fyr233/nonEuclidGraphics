@@ -16,7 +16,7 @@ namespace cgcore
 {
     class Intersector final {
     public:
-        FastBVH::Intersection<float, Triangle> operator () (const Triangle& tri, const FastBVH::Ray<float>& ray) noexcept {
+        FastBVH::Intersection<float, Triangle> operator () (const Triangle& tri, const FastBVH::Ray<float>& ray) const noexcept {
             matf3 E1E2d = {
                 tri.pos[1][0], tri.pos[2][0], -ray.d[0],
                 tri.pos[1][1], tri.pos[2][2], -ray.d[1],
