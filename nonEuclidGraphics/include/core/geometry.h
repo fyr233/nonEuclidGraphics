@@ -1,7 +1,9 @@
 #pragma once
 
 
-//#include <FastBVH.h>
+#include <FastBVH/Intersection.h>
+#include <FastBVH/Ray.h>
+
 #include <core/primitive.h>
 #include <core/mat.h>
 
@@ -9,13 +11,12 @@ template<typename T>
 static const float PI = static_cast<T>(3.1415926535897932);
 
 // 下面定义一个三角形求交
-/*
+
 namespace cgcore
 {
     class Intersector final {
     public:
         FastBVH::Intersection<float, Triangle> operator () (const Triangle& tri, const FastBVH::Ray<float>& ray) noexcept {
-
             matf3 E1E2d = {
                 tri.pos[1][0], tri.pos[2][0], -ray.d[0],
                 tri.pos[1][1], tri.pos[2][2], -ray.d[1],
@@ -37,4 +38,3 @@ namespace cgcore
         }
     };
 }
-*/
