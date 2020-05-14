@@ -228,7 +228,7 @@ void Mesh::Draw(GLuint programID, const matf4& m2paraTransform)
 	// TODO:加载纹理贴图 DOING
 	// TODO:传入度量矩阵
 
-
+	
 	// draw
 	glUseProgram(programID);
 
@@ -252,7 +252,7 @@ void Mesh::Draw(GLuint programID, const matf4& m2paraTransform)
 	glUniform3f(Location, material.specular[0], material.specular[1], material.specular[2]);
 	Location = glGetUniformLocation(programID, "material.shininess");
 	glUniform1f(Location, material.shininess);
-
+	
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

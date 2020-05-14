@@ -40,13 +40,20 @@ namespace nonEuc
 
 		World();
 
-		//使用一个WorldExample来设置世界
+		// 使用一个WorldExample来设置世界
 		template<typename TWorldExample>
 		void SetWorldExample();
 
 		~World();
+		// 添加网格物体，并指定center, scale, rotation
 		void AddObj(std::shared_ptr<Mesh> newMesh, vecf3 center, vecf3 scale, matf3 rotation);
+		//
+		void AddAreaLight(vecf3 position, vecf3 edge1, vecf3 edge2, float intensity, rgbf color);
+		// 设置OpenGL的光源
+		void SetUniformLight(GLuint programID);
+	private:
 
+		
 	};
 
 	template<typename TWorldExample>

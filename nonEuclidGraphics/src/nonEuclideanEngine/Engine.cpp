@@ -2,7 +2,7 @@
 #include <fstream>
 #include <core/geometry.h>
 #include <core/transform.h>
-
+#include <core/gl.h>
 using namespace nonEuc;
 
 static void glfw_error_callback(int error, const char* description);
@@ -72,7 +72,7 @@ bool Engine::Init()
     // Our state
     bool show_demo_window = true;
     bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 clear_color = ImVec4(0.10f, 0.10f, 0.24f, 1.00f);
 
     // 初始化着色器
     programID = LoadShaders("../nonEuclidGraphics/include/Shader/vertex.vert", "../nonEuclidGraphics/include/Shader/fragment.frag");
@@ -159,25 +159,27 @@ void Engine::Loop()
         
         glUseProgram(programID);
 
+        current_world->SetUniformLight(programID);
         for (int j = -2; j <= 2; j++)
         {
             matf4 view = current_world->camera.GetView(j);
-
-            int Location = glGetUniformLocation(programID, "V");
-            glUniformMatrix4fv(Location, 1, GL_TRUE, view.data);
-            Location = glGetUniformLocation(programID, "P");
-            glUniformMatrix4fv(Location, 1, GL_TRUE, perspective.data);
+            
+ 
+            gl::SetMat4f(programID, "V", view);
+            gl::SetMat4f(programID, "P", perspective);
 
             auto LightColor = current_world->light_as_point->color;
             auto LightPos = current_world->light_as_point->getLightPos();
             auto ViewPos = current_world->regularize(current_world->camera.paraPos, j);
 
-            Location = glGetUniformLocation(programID, "lightColor");
+            gl::SetMat3f(programID, "G", current_world->metric(ViewPos));
+            
+            /*Location = glGetUniformLocation(programID, "lightColor");
             glUniform3f(Location, LightColor.r, LightColor.g, LightColor.b);
             Location = glGetUniformLocation(programID, "lightPos");
             glUniform3f(Location, LightPos[0], LightPos[1], LightPos[2]);
-            Location = glGetUniformLocation(programID, "viewPos");
-            glUniform3f(Location, ViewPos[0], ViewPos[1], ViewPos[2]);
+            Location = glGetUniformLocation(programID, "viewPos");*/
+            gl::SetVec3f(programID, "viewPos", ViewPos);
 
             for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
                 current_world->objectPtrs[i]->Draw(programID);

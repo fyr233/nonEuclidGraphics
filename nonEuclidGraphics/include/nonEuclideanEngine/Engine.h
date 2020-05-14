@@ -49,7 +49,7 @@ namespace nonEuc
 		bool status_line = false;
 		float mouse_speed = 0.05f;
 		float move_speed = 1.0f;
-		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+		ImVec4 clear_color = ImVec4(0.12f, 0.13f, 0.19f, 1.00f);
 	};
 }
 

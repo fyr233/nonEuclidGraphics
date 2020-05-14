@@ -13,6 +13,8 @@ namespace cgcore
 	{
 		// pos[0]是0号点的参数坐标，pos[1]、pos[2] 是相对参数坐标 
 		vecf3 pos[3];
+		// 法线
+		vecf3 normal;
 		// 纹理坐标
 		vecf2 uv[3];
 		// 在world中所属的物体编号
