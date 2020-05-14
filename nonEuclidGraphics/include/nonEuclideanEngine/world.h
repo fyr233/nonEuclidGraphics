@@ -51,6 +51,9 @@ namespace nonEuc
 		void AddAreaLight(vecf3 position, vecf3 edge1, vecf3 edge2, float intensity, rgbf color);
 		// 设置OpenGL的光源
 		void SetUniformLight(GLuint programID);
+		// 获取世界中所有三角形, 包括Object和AreaLight
+		std::vector<Triangle> GetTriangles();
+
 	private:
 
 		

@@ -49,7 +49,7 @@ public:
 	~Mesh();
 
 	void LoadObj(std::string path);
-	void Transform(vecf3 center, matf3 S, matf3 R);	//变换结果存在ParaCoord中
+	void Transform(vecf3 center, matf3 S, matf3 R);	//变换到参数空间
 
 	void LoadMesh();				// 向OpenGL中加载网格数据
 	void LoadTexture(std::string path, std::string type = "Albedo");

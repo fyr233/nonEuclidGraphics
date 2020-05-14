@@ -46,3 +46,57 @@ void nonEuc::World::SetUniformLight(GLuint programID)
 	}
 	gl::SetInt(programID, "numAreaLights", num_Light);
 }
+
+std::vector<Triangle> nonEuc::World::GetTriangles()
+{
+	std::vector<Triangle> ans;
+	for (size_t i = 0; i < objectPtrs.size(); i++)
+	{
+		if (objectPtrs[i]->obj_type == Obj::ObjType::_Object)
+		{
+			auto m = std::static_pointer_cast<Object>(objectPtrs[i])->mesh;
+			for (size_t j = 0; j < m->faces.size(); j++)
+			{
+				Triangle t;
+
+				t.pos[0] = m->positions[m->faces[i].v_idx[0]];
+				t.pos[1] = m->positions[m->faces[i].v_idx[1]] - t.pos[0];
+				t.pos[2] = m->positions[m->faces[i].v_idx[2]] - t.pos[0];
+
+				auto G = metric(t.pos[0]);
+				auto S = SchmidtOrthogonalize(G);
+				auto Sinv = S.inverse();
+				t.normal = S.dot(vecf3::cross(Sinv.dot(t.pos[1]), Sinv.dot(t.pos[2])).normalize());
+
+				t.uv[0] = m->texcoords[m->faces[i].vt_idx[0]];
+				t.uv[1] = m->texcoords[m->faces[i].vt_idx[1]];
+				t.uv[2] = m->texcoords[m->faces[i].vt_idx[2]];
+
+				t.obj_id = i;
+
+				t.face_id = j;
+
+				ans.push_back(t);
+			}
+		}
+		else // _AreaLight
+		{
+			Triangle t;
+			t = std::static_pointer_cast<AreaLight>(objectPtrs[i])->tri;
+
+			//t.pos done
+
+			//t.normal done
+
+			t.uv[0] = vecf2({ 0, 0 });
+			t.uv[1] = vecf2({ 1, 0 });
+			t.uv[2] = vecf2({ 0, 1 });
+
+			t.obj_id = i;
+
+			t.face_id = 0;
+			ans.push_back(t);
+		}
+	}
+	return ans;
+}
