@@ -14,7 +14,7 @@ namespace FastBVH {
 //! by a primitive.
 //! \tparam Float The floating point type used
 //! by the minimum and maximum point components.
-template <typename Float>
+template<typename Float>
 struct BBox final {
   //! A simple type definition for a 3D vector.
   using Vec3 = Vector3<Float>;

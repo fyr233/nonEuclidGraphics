@@ -24,7 +24,7 @@ struct Intersection final {
   //Vec3 normal = {0, 0, 1};
 
   //! The UV coordinates at the position of intersection.
-  Float uv[2] = {0, 0};
+  Float uv[2] = {static_cast<Float>(0), static_cast<Float>(0)};
 
   //! Gets the position at the ray hit the object.
   //! \param ray_pos The ray position.

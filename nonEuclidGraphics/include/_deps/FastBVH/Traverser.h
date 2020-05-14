@@ -57,6 +57,10 @@ struct Traversal final {
 
 }  // namespace TraverserImpl
 
+#ifdef near
+#undef near;
+#endif
+
 template <typename Float, typename Primitive, typename Intersector, TraverserFlags Flags>
 Intersection<Float, Primitive> Traverser<Float, Primitive, Intersector, Flags>::traverse(const Ray<Float>& ray) const {
   using Traversal = TraverserImpl::Traversal<Float>;
