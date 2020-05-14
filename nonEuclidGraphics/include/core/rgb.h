@@ -32,9 +32,9 @@ namespace cgcore
 		rgb(const std::initializer_list<T> elem_list)
 		{
 			assert(elem_list.size() == 3 && "Initializer list must be 3");
-			r = elem_list[0];
-			g = elem_list[1];
-			b = elem_list[2];
+			T* p = (T*)this;
+			for (auto it : elem_list)
+				*p++ = it;
 		}
 
 		T illumination() const noexcept {

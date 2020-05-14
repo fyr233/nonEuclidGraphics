@@ -58,7 +58,7 @@ struct Traversal final {
 }  // namespace TraverserImpl
 
 #ifdef near
-#undef near;
+#undef near
 #endif
 
 template <typename Float, typename Primitive, typename Intersector, TraverserFlags Flags>
