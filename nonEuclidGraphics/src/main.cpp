@@ -11,6 +11,8 @@
 #include <core/transform.h>
 #include <nonEuclideanEngine/WorldExample.h>
 
+#include <nonEuclideanEngine/GlobalRenderer/RayTracer.h>
+
 using namespace cgcore;
 
 int main()
@@ -48,6 +50,12 @@ int main()
             for (int k = -1; k <= 1; k += 2)
                 pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::MaterialType::DEFAULT), { (float)i/2.f + PI<float>, (float)j/2.f, (float)k/2.f }, {0.05f, 0.05f, 0.05f}, matf3::Identity());
     pworld->AddAreaLight({PI<float>, 2.f, 0.f}, {0.3f, 0.f, 0.f}, {0.f, 0.f, 0.3f}, 30.f, { 1.f,1.f,1.f });
+    
+    nonEuc::RayTracer rayTracer(&(*pworld));
+    rayTracer.SetParameter(5.0f, 3.0f, rgbf{ 0.12f, 0.13f, 0.19f });    //初始渲染参数
+    rayTracer.BuildBVH();                                               //生成BVH
+    auto img = rayTracer.RenderTracing(PI<float>/4.0f, 1.0, 100);
+    
     //pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::BRASS), { 0.5f,0.f,0.f }, { 0.1f, 0.1f, 0.1f }, matf3::Identity());
     engine.SetWorld(pworld);
     engine.Loop();

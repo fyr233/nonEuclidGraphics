@@ -59,18 +59,18 @@ std::vector<Triangle> nonEuc::World::GetTriangles()
 			{
 				Triangle t;
 
-				t.pos[0] = m->positions[m->faces[i].v_idx[0]];
-				t.pos[1] = m->positions[m->faces[i].v_idx[1]] - t.pos[0];
-				t.pos[2] = m->positions[m->faces[i].v_idx[2]] - t.pos[0];
+				t.pos[0] = m->positions[m->faces[j].v_idx[0]];
+				t.pos[1] = m->positions[m->faces[j].v_idx[1]] - t.pos[0];
+				t.pos[2] = m->positions[m->faces[j].v_idx[2]] - t.pos[0];
 
 				auto G = metric(t.pos[0]);
 				auto S = SchmidtOrthogonalize(G);
 				auto Sinv = S.inverse();
 				t.normal = S.dot(vecf3::cross(Sinv.dot(t.pos[1]), Sinv.dot(t.pos[2])).normalize());
 
-				t.uv[0] = m->texcoords[m->faces[i].vt_idx[0]];
-				t.uv[1] = m->texcoords[m->faces[i].vt_idx[1]];
-				t.uv[2] = m->texcoords[m->faces[i].vt_idx[2]];
+				t.uv[0] = m->texcoords[m->faces[j].vt_idx[0]];
+				t.uv[1] = m->texcoords[m->faces[j].vt_idx[1]];
+				t.uv[2] = m->texcoords[m->faces[j].vt_idx[2]];
 
 				t.obj_id = i;
 

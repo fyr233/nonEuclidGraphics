@@ -16,14 +16,26 @@ float dot(const Vec3& v1, const matf3& mat, const Vec3& v2)
 	return ret;
 }
 
-void nonEuc::RayTracer::Run(float fov, float aspect, int width)
+nonEuc::RayTracer::RayTracer(World* _world) :world{_world}
 {
-	RenderTracing(fov, aspect, width);
+	
+}
+
+void nonEuc::RayTracer::SetWorld(World* _world)
+{
+	world = _world;
+}
+
+void nonEuc::RayTracer::SetParameter(float _distance_limit, float _decay_distance, rgbf _background_color)
+{
+	distance_limit = _distance_limit;
+	decay_distance = _decay_distance;
+	background_color = _background_color;
 }
 
 void nonEuc::RayTracer::BuildBVH()
 {
-	//triangles = world->GetTriangles();			//TODO
+	triangles = world->GetTriangles();			//TODO
 
 	FastBVH::DefaultBuilder<float> builder;
 
@@ -33,13 +45,14 @@ void nonEuc::RayTracer::BuildBVH()
 		minbound[1] = std::min(std::min(t.pos[0][1], t.pos[1][1]), t.pos[2][1]);
 		minbound[2] = std::min(std::min(t.pos[0][2], t.pos[1][2]), t.pos[2][2]);
 
-		minbound[0] = std::max(std::max(t.pos[0][0], t.pos[1][0]), t.pos[2][0]);
-		minbound[1] = std::max(std::max(t.pos[0][1], t.pos[1][1]), t.pos[2][1]);
-		minbound[2] = std::max(std::max(t.pos[0][2], t.pos[1][2]), t.pos[2][2]);
+		maxbound[0] = std::max(std::max(t.pos[0][0], t.pos[1][0]), t.pos[2][0]);
+		maxbound[1] = std::max(std::max(t.pos[0][1], t.pos[1][1]), t.pos[2][1]);
+		maxbound[2] = std::max(std::max(t.pos[0][2], t.pos[1][2]), t.pos[2][2]);
 
 		return FastBVH::BBox<float>(minbound, maxbound);
 	};
-	bvh = builder(triangles, boxConverter);
+	delete bvh;
+	bvh = new FastBVH::BVH(builder(triangles, boxConverter));
 }
 
 cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
@@ -60,19 +73,21 @@ cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
 	cv::Mat img(height, width, CV_32FC3);
 
 	Intersector intersector;
-	FastBVH::Traverser<float, Triangle, Intersector> traverser(bvh, intersector);
+	FastBVH::Traverser<float, Triangle, Intersector> traverser(*bvh, intersector);
 
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
 		{
-			vecf3 d = cameraz + camerax * (delta * (i - midwid)) + cameray*(delta*(midhgh - j));
+			vecf3 d = cameraz*(-1.f) + camerax * (delta * (i - midwid)) + cameray*(delta*(midhgh - j));
 			d = d / sqrt(world->metric(o).dot_s(d, d));			//Normalize
 			pixel = tracer(FastBVH::Ray<float>(Vec3{o[0],o[1],o[2]}, Vec3{ d[0], d[1], d[2]}), traverser);
 			img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&pixel);
 		}
 		std::cout << float(i) / width << std::endl;
 	}
+	// 暂时保存为图片查看。接下来最好做成显示在 GUI 上。
+	cv::cvtColor(img, img, cv::COLOR_RGB2BGR);
 	if (cv::imwrite("../data/rst.jpg", img))
 		std::cout << "Done" << std::endl;
 	else
@@ -97,7 +112,7 @@ rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float
 	FastBVH::Intersection<float, Triangle> isect;
 	while (true)
 	{
-		float nrm = dot(ray.d, world->metric(vecf3(rayo)), ray.d);
+		float nrm = sqrt(dot(ray.d, world->metric(vecf3(rayo)), ray.d));
 		ray.d = ray.d * (dt / nrm);
 
 		isect = traverser.traverse(ray);
@@ -125,5 +140,6 @@ rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float
 
 		if (distance > distance_limit)
 			return background_color;
+		
 	}
 }
