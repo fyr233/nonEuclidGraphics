@@ -3,6 +3,7 @@
 #include <core/geometry.h>
 #include <core/transform.h>
 #include <core/gl.h>
+#include <string>
 using namespace nonEuc;
 
 static void glfw_error_callback(int error, const char* description);
@@ -82,6 +83,13 @@ bool Engine::Init()
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
     
+    // 图片渲染初始化
+    glGenTextures(1, &imageID);
+    glBindTexture(GL_TEXTURE_2D, imageID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
     return true;
 }
 
@@ -111,17 +119,20 @@ void Engine::Loop()
         else
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-        // TODO:处理键盘事件，在允许鼠标移动时能够隐藏鼠标
-
         // 加载Imgui的窗口
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
         CreateMainMenu();
+        if (show_editor_menu)
+            CreateEditorMenu();
+        if (show_image)
+            ShowImage();
 
         // Rendering
         ImGui::Render();
+        
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -147,11 +158,6 @@ void Engine::Loop()
 
             gl::SetMat3f(programID, "G", current_world->metric(ViewPos));
             
-            /*Location = glGetUniformLocation(programID, "lightColor");
-            glUniform3f(Location, LightColor.r, LightColor.g, LightColor.b);
-            Location = glGetUniformLocation(programID, "lightPos");
-            glUniform3f(Location, LightPos[0], LightPos[1], LightPos[2]);
-            Location = glGetUniformLocation(programID, "viewPos");*/
             gl::SetVec3f(programID, "viewPos", ViewPos);
 
             for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
@@ -232,11 +238,7 @@ void Engine::CreateMainMenu()
     ImGui::Begin("Engine");
     //ImGui::Text("Information about the scene.(TODO)");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    if (ImGui::CollapsingHeader("Objects"))
-    {
-        for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
-            ImGui::Text("Object%d", i);
-    }
+    
     if (ImGui::CollapsingHeader("Camera"))
     {
         ImGui::SliderFloat("FarPlane", &far_plane, 5.f, 20.f);
@@ -250,8 +252,11 @@ void Engine::CreateMainMenu()
     {
         if (ImGui::Button("RenderTracing"))
         {
-            //RayTracer rayTracer(current_world);
-            //rayTracer.Run(PI<float> / 4, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, 128);
+            nonEuc::RayTracer rayTracer(&(*current_world));
+            rayTracer.SetParameter(5.0f, 3.0f, rgbf{ clear_color.x, clear_color.y, clear_color.z });    //初始渲染参数
+            rayTracer.BuildBVH();                                               //生成BVH
+            image = rayTracer.RenderTracing(PI<float> / 4.0f, 1.0, 500);
+            show_image = true;
         }
     }
     if (ImGui::CollapsingHeader("Controller"))
@@ -260,6 +265,63 @@ void Engine::CreateMainMenu()
         ImGui::SameLine();
         ImGui::Text("(Press M to make the mouse unfocused)");
     }
+    ImGui::Checkbox("EditorMenu", &show_editor_menu);
+
+    ImGui::End();
+}
+
+void Engine::CreateEditorMenu()
+{
+    ImGui::Begin("Editor");
+    for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
+    {
+        std::string object_name = "";
+        auto objPtr = current_world->objectPtrs[i];
+        switch (objPtr->obj_type)
+        {
+        case Object::ObjType::_AreaLight:
+            object_name += "AreaLight";
+            object_name += char(i + '0');
+            if (ImGui::CollapsingHeader(object_name.c_str()))
+                CreateLightMenu(dynamic_cast<AreaLight*>(&*objPtr), &object_name);
+            break;
+        case Object::ObjType::_Object:
+            object_name += "Mesh";
+            object_name += char(i + '0');
+            if (ImGui::CollapsingHeader(object_name.c_str()))
+                CreateMeshMenu(dynamic_cast<Object*>(&*objPtr), &object_name);
+            break;
+        default:
+            break;
+        }
+        
+    }
+    ImGui::End();
+}
+
+void Engine::CreateMeshMenu(Object* pobject, std::string* name)
+{
+    //float scale[3];
+    //for (int i = 0; i < 3; i++) scale[i] = pobject->scale(i, i);
+    ImGui::DragFloat3("Center", pobject->center.data, 0.01f);
+    pobject->center =  current_world->regularize(pobject->center, 0);
+
+    //ImGui::DragFloat3("Size", scale, 0.01f, 0.0f, 1.0f);
+    //for (int i = 0; i < 3; i++) pobject->scale(i, i) = scale[i];
+}
+
+void Engine::CreateLightMenu(AreaLight* plight, std::string* name)
+{
+    //ImGui::InputFloat3("Center", plight->.data, 3);
+}
+
+void Engine::ShowImage()
+{
+    ImGui::Begin("Result", &show_image);
+
+    glBindTexture(GL_TEXTURE_2D, imageID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
+    ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(imageID)), ImVec2(image.cols, image.rows));
 
     ImGui::End();
 }

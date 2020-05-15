@@ -116,11 +116,11 @@ tensorf333 Euclidean::gamma(const vecf3& u)
 //                                                                                     //
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void nonEuc::WorldExample::Gaussian::regularize_ref(vecf3& u)
+void nonEuc::WorldExample::Gaussian::regularize_ref(vecf3& u, int i)
 {
 }
 
-vecf3 nonEuc::WorldExample::Gaussian::regularize(const vecf3& u)
+vecf3 nonEuc::WorldExample::Gaussian::regularize(const vecf3& u, int i)
 {
 	return u;
 }

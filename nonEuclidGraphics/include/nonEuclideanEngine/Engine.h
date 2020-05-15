@@ -32,6 +32,11 @@ namespace nonEuc
 
 		// 窗口布局
 		void CreateMainMenu();
+		void CreateEditorMenu();
+		void CreateLightMenu(AreaLight* plight, std::string* name);
+		void CreateMeshMenu(Object* pobject, std::string* name);
+
+		void ShowImage();
 
 	private:
 		// 目的就是把这个场景的东西显示出来
@@ -53,7 +58,13 @@ namespace nonEuc
 		bool status_line = false;
 		float mouse_speed = 0.05f;
 		float move_speed = 1.0f;
+
+		cv::Mat image;
+		GLuint imageID;
 		ImVec4 clear_color = ImVec4(0.12f, 0.13f, 0.19f, 1.00f);
+
+		bool show_editor_menu = false;
+		bool show_image = false;
 	};
 }
 

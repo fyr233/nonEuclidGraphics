@@ -72,6 +72,10 @@ cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
 
 	cv::Mat img(height, width, CV_32FC3);
 
+	// test
+	std::cout << "Tracing..." << std::endl;
+	return img;
+
 	Intersector intersector;
 	FastBVH::Traverser<float, Triangle, Intersector> traverser(*bvh, intersector);
 
