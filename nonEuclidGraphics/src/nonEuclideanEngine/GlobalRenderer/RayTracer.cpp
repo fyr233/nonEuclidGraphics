@@ -83,7 +83,7 @@ cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
 			vecf3 d = cameraz*(-1.f) + camerax * (delta * (i - midwid)) + cameray*(delta*(midhgh - j));
 			d = d / sqrt(world->metric(o).dot_s(d, d));			//Normalize
 			pixel = tracer(FastBVH::Ray<float>(Vec3{o[0],o[1],o[2]}, Vec3{ d[0], d[1], d[2]}), traverser);
-			img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(pixel * 256.f));
+			img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(pixel*256.f));
 			//std::cout << pixel.r << pixel.g << pixel.b<< std::endl;
 		}
 		std::cout << float(i) / width << std::endl;
@@ -116,6 +116,17 @@ rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float
 		float nrm = sqrt(dot(ray.d, world->metric(vecf3(rayo)), ray.d));
 		ray.d = ray.d * (dt / nrm);
 
+		tensorf333 gamma = world->gamma(vecf3(rayo));
+		Vec3 dv;
+		for (size_t i = 0; i < 3; i++)
+		{
+			dv[i] = 0.f;
+			for (size_t k = 0; k < 3; k++)
+				for (size_t l = 0; l < 3; l++)
+					dv[i] -= gamma(i, k, l) * ray.d[k] * ray.d[l];
+		}
+		ray.d = ray.d + dv;
+
 		isect = traverser.traverse(ray);
 		if (isect)
 		{
@@ -127,16 +138,6 @@ rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float
 				return ((Object*)isectobj)->mesh->AlbedoTexture->Sample({ isect.uv[0], isect.uv[1] });
 		}
 
-		tensorf333 gamma = world->gamma(vecf3(rayo));
-		Vec3 dv;
-		for (size_t i = 0; i < 3; i++)
-		{
-			dv[i] = 0.f;
-			for (size_t k = 0; k < 3; k++)
-				for (size_t l = 0; l < 3; l++)
-					dv[i] -= gamma(i, k, l) * ray.d[k] * ray.d[l];
-		}
-		ray.d = ray.d + dv / dt;
 		ray.o = ray.o + ray.d;
 		distance += dt;
 
