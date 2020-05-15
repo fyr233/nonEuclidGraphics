@@ -26,11 +26,12 @@ void nonEuc::RayTracer::SetWorld(World* _world)
 	world = _world;
 }
 
-void nonEuc::RayTracer::SetParameter(float _distance_limit, float _decay_distance, rgbf _background_color)
+void nonEuc::RayTracer::SetParameter(float _distance_limit, float _decay_distance, rgbf _background_color, float _dt)
 {
 	distance_limit = _distance_limit;
 	decay_distance = _decay_distance;
 	background_color = _background_color;
+	dt = _dt;
 }
 
 void nonEuc::RayTracer::BuildBVH()
@@ -107,7 +108,6 @@ rgbf nonEuc::RayTracer::shader(FastBVH::Ray<float> ray, float distance, int time
 rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float, Triangle, Intersector>& traverser)
 {
 	float distance = 0.f;
-	float dt = 0.1f;
 	float* rayo = (float*)&ray.o;
 
 	FastBVH::Intersection<float, Triangle> isect;
@@ -134,7 +134,7 @@ rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float
 			dv[i] = 0.f;
 			for (size_t k = 0; k < 3; k++)
 				for (size_t l = 0; l < 3; l++)
-					dv[i] -= gamma(i, k, l) * ray.d[i] * ray.d[i];
+					dv[i] -= gamma(i, k, l) * ray.d[k] * ray.d[l];
 		}
 		ray.d = ray.d + dv / dt;
 		ray.o = ray.o + ray.d;
