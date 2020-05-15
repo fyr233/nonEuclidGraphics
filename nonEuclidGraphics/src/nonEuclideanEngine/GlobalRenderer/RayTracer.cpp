@@ -16,9 +16,14 @@ float dot(const Vec3& v1, const matf3& mat, const Vec3& v2)
 	return ret;
 }
 
+void nonEuc::RayTracer::Run(float fov, float aspect, int width)
+{
+	RenderTracing(fov, aspect, width);
+}
+
 void nonEuc::RayTracer::BuildBVH()
 {
-	//triangles = world.GetTriangles();			//TODO
+	//triangles = world->GetTriangles();			//TODO
 
 	FastBVH::DefaultBuilder<float> builder;
 

@@ -22,7 +22,7 @@ void nonEuc::World::AddAreaLight(vecf3 position, vecf3 edge1, vecf3 edge2, float
 void nonEuc::World::SetUniformLight(GLuint programID)
 {
 	int num_Light = 0;
-	GLint loc;
+	//GLint loc;
 	std::string var_name;
 	for (auto pObj : objectPtrs)
 	{

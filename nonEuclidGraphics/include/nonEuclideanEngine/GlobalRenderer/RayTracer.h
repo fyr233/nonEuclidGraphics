@@ -16,7 +16,14 @@ namespace nonEuc
 	class RayTracer
 	{
 	public:
-		World* world;
+		//RayTracer();
+		//~RayTracer() {}
+
+		//void Init(std::shared_ptr<World> _world) { world = _world; BuildBVH(); }
+		void Run(float fov, float aspect, int width);
+
+	public:
+		std::shared_ptr<World> world;
 		
 		FastBVH::BVH<float, Triangle> bvh;
 

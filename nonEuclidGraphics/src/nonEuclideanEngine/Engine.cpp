@@ -118,34 +118,7 @@ void Engine::Loop()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        {
-            // TODO: 创建一个控制台来调整一些参数
-            ImGui::Begin("Engine");
-            ImGui::Text("Information about the scene.(TODO)");
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            if (ImGui::CollapsingHeader("Objects"))
-            {
-                for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
-                    ImGui::Text("Object%d", i);
-            }
-            if (ImGui::CollapsingHeader("Camera"))
-            {
-                ImGui::SliderFloat("FarPlane", &far_plane, 5.f, 20.f);
-                ImGui::SliderFloat("NearPlane", &near_plane, 0.001f, 1.0f);
-            }
-            if (ImGui::CollapsingHeader("Mesh"))
-            {
-                ImGui::Checkbox("Line", &status_line);
-            }
-            if (ImGui::CollapsingHeader("Controller"))
-            {
-                ImGui::Checkbox("Roam", &Roam_status);
-                ImGui::SameLine();
-                ImGui::Text("(Press M to make the mouse unfocused)");
-            }
-
-            ImGui::End();
-        }
+        CreateMainMenu();
 
         // Rendering
         ImGui::Render();
@@ -252,4 +225,41 @@ void Engine::UpdateCamera()
         du = Up * (-move_speed) * deltaTime;
 
     camera.UpdatePosition(du);
+}
+
+void Engine::CreateMainMenu()
+{
+    ImGui::Begin("Engine");
+    //ImGui::Text("Information about the scene.(TODO)");
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    if (ImGui::CollapsingHeader("Objects"))
+    {
+        for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
+            ImGui::Text("Object%d", i);
+    }
+    if (ImGui::CollapsingHeader("Camera"))
+    {
+        ImGui::SliderFloat("FarPlane", &far_plane, 5.f, 20.f);
+        ImGui::SliderFloat("NearPlane", &near_plane, 0.001f, 1.0f);
+    }
+    if (ImGui::CollapsingHeader("Mesh"))
+    {
+        ImGui::Checkbox("Line", &status_line);
+    }
+    if (ImGui::CollapsingHeader("Render"))
+    {
+        if (ImGui::Button("RenderTracing"))
+        {
+            //RayTracer rayTracer(current_world);
+            //rayTracer.Run(PI<float> / 4, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, 128);
+        }
+    }
+    if (ImGui::CollapsingHeader("Controller"))
+    {
+        ImGui::Checkbox("Roam", &Roam_status);
+        ImGui::SameLine();
+        ImGui::Text("(Press M to make the mouse unfocused)");
+    }
+
+    ImGui::End();
 }

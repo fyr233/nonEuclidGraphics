@@ -13,6 +13,7 @@
 #include <core/Mesh.h>
 #include <core/Obj.h>
 #include <nonEuclideanEngine/shader.hpp>
+#include <nonEuclideanEngine/GlobalRenderer/RayTracer.h>
 
 namespace nonEuc
 {
@@ -28,6 +29,9 @@ namespace nonEuc
 		void Clear();	// 在结束的时候调用
 
 		void UpdateCamera();
+
+		// 窗口布局
+		void CreateMainMenu();
 
 	private:
 		// 目的就是把这个场景的东西显示出来
