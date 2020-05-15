@@ -255,8 +255,13 @@ void Engine::CreateMainMenu()
             nonEuc::RayTracer rayTracer(&(*current_world));
             rayTracer.SetParameter(5.0f, 3.0f, rgbf{ clear_color.x, clear_color.y, clear_color.z });    //初始渲染参数
             rayTracer.BuildBVH();                                               //生成BVH
-            image = rayTracer.RenderTracing(PI<float> / 4.0f, 1.0, 500);
+            image = rayTracer.RenderTracing(PI<float> / 4.0f, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, 128);
             show_image = true;
+
+            cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
+            for (int i = 0; i < image.cols; i++)
+                for (int j = 0; j < image.rows; j++)
+                    image.at<cv::Vec3f>(j, i) /= 256.f;
         }
     }
     if (ImGui::CollapsingHeader("Controller"))
@@ -318,10 +323,12 @@ void Engine::CreateLightMenu(AreaLight* plight, std::string* name)
 void Engine::ShowImage()
 {
     ImGui::Begin("Result", &show_image);
-
+    
     glBindTexture(GL_TEXTURE_2D, imageID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
-    ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(imageID)), ImVec2(image.cols, image.rows));
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.cols, image.rows, 0, GL_RGB, GL_FLOAT, image.data);
+    auto size = ImGui::GetWindowSize();
+    auto scale = std::max(size.x / image.cols, 1.0f);
+    ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(imageID)), ImVec2(image.cols * scale, image.rows * scale));
 
     ImGui::End();
 }

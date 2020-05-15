@@ -72,10 +72,6 @@ cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
 
 	cv::Mat img(height, width, CV_32FC3);
 
-	// test
-	std::cout << "Tracing..." << std::endl;
-	return img;
-
 	Intersector intersector;
 	FastBVH::Traverser<float, Triangle, Intersector> traverser(*bvh, intersector);
 
@@ -86,7 +82,7 @@ cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
 			vecf3 d = cameraz*(-1.f) + camerax * (delta * (i - midwid)) + cameray*(delta*(midhgh - j));
 			d = d / sqrt(world->metric(o).dot_s(d, d));			//Normalize
 			pixel = tracer(FastBVH::Ray<float>(Vec3{o[0],o[1],o[2]}, Vec3{ d[0], d[1], d[2]}), traverser);
-			img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(pixel*256.f));
+			img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(pixel * 256.f));
 			//std::cout << pixel.r << pixel.g << pixel.b<< std::endl;
 		}
 		std::cout << float(i) / width << std::endl;
