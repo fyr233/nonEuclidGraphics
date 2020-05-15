@@ -34,11 +34,13 @@ namespace nonEuc
 		rgbf background_color;
 
 		float decay_distance;							//衰减系数
-
+		float dt;										//迭代步长
 		float distance_limit;
 
 		void SetWorld(World* _world);
-		void SetParameter(float _distance_limit, float _decay_distance, rgbf _background_color);
+		// 设置RayTrace的参数
+		// 距离极限，衰减系数，背景颜色，迭代步长
+		void SetParameter(float _distance_limit, float _decay_distance, rgbf _background_color, float _dt);
 		// 生成world中的所有三角形，生成BVH
 		void BuildBVH();
 		
