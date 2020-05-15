@@ -54,14 +54,16 @@ std::vector<Triangle> nonEuc::World::GetTriangles()
 	{
 		if (objectPtrs[i]->obj_type == Obj::ObjType::_Object)
 		{
+			auto pobject = std::static_pointer_cast<Object>(objectPtrs[i]);
+			matf3 m2para = pobject->Getm2paraCoord();
 			auto m = std::static_pointer_cast<Object>(objectPtrs[i])->mesh;
 			for (size_t j = 0; j < m->faces.size(); j++)
 			{
 				Triangle t;
 
-				t.pos[0] = m->positions[m->faces[j].v_idx[0]];
-				t.pos[1] = m->positions[m->faces[j].v_idx[1]] - t.pos[0];
-				t.pos[2] = m->positions[m->faces[j].v_idx[2]] - t.pos[0];
+				t.pos[0] = m2para.dot(m->positions[m->faces[j].v_idx[0]]) + pobject->center;
+				t.pos[1] = m2para.dot(m->positions[m->faces[j].v_idx[1]]) + pobject->center - t.pos[0];
+				t.pos[2] = m2para.dot(m->positions[m->faces[j].v_idx[2]]) + pobject->center - t.pos[0];
 
 				auto G = metric(t.pos[0]);
 				auto S = SchmidtOrthogonalize(G);

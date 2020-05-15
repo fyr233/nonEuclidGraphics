@@ -44,12 +44,13 @@ int main()
     tex->Load("../data/test.png");
     tex->SetTextureImage();
     // 添加网格
-    pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex), { PI<float> ,0.f,0.f }, { 0.05f, 0.05f, 0.05f }, matf3::Identity());
-    for(int i = -1; i <=1; i+=2)
-        for (int j = -1; j <= 1; j += 2)
-            for (int k = -1; k <= 1; k += 2)
-                pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj",tex, Material::MaterialType::DEFAULT), { (float)i/2.f + PI<float>, (float)j/2.f, (float)k/2.f }, {0.05f, 0.05f, 0.05f}, matf3::Identity());
-    pworld->AddAreaLight({PI<float>, 2.f, 0.f}, {0.3f, 0.f, 0.f}, {0.f, 0.f, 0.3f}, 30.f, { 1.f,1.f,1.f });
+
+    //pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex), {0.f,0.f,0.f }, { 0.05f, 0.05f, 0.05f }, matf3::Identity());
+    for(int i = -3; i <=3; i+=2)
+        for (int j = -3; j <= 3; j += 2)
+            for (int k = -3; k <= 3; k += 2)
+                pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::MaterialType::DEFAULT), { (float)i/2.f, (float)j/2.f, (float)k/2.f }, {0.05f, 0.05f, 0.05f}, matf3::Identity());
+    pworld->AddAreaLight({0.f, 2.f, 0.f}, {0.3f, 0.f, 0.f}, {0.f, 0.f, 0.3f}, 30.f, { 1.f,1.f,1.f });
     
     //pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::BRASS), { 0.5f,0.f,0.f }, { 0.1f, 0.1f, 0.1f }, matf3::Identity());
     engine.SetWorld(pworld);

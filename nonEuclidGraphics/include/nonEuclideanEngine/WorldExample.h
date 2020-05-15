@@ -73,9 +73,9 @@ namespace nonEuc
 		class Euclidean : WorldExampleBase
 		{
 		public:
-			static void regularize_ref(vecf3& u);
+			static void regularize_ref(vecf3& u, int i);
 
-			static vecf3 regularize(const vecf3& u);
+			static vecf3 regularize(const vecf3& u, int i);
 
 			static vecf4 coord(const vecf3& u);
 

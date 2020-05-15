@@ -20,10 +20,10 @@ namespace cgcore
 			: Obj(_world), mesh{ _mesh }, center{ _center }, R{ _rotation }
 		{
 			scale = matf3::Diag(_scale);
-			obj_type = _Object;
+			obj_type = Obj::ObjType::_Object;
 		}
 
-		void Transform(matf3 S);
+		matf3 Getm2paraCoord();
 		void Draw(GLuint programID);
 
 	private:

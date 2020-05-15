@@ -109,13 +109,6 @@ void Mesh::LoadObj(std::string path)
 	*/
 }
 
-void Mesh::Transform(vecf3 center, matf3 S, matf3 R)
-{
-	for (int i = 0; i < positions.size(); i++)
-	{
-		positions[i] = matf3::dot(S, R).dot(positions[i]) + center;
-	}
-}
 
 std::vector<std::string> Mesh::SplitString(const std::string& s, const std::string& spliter)
 {
