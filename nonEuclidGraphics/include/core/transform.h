@@ -2,7 +2,7 @@
 
 #include <core/mat.h>
 #include <core/tensor.h>
-
+#include <iostream>
 namespace cgcore
 {
 	/*
@@ -44,7 +44,7 @@ namespace cgcore
 			for (size_t l = 0; l < NRow; l++)
 				for (size_t j = 0; j < i; j++)
 					for (size_t k = 0; k < NRow; k++)
-						beta[l] += S(k, j) * metric(i, k) * S(l, j);
+						beta[l] -= S(k, j) * metric(i, k) * S(l, j);
 			T beta_norm = sqrt(metric.dot_s(beta, beta));
 			for (size_t l = 0; l < NRow; l++)
 				S(l, i) = beta[l] / beta_norm;

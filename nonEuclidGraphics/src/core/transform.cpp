@@ -9,7 +9,7 @@ vecf3 cgcore::Translate(const tensorf333& gamma, vecf3 du, vecf3 v)
 		dv[i] = 0.f;
 		for (size_t k = 0; k < 3; k++)
 			for (size_t l = 0; l < 3; l++)
-				dv[i] -= gamma(i, k, l) * du[i] * v[i];
+				dv[i] -= gamma(i, k, l) * du[k] * v[l];
 	}
 	return v + dv;
 }
@@ -27,7 +27,7 @@ matf3 cgcore::Translate(const matf3& S_u1, const matf3& S_u2, const tensorf333& 
 		{
 			for (size_t k = 0; k < 3; k++)
 				for (size_t l = 0; l < 3; l++)
-					dSR(i, j) -= gamma(i, k, l) * du[i] * SR_1(i, j);
+					dSR(i, j) -= gamma(i, k, l) * du[k] * SR_1(l, j);
 		}
 	}
 	matf3 SR_2 = SR_1 + dSR;
