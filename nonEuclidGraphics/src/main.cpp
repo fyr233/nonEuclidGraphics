@@ -39,22 +39,22 @@ int main()
     nonEuc::Engine engine;      // 这个最好放在最开始
     std::shared_ptr<nonEuc::World> pworld = std::make_shared<nonEuc::World>();
 
-    pworld->SetWorldExample<nonEuc::WorldExample::OneRecursive>();
+    pworld->SetWorldExample<nonEuc::WorldExample::Gaussian>();
     std::shared_ptr<Texture2D> tex = std::make_shared<Texture2D>();
     tex->Load("../data/test.png");
     tex->SetTextureImage();
     // 添加网格
-    pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex), {PI<float>,0.f,0.f }, { 0.05f, 0.05f, 0.05f }, matf3::Identity());
-    for(int i = -1; i <=1; i+=2)
-        for (int j = -1; j <= 1; j += 2)
-            for (int k = -1; k <= 1; k += 2)
-                pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::MaterialType::DEFAULT), { (float)i/2.f + PI<float>, (float)j/2.f, (float)k/2.f }, {0.05f, 0.05f, 0.05f}, matf3::Identity());
-    pworld->AddAreaLight({PI<float>, 2.f, 0.f}, {0.3f, 0.f, 0.f}, {0.f, 0.f, 0.3f}, 30.f, { 1.f,1.f,1.f });
+    //pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex), {0.f,0.f,0.f }, { 0.05f, 0.05f, 0.05f }, matf3::Identity());
+    for(int i = -3; i <=3; i+=2)
+        for (int j = -3; j <= 3; j += 2)
+            for (int k = -3; k <= 3; k += 2)
+                pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::MaterialType::DEFAULT), { (float)i/2.f, (float)j/2.f, (float)k/2.f }, {0.05f, 0.05f, 0.05f}, matf3::Identity());
+    pworld->AddAreaLight({0.f, 2.f, 0.f}, {0.3f, 0.f, 0.f}, {0.f, 0.f, 0.3f}, 30.f, { 1.f,1.f,1.f });
     
     nonEuc::RayTracer rayTracer(&(*pworld));
     rayTracer.SetParameter(5.0f, 3.0f, rgbf{ 0.12f, 0.13f, 0.19f });    //初始渲染参数
     rayTracer.BuildBVH();                                               //生成BVH
-    auto img = rayTracer.RenderTracing(PI<float>/4.0f, 1.0, 100);
+    //auto img = rayTracer.RenderTracing(PI<float>/4.0f, 1.0, 150);
     
     //pworld->AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::BRASS), { 0.5f,0.f,0.f }, { 0.1f, 0.1f, 0.1f }, matf3::Identity());
     engine.SetWorld(pworld);

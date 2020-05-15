@@ -70,7 +70,7 @@ namespace nonEuc
 		metric = TWorldExample::metric;
 
 		//初始化Camera (初始化方法可以修改)
-		camera = Camera({ PI<float> , 0.f, 3.f }, this);
+		camera = Camera({ 0.f , 0.f, 3.f }, this);
 		//初始化实时渲染用的光源
 		light_as_point = new AreaLight(this, vecf3({ 0.f, 0.f, 0.f }));
 	}

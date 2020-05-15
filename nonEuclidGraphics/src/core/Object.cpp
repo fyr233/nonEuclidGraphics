@@ -4,9 +4,10 @@
 #include <core/gl.h>
 using namespace cgcore;
 
-void Object::Transform(matf3 S)
+matf3 Object::Getm2paraCoord()
 {
-	mesh->Transform(center, S, R);
+	matf3 S = cgcore::SchmidtOrthogonalize(world->metric(center));
+	return (S * R) * scale;
 }
 
 void Object::Draw(GLuint programID)

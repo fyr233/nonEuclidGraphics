@@ -41,13 +41,13 @@ void nonEuc::RayTracer::BuildBVH()
 
 	auto boxConverter = [](const Triangle& t) {
 		FastBVH::Vector3<float> minbound, maxbound;
-		minbound[0] = std::min(std::min(t.pos[0][0], t.pos[1][0]), t.pos[2][0]);
-		minbound[1] = std::min(std::min(t.pos[0][1], t.pos[1][1]), t.pos[2][1]);
-		minbound[2] = std::min(std::min(t.pos[0][2], t.pos[1][2]), t.pos[2][2]);
+		minbound[0] = t.pos[0][0] + std::min(std::min(0.f, t.pos[1][0]), t.pos[2][0]);
+		minbound[1] = t.pos[0][1] + std::min(std::min(0.f, t.pos[1][1]), t.pos[2][1]);
+		minbound[2] = t.pos[0][2] + std::min(std::min(0.f, t.pos[1][2]), t.pos[2][2]);
 
-		maxbound[0] = std::max(std::max(t.pos[0][0], t.pos[1][0]), t.pos[2][0]);
-		maxbound[1] = std::max(std::max(t.pos[0][1], t.pos[1][1]), t.pos[2][1]);
-		maxbound[2] = std::max(std::max(t.pos[0][2], t.pos[1][2]), t.pos[2][2]);
+		maxbound[0] = t.pos[0][0] + std::max(std::max(0.f, t.pos[1][0]), t.pos[2][0]);
+		maxbound[1] = t.pos[0][1] + std::max(std::max(0.f, t.pos[1][1]), t.pos[2][1]);
+		maxbound[2] = t.pos[0][2] + std::max(std::max(0.f, t.pos[1][2]), t.pos[2][2]);
 
 		return FastBVH::BBox<float>(minbound, maxbound);
 	};
@@ -82,7 +82,8 @@ cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
 			vecf3 d = cameraz*(-1.f) + camerax * (delta * (i - midwid)) + cameray*(delta*(midhgh - j));
 			d = d / sqrt(world->metric(o).dot_s(d, d));			//Normalize
 			pixel = tracer(FastBVH::Ray<float>(Vec3{o[0],o[1],o[2]}, Vec3{ d[0], d[1], d[2]}), traverser);
-			img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&pixel);
+			img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(pixel*256.f));
+			//std::cout << pixel.r << pixel.g << pixel.b<< std::endl;
 		}
 		std::cout << float(i) / width << std::endl;
 	}
@@ -118,6 +119,7 @@ rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float
 		isect = traverser.traverse(ray);
 		if (isect)
 		{
+
 			Obj* isectobj = &(*world->objectPtrs[isect.object->obj_id]);
 			if (isectobj->obj_type == Obj::ObjType::_AreaLight)
 				return ((AreaLight*)isectobj)->RadianceFactor();
