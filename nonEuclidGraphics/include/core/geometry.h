@@ -19,7 +19,7 @@ namespace cgcore
         FastBVH::Intersection<float, Triangle> operator () (const Triangle& tri, const FastBVH::Ray<float>& ray) const noexcept {
             matf3 E1E2d = {
                 tri.pos[1][0], tri.pos[2][0], -ray.d[0],
-                tri.pos[1][1], tri.pos[2][2], -ray.d[1],
+                tri.pos[1][1], tri.pos[2][1], -ray.d[1],
                 tri.pos[1][2], tri.pos[2][2], -ray.d[2]
             };
             vecf3 abt = E1E2d.inverse().dot(vecf3{ ray.o[0], ray.o[1], ray.o[2] }-tri.pos[0]);
