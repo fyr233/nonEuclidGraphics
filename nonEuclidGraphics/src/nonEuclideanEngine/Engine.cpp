@@ -253,7 +253,7 @@ void Engine::CreateMainMenu()
         if (ImGui::Button("RenderTracing"))
         {
             nonEuc::RayTracer rayTracer(&(*current_world));
-            rayTracer.SetParameter(5.0f, 3.0f, rgbf{ clear_color.x, clear_color.y, clear_color.z });    //初始渲染参数
+            rayTracer.SetParameter(5.0f, 3.0f, rgbf{ clear_color.x, clear_color.y, clear_color.z }, 0.01f);    //初始渲染参数
             rayTracer.BuildBVH();                                               //生成BVH
             image = rayTracer.RenderTracing(PI<float> / 4.0f, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, 128);
             show_image = true;
@@ -327,7 +327,7 @@ void Engine::ShowImage()
     glBindTexture(GL_TEXTURE_2D, imageID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.cols, image.rows, 0, GL_RGB, GL_FLOAT, image.data);
     auto size = ImGui::GetWindowSize();
-    auto scale = std::max(size.x / image.cols, 1.0f);
+    auto scale = std::max(size.x / image.cols, 0.0f);
     ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(imageID)), ImVec2(image.cols * scale, image.rows * scale));
 
     ImGui::End();
