@@ -4,6 +4,8 @@
 #include <core/transform.h>
 #include <core/gl.h>
 #include <string>
+#include <sstream>
+
 using namespace nonEuc;
 
 static void glfw_error_callback(int error, const char* description);
@@ -123,7 +125,7 @@ void Engine::Loop()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
+        //ImGui::ShowDemoWindow();
         CreateMainMenu();
         if (show_editor_menu)
             CreateEditorMenu();
@@ -140,24 +142,20 @@ void Engine::Loop()
         if (Roam_status)
             UpdateCamera();
         matf4 perspective = Perspective(PI<float> / 4, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, near_plane, far_plane);
-        
-        glUseProgram(programID);
 
         current_world->SetUniformLight(programID);
         for (int j = -2; j <= 2; j++)
         {
             matf4 view = current_world->camera.GetView(j);
-            
- 
-            gl::SetMat4f(programID, "V", view);
-            gl::SetMat4f(programID, "P", perspective);
-
             auto LightColor = current_world->light_as_point->color;
             auto LightPos = current_world->light_as_point->getLightPos();
             auto ViewPos = current_world->regularize(current_world->camera.paraPos, j);
-
-            gl::SetMat3f(programID, "G", current_world->metric(ViewPos));
             
+            gl::SetVec3f(programID, "backgroundColor", vecf3{ clear_color.x, clear_color.y, clear_color.z });
+            gl::SetFloat(programID, "zFar", far_plane);
+            gl::SetMat4f(programID, "V", view);
+            gl::SetMat4f(programID, "P", perspective);
+            gl::SetMat3f(programID, "G", current_world->metric(ViewPos));
             gl::SetVec3f(programID, "viewPos", ViewPos);
 
             for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
@@ -250,12 +248,20 @@ void Engine::CreateMainMenu()
     }
     if (ImGui::CollapsingHeader("Render"))
     {
-        if (ImGui::Button("RenderTracing"))
+        static int imgWidth = 128;
+        static float dt = 0.01f;
+        static float distanceLimit = 5.0f;
+        static float decay = 3.0f;
+        ImGui::DragInt("Width", &imgWidth);
+        ImGui::SliderFloat("StepSize", &dt, 0.001f, 0.1f);
+        ImGui::SliderFloat("Distance", &distanceLimit, 1.0f, 20.0f);
+        //ImGui::SliderFloat("Decay", &decay, 1.0f, 10.0f);
+        if (ImGui::Button("RayTracing"))
         {
             nonEuc::RayTracer rayTracer(&(*current_world));
-            rayTracer.SetParameter(5.0f, 3.0f, rgbf{ clear_color.x, clear_color.y, clear_color.z }, 0.01f);    //初始渲染参数
+            rayTracer.SetParameter(distanceLimit, decay, rgbf{ clear_color.x, clear_color.y, clear_color.z }, dt);    //初始渲染参数
             rayTracer.BuildBVH();                                               //生成BVH
-            image = rayTracer.RenderTracing(PI<float> / 4.0f, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, 128);
+            image = rayTracer.RenderTracing(PI<float> / 4.0f, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, imgWidth);
             show_image = true;
 
             cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
@@ -263,12 +269,17 @@ void Engine::CreateMainMenu()
                 for (int j = 0; j < image.rows; j++)
                     image.at<cv::Vec3f>(j, i) /= 256.f;
         }
+        
     }
     if (ImGui::CollapsingHeader("Controller"))
     {
         ImGui::Checkbox("Roam", &Roam_status);
         ImGui::SameLine();
         ImGui::Text("(Press M to make the mouse unfocused)");
+    }
+    if (ImGui::CollapsingHeader("Settings"))
+    {
+        ImGui::ColorEdit4("Background", &clear_color.x);
     }
     ImGui::Checkbox("EditorMenu", &show_editor_menu);
 
@@ -277,22 +288,24 @@ void Engine::CreateMainMenu()
 
 void Engine::CreateEditorMenu()
 {
-    ImGui::Begin("Editor");
+    ImGui::Begin("Editor", &show_editor_menu);
+    
     for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
     {
+        std::ostringstream s;
         std::string object_name = "";
         auto objPtr = current_world->objectPtrs[i];
         switch (objPtr->obj_type)
         {
         case Object::ObjType::_AreaLight:
-            object_name += "AreaLight";
-            object_name += char(i + '0');
+            s << "AreaLight" << i;
+            object_name = s.str();
             if (ImGui::CollapsingHeader(object_name.c_str()))
                 CreateLightMenu(dynamic_cast<AreaLight*>(&*objPtr), &object_name);
             break;
         case Object::ObjType::_Object:
-            object_name += "Mesh";
-            object_name += char(i + '0');
+            s << "Mesh" << i;
+            object_name = s.str();
             if (ImGui::CollapsingHeader(object_name.c_str()))
                 CreateMeshMenu(dynamic_cast<Object*>(&*objPtr), &object_name);
             break;
@@ -306,13 +319,13 @@ void Engine::CreateEditorMenu()
 
 void Engine::CreateMeshMenu(Object* pobject, std::string* name)
 {
-    //float scale[3];
-    //for (int i = 0; i < 3; i++) scale[i] = pobject->scale(i, i);
+    float scale = pobject->scale(1, 1);
     ImGui::DragFloat3("Center", pobject->center.data, 0.01f);
     pobject->center =  current_world->regularize(pobject->center, 0);
-
-    //ImGui::DragFloat3("Size", scale, 0.01f, 0.0f, 1.0f);
-    //for (int i = 0; i < 3; i++) pobject->scale(i, i) = scale[i];
+    ImGui::DragFloat("Scale", &scale, 0.01f, 0.0f, 1.0f);
+    for (int i = 0; i < 3; i++) pobject->scale(i, i) = scale;
+    ImGui::DragFloat3("Rotation", pobject->rotate.data, 1.0f, -90.0f, 90.0f);
+    pobject->UpdateR();
 }
 
 void Engine::CreateLightMenu(AreaLight* plight, std::string* name)

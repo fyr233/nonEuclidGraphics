@@ -17,6 +17,8 @@ struct AreaLight
 
 uniform bool useTexture;
 
+uniform vec3 backgroundColor;
+uniform float zFar;
 uniform sampler2D AlbedoTexture;
 uniform vec3 lightColor;
 uniform vec3 lightPos;
@@ -95,8 +97,9 @@ void main()
 	vec3 color = vec3(0);//useTexture ? objColor * ambient: ambient;
 	for(int i = 0; i < numAreaLights; i++)
 		color += useTexture ? objColor * CalcAreaLight(areaLights[i], WorldPos, viewDir) : CalcAreaLight(areaLights[i], WorldPos, viewDir);
-	float zfar2 = pow(16, 0.8);
+	//float zfar2 = pow(16, 0.8);
+	float zfar2 = pow(zFar / 2, 1.6f);
 	float decay = exp(- viewDistance / zfar2);
-	color = color * decay + vec3(0.12, 0.13, 0.19) * (1-decay);
+	color = color * decay + backgroundColor * (1-decay);
 	fragColor = color;
 }

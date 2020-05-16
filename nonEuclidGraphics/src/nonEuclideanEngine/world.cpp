@@ -9,7 +9,7 @@ World::World()
 	
 }
 
-void World::AddObj(std::shared_ptr<Mesh> newMesh, vecf3 center, vecf3 scale, matf3 rotation)
+void World::AddObj(std::shared_ptr<Mesh> newMesh, vecf3 center, vecf3 scale, vecf3 rotation)
 {
 	objectPtrs.push_back(std::make_shared<Object>(this, newMesh, center, scale, rotation));
 }

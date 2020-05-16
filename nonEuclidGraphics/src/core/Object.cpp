@@ -18,3 +18,20 @@ void Object::Draw(GLuint programID)
 	gl::SetMat3f(programID, "SR", S * R);
 	mesh->Draw(programID, transform);
 }
+
+void Object::UpdateR()
+{
+	R = matf3{
+		1, 0, 0,
+		0, cos(toRad(rotate[0])), -sin(toRad(rotate[0])),
+		0, sin(toRad(rotate[0])), cos(toRad(rotate[0])),
+	} * matf3{
+		cos(toRad(rotate[1])), 0, -sin(toRad(rotate[1])),
+		0, 1, 0,
+		sin(toRad(rotate[1])), 0, cos(toRad(rotate[1])),
+	} * matf3{
+		cos(toRad(rotate[2])), -sin(toRad(rotate[2])), 0,
+		sin(toRad(rotate[2])), cos(toRad(rotate[2])), 0,
+		0, 0, 1,
+	};
+}
