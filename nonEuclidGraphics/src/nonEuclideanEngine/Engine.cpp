@@ -4,6 +4,7 @@
 #include <core/transform.h>
 #include <core/gl.h>
 #include <string>
+#include <sstream>
 using namespace nonEuc;
 
 static void glfw_error_callback(int error, const char* description);
@@ -255,7 +256,7 @@ void Engine::CreateMainMenu()
             nonEuc::RayTracer rayTracer(&(*current_world));
             rayTracer.SetParameter(5.0f, 3.0f, rgbf{ clear_color.x, clear_color.y, clear_color.z }, 0.01f);    //初始渲染参数
             rayTracer.BuildBVH();                                               //生成BVH
-            image = rayTracer.RenderTracing(PI<float> / 4.0f, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, 128);
+            image = rayTracer.RenderTracing(PI<float> / 4.0f, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, 512);
             show_image = true;
 
             cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
@@ -278,21 +279,26 @@ void Engine::CreateMainMenu()
 void Engine::CreateEditorMenu()
 {
     ImGui::Begin("Editor");
+    std::string strbuf;
+
     for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
     {
         std::string object_name = "";
         auto objPtr = current_world->objectPtrs[i];
+        std::stringstream ss;
         switch (objPtr->obj_type)
         {
         case Object::ObjType::_AreaLight:
-            object_name += "AreaLight";
-            object_name += char(i + '0');
+            ss << int(i);
+            ss >> strbuf;
+            object_name += "AreaLight " + strbuf;
             if (ImGui::CollapsingHeader(object_name.c_str()))
                 CreateLightMenu(dynamic_cast<AreaLight*>(&*objPtr), &object_name);
             break;
         case Object::ObjType::_Object:
-            object_name += "Mesh";
-            object_name += char(i + '0');
+            ss << int(i);
+            ss >> strbuf;
+            object_name += "Mesh " + strbuf;
             if (ImGui::CollapsingHeader(object_name.c_str()))
                 CreateMeshMenu(dynamic_cast<Object*>(&*objPtr), &object_name);
             break;
@@ -308,7 +314,7 @@ void Engine::CreateMeshMenu(Object* pobject, std::string* name)
 {
     //float scale[3];
     //for (int i = 0; i < 3; i++) scale[i] = pobject->scale(i, i);
-    ImGui::DragFloat3("Center", pobject->center.data, 0.01f);
+    ImGui::DragFloat3((*name+":Center").c_str(), pobject->center.data, 0.01f);
     pobject->center =  current_world->regularize(pobject->center, 0);
 
     //ImGui::DragFloat3("Size", scale, 0.01f, 0.0f, 1.0f);
