@@ -261,7 +261,9 @@ void Engine::CreateMainMenu()
             nonEuc::RayTracer rayTracer(&(*current_world));
             rayTracer.SetParameter(distanceLimit, decay, rgbf{ clear_color.x, clear_color.y, clear_color.z }, dt);    //初始渲染参数
             rayTracer.BuildBVH();                                               //生成BVH
+
             image = rayTracer.RenderTracing(PI<float> / 4.0f, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, imgWidth);
+
             show_image = true;
 
             cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
@@ -289,23 +291,30 @@ void Engine::CreateMainMenu()
 void Engine::CreateEditorMenu()
 {
     ImGui::Begin("Editor", &show_editor_menu);
-    
+
+    std::string strbuf;
+
     for (size_t i = 0; i < current_world->objectPtrs.size(); i++)
     {
         std::ostringstream s;
         std::string object_name = "";
         auto objPtr = current_world->objectPtrs[i];
+        std::stringstream ss;
         switch (objPtr->obj_type)
         {
         case Object::ObjType::_AreaLight:
-            s << "AreaLight" << i;
-            object_name = s.str();
+            ss << int(i);
+            ss >> strbuf;
+            object_name += "AreaLight " + strbuf;
+
             if (ImGui::CollapsingHeader(object_name.c_str()))
                 CreateLightMenu(dynamic_cast<AreaLight*>(&*objPtr), &object_name);
             break;
         case Object::ObjType::_Object:
-            s << "Mesh" << i;
-            object_name = s.str();
+            ss << int(i);
+            ss >> strbuf;
+            object_name += "Mesh " + strbuf;
+
             if (ImGui::CollapsingHeader(object_name.c_str()))
                 CreateMeshMenu(dynamic_cast<Object*>(&*objPtr), &object_name);
             break;
@@ -320,7 +329,8 @@ void Engine::CreateEditorMenu()
 void Engine::CreateMeshMenu(Object* pobject, std::string* name)
 {
     float scale = pobject->scale(1, 1);
-    ImGui::DragFloat3("Center", pobject->center.data, 0.01f);
+    ImGui::DragFloat3((*name+":Center").c_str(), pobject->center.data, 0.01f);
+
     pobject->center =  current_world->regularize(pobject->center, 0);
     ImGui::DragFloat("Scale", &scale, 0.01f, 0.0f, 1.0f);
     for (int i = 0; i < 3; i++) pobject->scale(i, i) = scale;

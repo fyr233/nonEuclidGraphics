@@ -17,25 +17,7 @@ using namespace cgcore;
 
 int main()
 {
-    vecf3 v1 = { 0.1f, 2.f, 0.3f };
-    vecf3 v2 = { 0.5, 0.3f, 0.4f };
-    vec<float, 6> v3(v1, v2);
-    printf("%f\n",vecf3::dot(v1, v2));
 
-    mat<float, 3, 3> mat1 = { 4.f, 2.f, 3.f, 4.f, 1.f, 6.f, 7.f, 8.f, 9.f};
-
-    std::cout << mat1.transpose() << std::endl;
-    std::cout << vecf3::cross(v1, v2) << std::endl;
-    std::cout << mat1.inverse() << std::endl;
-    std::cout << matf3::dot(mat1.inverse(), mat1) << std::endl;
-    std::cout << "Hello World!\n";
-    matf3 g = matf3::dot(mat1.transpose(), mat1);
-    std::cout << g << std::endl;
-    std::cout << SchmidtOrthogonalize(g) << std::endl;
-
-    rgbf color1(3.f, 2.f, 1.f), color2(3.f,7.f, 9.f);
-    color1 += color2;
-    color1 *= color2[1];
     nonEuc::Engine engine;      // 这个最好放在最开始
     std::shared_ptr<nonEuc::World> pworld = std::make_shared<nonEuc::World>();
 
