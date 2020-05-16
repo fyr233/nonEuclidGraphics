@@ -253,7 +253,7 @@ void Engine::CreateMainMenu()
         if (ImGui::Button("RenderTracing"))
         {
             nonEuc::RayTracer rayTracer(&(*current_world));
-            rayTracer.SetParameter(5.0f, 3.0f, rgbf{ clear_color.x, clear_color.y, clear_color.z });    //初始渲染参数
+            rayTracer.SetParameter(5.0f, 3.0f, rgbf{ clear_color.x, clear_color.y, clear_color.z }, 0.01f);    //初始渲染参数
             rayTracer.BuildBVH();                                               //生成BVH
             image = rayTracer.RenderTracing(PI<float> / 4.0f, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, 128);
             show_image = true;

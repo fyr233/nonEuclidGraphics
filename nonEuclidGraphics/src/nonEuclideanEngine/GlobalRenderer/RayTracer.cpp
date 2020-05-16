@@ -78,6 +78,7 @@ cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
 
 	for (int i = 0; i < width; i++)
 	{
+#pragma omp parallel for
 		for (int j = 0; j < height; j++)
 		{
 			vecf3 d = cameraz*(-1.f) + camerax * (delta * (i - midwid)) + cameray*(delta*(midhgh - j));
