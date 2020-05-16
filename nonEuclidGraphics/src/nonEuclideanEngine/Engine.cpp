@@ -332,9 +332,10 @@ void Engine::CreateMeshMenu(Object* pobject, std::string* name)
     ImGui::DragFloat3((*name+":Center").c_str(), pobject->center.data, 0.01f);
 
     pobject->center =  current_world->regularize(pobject->center, 0);
-    ImGui::DragFloat("Scale", &scale, 0.01f, 0.0f, 1.0f);
+    ImGui::DragFloat((*name + ":Scale").c_str(), &scale, 0.01f, 0.0f, 1.0f);
     for (int i = 0; i < 3; i++) pobject->scale(i, i) = scale;
-    ImGui::DragFloat3("Rotation", pobject->rotate.data, 1.0f, -90.0f, 90.0f);
+
+    ImGui::DragFloat3((*name + ":Rotation").c_str(), pobject->rotate.data, 1.0f, -180.0f, 180.0f);
     pobject->UpdateR();
 }
 
