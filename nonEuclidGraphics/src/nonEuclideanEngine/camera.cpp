@@ -56,15 +56,15 @@ void Camera::UpdatePosition(vecf3 du)
 	Rotation = Translate(S1, S2, world->gamma(paraPos), du, Rotation);
 	//std::cout << "Rotation" << std::endl<< Rotation;
 	paraPos = paraPos + du;
-	world->regularize_ref(paraPos, 0);
+	world->regularize_ref(paraPos, 0, 0, 0);
 	T = (S2 * Rotation).transpose();
 }
 
-matf4 Camera::GetView(int i)
+matf4 Camera::GetView(int i, int j, int k)
 {
 	// Vp = TG(p - camera.p)
 	matf3 G = world->metric(paraPos);
-	auto paraPostemp = world->regularize(paraPos, i);
+	auto paraPostemp = world->regularize(paraPos, i, j, k);
 	matf4 m1{
 		1.0f, 0.0f, 0.0f, -paraPostemp[0],
 		0.0f, 1.0f, 0.0f, -paraPostemp[1],

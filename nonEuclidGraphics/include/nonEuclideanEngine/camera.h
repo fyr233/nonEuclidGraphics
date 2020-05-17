@@ -31,7 +31,7 @@ namespace nonEuc
 		void ResetCamera(vecf3 position, float yaw, float pitch);
 		void UpdateDirection(float dyaw, float dpitch);
 		void UpdatePosition(vecf3 du);
-		matf4 GetView(int i);
+		matf4 GetView(int i, int j, int k);
 
 	public:
 		nonEuc::World* world;	//对世界的引用（让camera按需自己去计算S、G，省得总是传递）

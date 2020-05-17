@@ -144,12 +144,12 @@ void Engine::Loop()
         matf4 perspective = Perspective(PI<float> / 4, scrheight == 0 ? 1.0f : (float)scrwidth / (float)scrheight, near_plane, far_plane);
 
         current_world->SetUniformLight(programID);
-        for (int j = -2; j <= 2; j++)
+        for (int j = -2; j <= 2; j++) for(int k = -1; k <= -1; k++) for (int l = -1; l <= -1; l++)
         {
-            matf4 view = current_world->camera.GetView(j);
+            matf4 view = current_world->camera.GetView(j, k, l);
             auto LightColor = current_world->light_as_point->color;
             auto LightPos = current_world->light_as_point->getLightPos();
-            auto ViewPos = current_world->regularize(current_world->camera.paraPos, j);
+            auto ViewPos = current_world->regularize(current_world->camera.paraPos, j, k, l);
             
             gl::SetVec3f(programID, "backgroundColor", vecf3{ clear_color.x, clear_color.y, clear_color.z });
             gl::SetFloat(programID, "zFar", far_plane);
@@ -239,6 +239,7 @@ void Engine::CreateMainMenu()
     
     if (ImGui::CollapsingHeader("Camera"))
     {
+        ImGui::DragFloat3("Pos", current_world->camera.paraPos.data, 0);
         ImGui::SliderFloat("FarPlane", &far_plane, 5.f, 20.f);
         ImGui::SliderFloat("NearPlane", &near_plane, 0.001f, 1.0f);
     }
@@ -331,7 +332,7 @@ void Engine::CreateMeshMenu(Object* pobject, std::string* name)
     float scale = pobject->scale(1, 1);
     ImGui::DragFloat3((*name+":Center").c_str(), pobject->center.data, 0.01f);
 
-    pobject->center =  current_world->regularize(pobject->center, 0);
+    pobject->center =  current_world->regularize(pobject->center, 0, 0, 0);
     ImGui::DragFloat((*name + ":Scale").c_str(), &scale, 0.01f, 0.0f, 1.0f);
     for (int i = 0; i < 3; i++) pobject->scale(i, i) = scale;
 
