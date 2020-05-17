@@ -85,11 +85,11 @@ cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
 			d = d / sqrt(world->metric(o).dot_s(d, d));			//Normalize
 			pixel = tracer(FastBVH::Ray<float>(Vec3{o[0],o[1],o[2]}, Vec3{ d[0], d[1], d[2]}), traverser);
 			img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(pixel*256.f));
-			//std::cout << pixel.r << pixel.g << pixel.b<< std::endl;
+
 		}
 		std::cout << float(i) / width << std::endl;
 	}
-	// 暂时保存为图片查看。接下来最好做成显示在 GUI 上。
+	// 暂时保存为图片查看
 	cv::cvtColor(img, img, cv::COLOR_RGB2BGR);
 	//if (cv::imwrite("../data/rst.jpg", img))
 	//	std::cout << "Done" << std::endl;
@@ -114,6 +114,10 @@ rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float
 	FastBVH::Intersection<float, Triangle> isect;
 	while (true)
 	{
+		vecf3 vrayo((float*)&ray.o);
+		world->regularize_ref(vrayo, 0, 0, 0);
+		memcpy(&(ray.o), vrayo.data, sizeof(float) * 3);
+
 		float nrm = sqrt(dot(ray.d, world->metric(vecf3(rayo)), ray.d));
 		ray.d = ray.d * (dt / nrm);
 
@@ -131,12 +135,13 @@ rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float
 		isect = traverser.traverse(ray);
 		if (isect)
 		{
-
 			Obj* isectobj = &(*world->objectPtrs[isect.object->obj_id]);
-			if (isectobj->obj_type == Obj::ObjType::_AreaLight)
-				return ((AreaLight*)isectobj)->RadianceFactor();
-			else
-				return ((Object*)isectobj)->mesh->AlbedoTexture->Sample({ isect.uv[0], isect.uv[1] });
+			if (isectobj->obj_type == Obj::ObjType::_Object)
+			{
+				float decay = exp(-pow(distance / decay_distance, 1.5f));
+				return ((Object*)isectobj)->mesh->AlbedoTexture->Sample({ isect.uv[0], isect.uv[1] }) * decay + background_color * (1 - decay);
+			}
+				
 		}
 
 		ray.o = ray.o + ray.d;

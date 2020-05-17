@@ -24,8 +24,8 @@ namespace cgcore
             };
             vecf3 abt = E1E2d.inverse().dot(vecf3{ ray.o[0], ray.o[1], ray.o[2] }-tri.pos[0]);
             if(isnan(abt[2]) ||
-                abt[0] < 0.f || abt[0] > 1.f 
-                || abt[1] <0.f || abt[1] >1.f
+                abt[0] < 0.f || abt[1] < 0.f
+                || abt[0]+abt[1] > 1.f
                 || abt[2]<0.f || abt[2]>1.f ){
                 return FastBVH::Intersection<float, Triangle> { };
             }

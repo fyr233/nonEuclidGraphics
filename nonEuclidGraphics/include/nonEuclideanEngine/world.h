@@ -36,7 +36,7 @@ namespace nonEuc
 	
 		std::vector<std::shared_ptr<Obj>> objectPtrs;
 		Camera camera;
-		AreaLight *light_as_point;
+
 
 	public:
 
@@ -72,14 +72,13 @@ namespace nonEuc
 		metric = TWorldExample::metric;
 
 		//初始化Camera (初始化方法可以修改)
-		camera = Camera({ 1.f , 3 * PI<float>/2, 10.f }, this);
-		//初始化实时渲染用的光源
-		light_as_point = new AreaLight(this, vecf3({ 1.f, 1.f, 3.f }));
+		camera = Camera({ 0.f , PI<float>/2.f, PI<float>/2.f}, this);
+
 	}
 
 	inline World::~World()
 	{
-		delete light_as_point;
+
 	}
 }
 

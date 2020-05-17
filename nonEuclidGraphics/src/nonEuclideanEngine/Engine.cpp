@@ -149,8 +149,7 @@ void Engine::Loop()
         for (int j = -2; j <= 2; j++) for(int k = -1; k <= -1; k++) for (int l = -1; l <= -1; l++)
         {
             matf4 view = current_world->camera.GetView(j, k, l);
-            auto LightColor = current_world->light_as_point->color;
-            auto LightPos = current_world->light_as_point->getLightPos();
+
             auto ViewPos = current_world->regularize(current_world->camera.paraPos, j, k, l);
             
             gl::SetVec3f(programID, "backgroundColor", vecf3{ clear_color.x, clear_color.y, clear_color.z });
@@ -237,8 +236,9 @@ void Engine::CreateMainMenu()
 {
     ImGui::Begin("Engine");
     //ImGui::Text("Information about the scene.(TODO)");
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    
+    ImGui::Text(" %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::Text("Camera (%f, %f, %f)", current_world->camera.paraPos[0], current_world->camera.paraPos[1], current_world->camera.paraPos[2]);
+
     if (ImGui::CollapsingHeader("Camera"))
     {
         ImGui::DragFloat3("Pos", current_world->camera.paraPos.data, 0);
@@ -249,7 +249,7 @@ void Engine::CreateMainMenu()
     {
         ImGui::Checkbox("Line", &status_line);
     }
-    if (ImGui::CollapsingHeader("Render"))
+    if (ImGui::CollapsingHeader("Global Render"))
     {
         static int imgWidth = 128;
         static float dt = 0.01f;
@@ -258,7 +258,7 @@ void Engine::CreateMainMenu()
         ImGui::DragInt("Width", &imgWidth);
         ImGui::SliderFloat("StepSize", &dt, 0.001f, 0.1f);
         ImGui::SliderFloat("Distance", &distanceLimit, 1.0f, 20.0f);
-        //ImGui::SliderFloat("Decay", &decay, 1.0f, 10.0f);
+        ImGui::SliderFloat("Decay", &decay, 1.0f, 10.0f);
         if (ImGui::Button("RayTracing"))
         {
             nonEuc::RayTracer rayTracer(&(*current_world));
