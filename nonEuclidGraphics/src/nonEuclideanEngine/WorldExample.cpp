@@ -309,3 +309,42 @@ tensorf333 nonEuc::WorldExample::Hyperbolic1::gamma(const vecf3& u)
 			}
 	return rst;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+void nonEuc::WorldExample::Hyperbolic2::regularize_ref(vecf3& u, int i, int j, int k)
+{
+
+}
+
+vecf3 nonEuc::WorldExample::Hyperbolic2::regularize(const vecf3& u, int i, int j, int k)
+{
+	return u;
+}
+
+matf3 nonEuc::WorldExample::Hyperbolic2::metric(const vecf3& u)
+{
+	float r2 = u.norm2();
+	matf3 rst;
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
+		{
+			rst(i, j) = u[i] * u[j] / ((r2+1) * A*A);
+			if (i == j) rst(i, j) += 1.0f;
+		}
+	return rst;
+}
+
+tensorf333 nonEuc::WorldExample::Hyperbolic2::gamma(const vecf3& u)
+{
+	float r2 = u.norm2();
+	float t = (1+r2)*(r2+A*A*(1+r2));
+	tensorf333 rst;
+	for (int i = 0; i < 3; i++)
+		for (int k = 0; k < 3; k++)
+			for (int l = 0; l < 3; l++)
+			{
+				rst(i, k, l) = k == l ? (1 + r2 - u[k] * u[k]) : (-u[k] * u[l]);
+				rst(i, k, l) *= u[i] / t;
+			}
+	return rst;
+}
