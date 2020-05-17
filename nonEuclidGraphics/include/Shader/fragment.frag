@@ -87,7 +87,7 @@ void main()
 	// ธ฿นโ
 	//float shininess =33;
 	//float specularStrength = 0.3;
-	float viewDistance = pow(G_norm2(viewPos - WorldPos), 0.8);
+	float viewDistance = pow(G_norm2(viewPos - WorldPos), 0.75);
 	vec3 viewDir = G_normalize(viewPos - WorldPos);
 	//vec3 reflectDir = reflect(-lightDir, SRnormal);
 	
@@ -98,7 +98,7 @@ void main()
 	for(int i = 0; i < numAreaLights; i++)
 		color += useTexture ? objColor * CalcAreaLight(areaLights[i], WorldPos, viewDir) : CalcAreaLight(areaLights[i], WorldPos, viewDir);
 	//float zfar2 = pow(16, 0.8);
-	float zfar2 = pow(zFar / 2, 1.6f);
+	float zfar2 = pow(zFar / 3, 1.5);
 	float decay = exp(- viewDistance / zfar2);
 	color = color * decay + backgroundColor * (1-decay);
 	fragColor = color;

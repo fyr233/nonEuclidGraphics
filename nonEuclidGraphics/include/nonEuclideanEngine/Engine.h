@@ -56,8 +56,8 @@ namespace nonEuc
 
 		bool Roam_status = false;
 		bool status_line = false;
-		float mouse_speed = 0.05f;
-		float move_speed = 1.0f;
+		float mouse_speed = 0.03f;
+		float move_speed = 0.8f;
 
 		cv::Mat image;
 		GLuint imageID;
