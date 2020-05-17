@@ -11,8 +11,10 @@ namespace cgcore
 
 	typedef std::function<vecf3(const vecf3&)> Func3to3;
 	typedef std::function<vecf3(const vecf3&, int)> Func3ito3;
+	typedef std::function<vecf3(const vecf3&, int, int, int)> Func3ijkto3;
 	typedef std::function<void(vecf3&)> Func3;
 	typedef std::function<void(vecf3&, int)> Func3i;
+	typedef std::function<void(vecf3&, int, int, int)> Func3ijk;
 	typedef std::function<matf3(const vecf3&)> Func3to33;
 	typedef std::function<matf43(const vecf3&)> Func3to43;
 	typedef std::function<tensorf333(const vecf3&)> Func3to333;

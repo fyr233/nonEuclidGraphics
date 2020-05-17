@@ -24,8 +24,10 @@ namespace nonEuc
 		//描述整个空间（三维流形）的性质
 
 		//规范化坐标（限制每个点参数坐标唯一）
-		Func3i regularize_ref;
-		Func3ito3 regularize;
+		//Func3i regularize_ref;
+		//Func3ito3 regularize;
+		Func3ijk regularize_ref;
+		Func3ijkto3 regularize;
 		
 		//度规矩阵
 		Func3to33 metric;
@@ -70,9 +72,9 @@ namespace nonEuc
 		metric = TWorldExample::metric;
 
 		//初始化Camera (初始化方法可以修改)
-		camera = Camera({ 0.f , 0.f, 3.f }, this);
+		camera = Camera({ 1.f , 3 * PI<float>/2, 10.f }, this);
 		//初始化实时渲染用的光源
-		light_as_point = new AreaLight(this, vecf3({ 0.f, 0.f, 0.f }));
+		light_as_point = new AreaLight(this, vecf3({ 1.f, 1.f, 3.f }));
 	}
 
 	inline World::~World()
