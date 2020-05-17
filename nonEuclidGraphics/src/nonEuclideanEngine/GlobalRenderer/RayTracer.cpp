@@ -91,10 +91,10 @@ cv::Mat nonEuc::RayTracer::RenderTracing(float fov, float aspect, int width)
 	}
 	// 暂时保存为图片查看。接下来最好做成显示在 GUI 上。
 	cv::cvtColor(img, img, cv::COLOR_RGB2BGR);
-	if (cv::imwrite("../data/rst.jpg", img))
-		std::cout << "Done" << std::endl;
-	else
-		std::cout << "FileError" << std::endl;
+	//if (cv::imwrite("../data/rst.jpg", img))
+	//	std::cout << "Done" << std::endl;
+	//else
+	//	std::cout << "FileError" << std::endl;
 	return img;
 }
 

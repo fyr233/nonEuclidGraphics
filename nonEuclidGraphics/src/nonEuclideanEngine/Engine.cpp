@@ -6,6 +6,8 @@
 #include <string>
 #include <sstream>
 
+#include <app/AutoCameraController.h>
+
 using namespace nonEuc;
 
 static void glfw_error_callback(int error, const char* description);
@@ -272,7 +274,13 @@ void Engine::CreateMainMenu()
                 for (int j = 0; j < image.rows; j++)
                     image.at<cv::Vec3f>(j, i) /= 256.f;
         }
-        
+        ImGui::SameLine();
+        if (ImGui::Button("UseScript"))
+        {
+            AutoCameraController acc;
+            acc.Init("../data/Scripts/test.txt", current_world);
+            acc.Run();
+        }
     }
     if (ImGui::CollapsingHeader("Controller"))
     {
