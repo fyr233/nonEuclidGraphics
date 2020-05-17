@@ -3,19 +3,19 @@
 using namespace nonEuc::WorldExample;
 
 /////////////////////////////////    ³¬ÇòÃæ¿Õ¼ä    /////////////////////////////////////////
-void HyperSphere::regularize_ref(vecf3& u)
+void HyperSphere::regularize_ref(vecf3& u, int i, int j, int k)
 {
-	u[0] = fmod(fmod(u[0], 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>);
+	u[0] = fmod(fmod(u[0] + i * 2 * PI<float>, 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>);
 	u[1] = fmod(fmod(u[1], PI<float>) + PI<float>, PI<float>);
-	u[2] = fmod(fmod(u[0], PI<float>) + PI<float>, PI<float>);
+	u[2] = fmod(fmod(u[2], PI<float>) + PI<float>, PI<float>);
 }
 
-vecf3 HyperSphere::regularize(const vecf3& u)
+vecf3 HyperSphere::regularize(const vecf3& u, int i, int j, int k)
 {
 	vecf3 ret;
-	ret[0] = fmod(fmod(u[0], 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>);
+	ret[0] = fmod(fmod(u[0] + i * 2 * PI<float>, 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>);
 	ret[1] = fmod(fmod(u[1], PI<float>) + PI<float>, PI<float>);
-	ret[2] = fmod(fmod(u[0], PI<float>) + PI<float>, PI<float>);
+	ret[2] = fmod(fmod(u[2], PI<float>) + PI<float>, PI<float>);
 	return ret;
 }
 
