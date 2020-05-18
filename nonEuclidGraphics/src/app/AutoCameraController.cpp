@@ -14,7 +14,7 @@ bool AutoCameraController::Init(std::string path, std::shared_ptr<nonEuc::World>
 	std::string line;
 	std::getline(objfile, line);
 	std::stringstream ss(line);
-	ss >> steps_per_frame >> step_size >> dt >> width;
+	ss >> steps_per_frame >> step_size >> dt >> width >> height;
 
 	while (!objfile.eof())
 	{
@@ -79,10 +79,12 @@ bool AutoCameraController::Init(std::string path, std::shared_ptr<nonEuc::World>
 
 bool AutoCameraController::Run()
 {
-	std::cout << steps_per_frame << " " << step_size << " " << dt << " " << width << std::endl;
+	std::cout << steps_per_frame << " " << step_size << " " << dt << " " << width << " " << height << std::endl;
 	for (int i = 0; i < operationQueue.size(); i++)
 		std::cout << operationQueue[i].type << " " << operationQueue[i].distance << std::endl;
 	
+	float fov = width / (float)height;
+
 	nonEuc::Camera& camera = pWorld->camera;
 
 	nonEuc::RayTracer rayTracer(&(*pWorld));
@@ -101,7 +103,7 @@ bool AutoCameraController::Run()
 				std::ostringstream ss;
 				ss << "../data/Result/rst" << num++ << ".jpg";
 
-				cv::Mat image = rayTracer.RenderTracing(PI<float> / 4, 1.0f, width);
+				cv::Mat image = rayTracer.RenderTracing(PI<float> / 4, fov, width);
 
 				if (cv::imwrite(ss.str(), image))
 					std::cout << "Done" << std::endl;

@@ -40,6 +40,7 @@ private:
 	rgbf backgroundColor = rgbf{ 0.12f, 0.13f, 0.19f };
 	float dt = 0.01f;
 	int width = 128;
+	int height = 128;
 
 	std::shared_ptr<nonEuc::World> pWorld = nullptr;
 	std::vector<Operation> operationQueue;
