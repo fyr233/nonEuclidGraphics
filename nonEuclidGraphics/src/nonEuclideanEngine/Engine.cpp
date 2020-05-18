@@ -274,12 +274,18 @@ void Engine::CreateMainMenu()
                 for (int j = 0; j < image.rows; j++)
                     image.at<cv::Vec3f>(j, i) /= 256.f;
         }
-        ImGui::SameLine();
+        static char path[100] = "../data/Scripts/test.txt";
+        ImGui::InputText("ScriptPath", path, 100);
         if (ImGui::Button("UseScript"))
         {
             AutoCameraController acc;
-            acc.Init("../data/Scripts/test.txt", current_world);
-            acc.Run();
+            if (acc.Init(path, current_world))
+            {
+                acc.Run();
+                std::cout << "Done" << std::endl;
+            }
+            else
+                std::cout << "ERROR:Failed to initialize AutoCameraController" << std::endl;
         }
     }
     if (ImGui::CollapsingHeader("Controller"))
