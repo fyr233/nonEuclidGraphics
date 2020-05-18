@@ -131,7 +131,7 @@ rgbf nonEuc::RayTracer::tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float
 					dv[i] -= gamma(i, k, l) * ray.d[k] * ray.d[l];
 		}
 		ray.d = ray.d + dv;
-
+		ray.inv_d = Vec3{ 1.f / ray.d[0],1.f / ray.d[1], 1.f / ray.d[2] };
 		isect = traverser.traverse(ray);
 		if (isect)
 		{
