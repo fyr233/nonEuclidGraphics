@@ -108,6 +108,7 @@ bool AutoCameraController::Run()
 				else
 					std::cout << "FileError" << std::endl;
 			}
+			count++;
 			vecf3 Front = vecf3{ camera.T(2, 0), camera.T(2, 1), camera.T(2, 2) };
 			vecf3 Right = vecf3{ camera.T(0, 0), camera.T(0, 1), camera.T(0, 2) };
 			vecf3 Up = vecf3{ camera.T(1, 0), camera.T(1, 1), camera.T(1, 2) };
