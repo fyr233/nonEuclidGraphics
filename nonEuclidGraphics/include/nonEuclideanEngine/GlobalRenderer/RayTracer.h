@@ -47,6 +47,8 @@ namespace nonEuc
 		// 渲染几何关系
 		cv::Mat RenderTracing(float fov, float aspect, int width);
 
+		int blocksize = 8;
+
 	private:
 		
 
@@ -56,6 +58,13 @@ namespace nonEuc
 		//求解一条光线的着色器
 		//ray:射线及其方向, distance:光线已走距离（距离发出为止）, times 光线反射的次数
 		rgbf shader(FastBVH::Ray<float> ray, float distance, int times);
-		rgbf tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float, Triangle, Intersector>& traverser);
+		rgbf tracer(FastBVH::Ray<float> ray, FastBVH::Traverser<float, Triangle, Intersector>& traverser, float distance);
+
+		void blocktracer(FastBVH::Traverser<float, Triangle, Intersector>& traverser,
+			const vecf3& o, const vecf3& cameraz, const vecf3& camerax, const vecf3& cameray,
+			float delta,
+			int ibegin, int iend, int jbegin, int jend,
+			int midwid, int midhgt,
+			cv::Mat& img);
 	};
 }
