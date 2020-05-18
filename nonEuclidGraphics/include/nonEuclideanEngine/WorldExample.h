@@ -13,7 +13,7 @@
 
 using namespace cgcore;
 
-static const float A = 1.0f;
+static const float A = 0.1f;
 
 namespace nonEuc
 {
@@ -138,7 +138,7 @@ namespace nonEuc
 			static tensorf333 gamma(const vecf3& u);
 		};
 
-		// 不用球坐标的双曲空间
+		// 不用球坐标的双曲空间(退化)
 		class Hyperbolic1 : public WorldExampleBase
 		{
 		public:
@@ -154,6 +154,24 @@ namespace nonEuc
 
 			static tensorf333 gamma(const vecf3& u);
 		
+		};
+
+		// 双曲空间
+		class Hyperbolic2 : public WorldExampleBase
+		{
+		public:
+			static void regularize_ref(vecf3& u, int i, int j, int k);
+
+			static vecf3 regularize(const vecf3& u, int i, int j, int k);
+
+			//static vecf4 coord(const vecf3& u);
+
+			//static matf43 jacobi(const vecf3& u);
+
+			static matf3 metric(const vecf3& u);
+
+			static tensorf333 gamma(const vecf3& u);
+
 		};
 	}
 	
