@@ -207,9 +207,8 @@ void Engine::UpdateCamera()
     Camera & camera = current_world->camera;
 
     // Get mouse position
-    float dyaw = -mouse_speed * io.MouseDelta.x;
-    float dpitch = mouse_speed * io.MouseDelta.y;
-    current_world->camera.UpdateDirection(dyaw, dpitch);
+    float dyaw = 0.0f;//-mouse_speed * io.MouseDelta.x;
+    float dpitch = 0.0f;//mouse_speed * io.MouseDelta.y;
 
     // Get keyboard input
     auto keyboardInput = io.KeysDown;
@@ -231,6 +230,16 @@ void Engine::UpdateCamera()
     else if (keyboardInput['E'])
         du = Up * (-move_speed) * deltaTime;
 
+    else if (keyboardInput['I'])
+        dpitch = -100 * move_speed * deltaTime;
+    else if (keyboardInput['K'])
+        dpitch = 100 * move_speed * deltaTime;
+    else if (keyboardInput['J'])
+        dyaw = 100 * move_speed * deltaTime;
+    else if (keyboardInput['L'])
+        dyaw = -100 * move_speed * deltaTime;
+
+    current_world->camera.UpdateDirection(dyaw, dpitch);
     camera.UpdatePosition(du);
 }
 
