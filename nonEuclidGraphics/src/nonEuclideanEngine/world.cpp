@@ -102,3 +102,17 @@ std::vector<Triangle> nonEuc::World::GetTriangles()
 	}
 	return ans;
 }
+
+void World::DeleteObj(Object* pobj)
+{
+	for (auto iter = objectPtrs.begin(); iter != objectPtrs.end(); iter++)
+	{
+		if ((*iter)->obj_id == pobj->obj_id)
+		{
+			objectPtrs.erase(iter);
+			break;
+		}
+	}
+	if (!pobj)
+		delete pobj;
+}

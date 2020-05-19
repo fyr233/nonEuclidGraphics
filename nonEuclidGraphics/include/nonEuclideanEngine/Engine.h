@@ -35,6 +35,7 @@ namespace nonEuc
 		void CreateEditorMenu();
 		void CreateLightMenu(AreaLight* plight, std::string* name);
 		void CreateMeshMenu(Object* pobject, std::string* name);
+		void CreateLoadMenu();
 
 		void ShowImage();
 
@@ -64,6 +65,7 @@ namespace nonEuc
 		ImVec4 clear_color = ImVec4(0.12f, 0.13f, 0.19f, 1.00f);
 
 		bool show_editor_menu = false;
+		bool show_load_menu = false;
 		bool show_image = false;
 	};
 }

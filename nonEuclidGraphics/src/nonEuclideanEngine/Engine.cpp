@@ -133,6 +133,8 @@ void Engine::Loop()
             CreateEditorMenu();
         if (show_image)
             ShowImage();
+        if (show_load_menu)
+            CreateLoadMenu();
 
         // Rendering
         ImGui::Render();
@@ -299,7 +301,8 @@ void Engine::CreateMainMenu()
         ImGui::ColorEdit4("Background", &clear_color.x);
     }
     ImGui::Checkbox("EditorMenu", &show_editor_menu);
-
+    if (ImGui::Button("LoadMesh"))
+        show_load_menu = true;
     ImGui::End();
 }
 
@@ -352,11 +355,49 @@ void Engine::CreateMeshMenu(Object* pobject, std::string* name)
 
     ImGui::DragFloat3((*name + ":Rotation").c_str(), pobject->rotate.data, 1.0f, -180.0f, 180.0f);
     pobject->UpdateR();
+    ImGui::Text("-----Material-----");
+    ImGui::ColorEdit3((*name + ":Ambient").c_str(), &pobject->mesh->material.ambient[0]);
+    ImGui::ColorEdit3((*name + ":Diffuse").c_str(), &pobject->mesh->material.diffuse[0]);
+    ImGui::ColorEdit3((*name + ":Specular").c_str(), &pobject->mesh->material.specular[0]);
+    if (ImGui::Button((*name + ":Delete").c_str()))
+    {
+        current_world->DeleteObj(pobject);
+    }
 }
 
 void Engine::CreateLightMenu(AreaLight* plight, std::string* name)
 {
     //ImGui::InputFloat3("Center", plight->.data, 3);
+}
+
+bool checkFilePath(std::string path);
+
+void Engine::CreateLoadMenu()
+{
+    ImGui::Begin("Load", &show_load_menu);
+
+    static char objPath[100] = "../data/ball.obj";
+    static char texPath[100] = "../data/test.png";
+    static float pos[3] = {PI<float> / 2, PI<float> / 2, PI<float> / 2};
+    static float Scale = 0.05f;
+
+    ImGui::InputText("ObjectPath", objPath, 100);
+    ImGui::InputText("TexturePath", texPath, 100);
+    ImGui::InputFloat3("Pos", pos, 3);
+    ImGui::InputFloat("Scale", &Scale, 0.01f, 0.05f, 2);
+    
+    if (ImGui::Button("Load"))
+    {
+        if (!checkFilePath(objPath) || !checkFilePath(texPath))
+            std::cout << "Fail to load mesh" << std::endl;
+        else
+        {
+            current_world->AddObj(std::make_shared<Mesh>(objPath, texPath, Material::MaterialType::DEFAULT), vecf3(pos), vecf3(Scale), vecf3{ 0.f, 0.f, 0.f });
+            ImGui::SameLine();
+            std::cout << "Load Successfully" << std::endl;
+        }
+    }
+    ImGui::End();
 }
 
 void Engine::ShowImage()
@@ -370,4 +411,16 @@ void Engine::ShowImage()
     ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(imageID)), ImVec2(image.cols * scale, image.rows * scale));
 
     ImGui::End();
+}
+
+bool checkFilePath(std::string path)
+{
+    std::ifstream objfile(path);
+    if (!objfile) {
+        std::cout << "ERROR::Engine::checkFilePath" << std::endl
+            << "\t" << "open file (" << path << ") fail" << std::endl;
+        return false;
+    }
+    objfile.close();
+    return true;
 }
