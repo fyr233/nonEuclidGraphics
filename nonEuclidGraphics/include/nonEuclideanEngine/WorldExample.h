@@ -173,6 +173,24 @@ namespace nonEuc
 			static tensorf333 gamma(const vecf3& u);
 
 		};
+
+		// Ë«Çú¿Õ¼ä(µ¥Ò¶Ë«ÇúÃæ)
+		class Hyperbolic3 : public WorldExampleBase
+		{
+		public:
+			static void regularize_ref(vecf3& u, int i, int j, int k);
+
+			static vecf3 regularize(const vecf3& u, int i, int j, int k);
+
+			//static vecf4 coord(const vecf3& u);
+
+			//static matf43 jacobi(const vecf3& u);
+
+			static matf3 metric(const vecf3& u);
+
+			static tensorf333 gamma(const vecf3& u);
+
+		};
 	}
 	
 }
