@@ -1,6 +1,6 @@
 #include <app/AutoCameraController.h>
 
-bool AutoCameraController::Init(std::string path, std::shared_ptr<nonEuc::World> _pWorld)
+bool AutoCameraController::Init(std::string path, std::shared_ptr<nonEuc::World> _pWorld, float _distanceLimit, float _decay)
 {
 	pWorld = _pWorld;
 
@@ -15,7 +15,8 @@ bool AutoCameraController::Init(std::string path, std::shared_ptr<nonEuc::World>
 	std::getline(objfile, line);
 	std::stringstream ss(line);
 	ss >> steps_per_frame >> step_size >> dt >> width >> height;
-
+	distanceLimit = _distanceLimit;
+	decay = _decay;
 	while (!objfile.eof())
 	{
 		std::string line;
@@ -138,16 +139,16 @@ bool AutoCameraController::Run()
 				du = Front * step_size;
 				break;
 			case ROTATE_DOWN:
-				dpitch = 10 * step_size;
+				dpitch = 100 * step_size;
 				break;
 			case ROTATE_LEFT:
-				dyaw = 10 * step_size;
+				dyaw = 100 * step_size;
 				break;
 			case ROTATE_RIGHT:
-				dyaw = -10 * step_size;
+				dyaw = -100 * step_size;
 				break;
 			case ROTATE_UP:
-				dpitch = -10 * step_size;
+				dpitch = -100 * step_size;
 				break;
 			default:
 				break;

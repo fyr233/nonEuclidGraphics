@@ -290,7 +290,7 @@ void Engine::CreateMainMenu()
         if (ImGui::Button("UseScript"))
         {
             AutoCameraController acc;
-            if (acc.Init(path, current_world))
+            if (acc.Init(path, current_world, distanceLimit, decay))
             {
                 acc.Run();
                 std::cout << "Done" << std::endl;

@@ -28,7 +28,7 @@ public:
 	AutoCameraController() {};
 	~AutoCameraController() {};
 
-	bool Init(std::string path, std::shared_ptr<nonEuc::World> _pWorld);
+	bool Init(std::string path, std::shared_ptr<nonEuc::World> _pWorld, float distanceLimit, float decay);
 	bool Run();
 
 private:
