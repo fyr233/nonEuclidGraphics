@@ -77,14 +77,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)nonEuclidGraphics\include\_deps;$(SolutionDir)nonEuclidGraphics\include\_deps\imgui;$(SolutionDir)nonEuclidGraphics\include\_deps\glfw\include;$(SolutionDir)nonEuclidGraphics\include\_deps\gl3w;$(SolutionDir)nonEuclidGraphics\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)nonEuclidGraphics\include\_deps\glfw\lib-3.3.2-64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\opencv-4.2.0\opencv\build\include;$(SolutionDir)nonEuclidGraphics\include\_deps;$(SolutionDir)nonEuclidGraphics\include\_deps\imgui;$(SolutionDir)nonEuclidGraphics\include\_deps\glfw\include;$(SolutionDir)nonEuclidGraphics\include\_deps\gl3w;$(SolutionDir)nonEuclidGraphics\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\opencv-4.2.0\opencv\build\x64\vc15\lib;$(SolutionDir)nonEuclidGraphics\include\_deps\glfw\lib-3.3.2-64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\opencv-4.2.0\opencv\build\include;$(SolutionDir)nonEuclidGraphics\include\_deps;$(SolutionDir)nonEuclidGraphics\include\_deps\imgui;$(SolutionDir)nonEuclidGraphics\include\_deps\glfw\include;$(SolutionDir)nonEuclidGraphics\include\_deps\gl3w;$(SolutionDir)nonEuclidGraphics\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)nonEuclidGraphics\include\_deps\glfw\lib-3.3.2-64;C:\opencv-4.2.0\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -109,11 +111,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3dll.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3dll.lib;legacy_stdio_definitions.lib;opencv_world420d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -145,12 +149,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3dll.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies);opencv_world420.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -161,16 +168,45 @@
     <ClCompile Include="include\_deps\imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="include\_deps\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="include\_deps\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\app\AutoCameraController.cpp" />
+    <ClCompile Include="src\core\AreaLight.cpp" />
+    <ClCompile Include="src\core\gl.cpp" />
+    <ClCompile Include="src\core\Material.cpp" />
+    <ClCompile Include="src\core\Mesh.cpp" />
+    <ClCompile Include="src\core\Object.cpp" />
+    <ClCompile Include="src\core\Texture2D.cpp" />
+    <ClCompile Include="src\core\transform.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\nonEuclideanEngine\camera.cpp" />
+    <ClCompile Include="src\nonEuclideanEngine\Engine.cpp" />
+    <ClCompile Include="src\nonEuclideanEngine\GlobalRenderer\RayTracer.cpp" />
+    <ClCompile Include="src\nonEuclideanEngine\shader.cpp" />
+    <ClCompile Include="src\nonEuclideanEngine\world.cpp" />
+    <ClCompile Include="src\nonEuclideanEngine\WorldExample.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\app\AutoCameraController.h" />
+    <ClInclude Include="include\core\AreaLight.h" />
     <ClInclude Include="include\core\func.h" />
     <ClInclude Include="include\core\geometry.h" />
+    <ClInclude Include="include\core\gl.h" />
     <ClInclude Include="include\core\mat.h" />
+    <ClInclude Include="include\core\Material.h" />
     <ClInclude Include="include\core\Mesh.h" />
+    <ClInclude Include="include\core\Obj.h" />
+    <ClInclude Include="include\core\Object.h" />
+    <ClInclude Include="include\core\primitive.h" />
+    <ClInclude Include="include\core\rgb.h" />
     <ClInclude Include="include\core\tensor.h" />
+    <ClInclude Include="include\core\Texture2D.h" />
+    <ClInclude Include="include\core\transform.h" />
     <ClInclude Include="include\core\vec.h" />
+    <ClInclude Include="include\nonEuclideanEngine\camera.h" />
+    <ClInclude Include="include\nonEuclideanEngine\Engine.h" />
+    <ClInclude Include="include\nonEuclideanEngine\GlobalRenderer\RayTracer.h" />
+    <ClInclude Include="include\nonEuclideanEngine\shader.hpp" />
     <ClInclude Include="include\nonEuclideanEngine\world.h" />
+    <ClInclude Include="include\nonEuclideanEngine\WorldExample.h" />
     <ClInclude Include="include\_deps\gl3w\GL\gl3w.h" />
     <ClInclude Include="include\_deps\gl3w\GL\glcorearb.h" />
     <ClInclude Include="include\_deps\imgui\imconfig.h" />
@@ -184,6 +220,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="include\core\mat.inl" />
+    <None Include="include\core\vec.inl" />
+    <None Include="include\Shader\fragment.frag" />
+    <None Include="include\Shader\vertex.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

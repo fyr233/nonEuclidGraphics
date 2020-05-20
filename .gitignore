@@ -1,4 +1,4 @@
-.vs/
+﻿.vs/
 Debug/
 x64/
 *.pdb
@@ -9,3 +9,4 @@ x64/
 nonEuclidGraphics/imgui.ini
 nonEuclidGraphics/include/_deps/ugl-src/
 非欧图形.pdf
+展示视频/

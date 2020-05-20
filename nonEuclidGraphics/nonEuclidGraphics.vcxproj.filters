@@ -28,11 +28,26 @@
     <Filter Include="头文件\nonEuclideanEngine">
       <UniqueIdentifier>{246caf9c-ad80-4dc6-95d5-454feb6d59e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\nonEuclideanEngine">
+      <UniqueIdentifier>{abcb643e-8b11-4e7c-b068-8ae53665b03e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Shader">
+      <UniqueIdentifier>{5400b2ef-0949-411d-aece-6735627b18f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\nonEuclideanEngine\GlobalRenderer">
+      <UniqueIdentifier>{3e36564d-f23b-47ef-b597-7a29d66851da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\nonEuclideanEngine\GlobalRenderer">
+      <UniqueIdentifier>{b14b812f-562e-4a83-8cc6-ab4b27bd1b2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\app">
+      <UniqueIdentifier>{88218630-1788-4a41-8425-ad107ecb7026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\app">
+      <UniqueIdentifier>{d2c0b5de-8297-43b6-9c16-a56f0aca1542}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="include\_deps\imgui\imgui.cpp">
       <Filter>源文件\imgui</Filter>
     </ClCompile>
@@ -53,6 +68,51 @@
     </ClCompile>
     <ClCompile Include="include\_deps\gl3w\GL\gl3w.c">
       <Filter>头文件\gl3w</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Mesh.cpp">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nonEuclideanEngine\shader.cpp">
+      <Filter>源文件\nonEuclideanEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nonEuclideanEngine\world.cpp">
+      <Filter>源文件\nonEuclideanEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nonEuclideanEngine\WorldExample.cpp">
+      <Filter>源文件\nonEuclideanEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\transform.cpp">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nonEuclideanEngine\camera.cpp">
+      <Filter>源文件\nonEuclideanEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Texture2D.cpp">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\AreaLight.cpp">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Object.cpp">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Material.cpp">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gl.cpp">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nonEuclideanEngine\GlobalRenderer\RayTracer.cpp">
+      <Filter>源文件\nonEuclideanEngine\GlobalRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nonEuclideanEngine\Engine.cpp">
+      <Filter>源文件\nonEuclideanEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\app\AutoCameraController.cpp">
+      <Filter>源文件\app</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,19 +158,73 @@
     <ClInclude Include="include\core\geometry.h">
       <Filter>头文件\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Mesh.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
     <ClInclude Include="include\nonEuclideanEngine\world.h">
       <Filter>头文件\nonEuclideanEngine</Filter>
     </ClInclude>
     <ClInclude Include="include\core\tensor.h">
       <Filter>头文件\core</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Mesh.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nonEuclideanEngine\Engine.h">
+      <Filter>头文件\nonEuclideanEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nonEuclideanEngine\shader.hpp">
+      <Filter>头文件\nonEuclideanEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\transform.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nonEuclideanEngine\WorldExample.h">
+      <Filter>头文件\nonEuclideanEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nonEuclideanEngine\camera.h">
+      <Filter>头文件\nonEuclideanEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\AreaLight.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\Texture2D.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\rgb.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\primitive.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nonEuclideanEngine\GlobalRenderer\RayTracer.h">
+      <Filter>头文件\nonEuclideanEngine\GlobalRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\Object.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\Obj.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\Material.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\gl.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\app\AutoCameraController.h">
+      <Filter>头文件\app</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\core\mat.inl">
       <Filter>头文件\core</Filter>
+    </None>
+    <None Include="include\core\vec.inl">
+      <Filter>头文件\core</Filter>
+    </None>
+    <None Include="include\Shader\fragment.frag">
+      <Filter>源文件\Shader</Filter>
+    </None>
+    <None Include="include\Shader\vertex.vert">
+      <Filter>源文件\Shader</Filter>
     </None>
   </ItemGroup>
 </Project>
