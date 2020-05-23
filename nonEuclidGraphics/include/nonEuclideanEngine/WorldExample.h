@@ -191,6 +191,40 @@ namespace nonEuc
 			static tensorf333 gamma(const vecf3& u);
 
 		};
+		
+		class Schwarzschild : public WorldExampleBase
+		{
+		public:
+			static void regularize_ref(vecf3& u, int i, int j, int k);
+
+			static vecf3 regularize(const vecf3& u, int i, int j, int k);
+
+			//static vecf4 coord(const vecf3& u);
+
+			//static matf43 jacobi(const vecf3& u);
+
+			static matf3 metric(const vecf3& u);
+
+			static tensorf333 gamma(const vecf3& u);
+
+		};
+
+		class Schwarzschild2 : public WorldExampleBase
+		{
+		public:
+			static void regularize_ref(vecf3& u, int i, int j, int k);
+
+			static vecf3 regularize(const vecf3& u, int i, int j, int k);
+
+			//static vecf4 coord(const vecf3& u);
+
+			//static matf43 jacobi(const vecf3& u);
+
+			static matf3 metric(const vecf3& u);
+
+			static tensorf333 gamma(const vecf3& u);
+
+		};
 	}
 	
 }

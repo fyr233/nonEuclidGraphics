@@ -74,7 +74,7 @@ namespace nonEuc
 		metric = TWorldExample::metric;
 
 		//初始化Camera (初始化方法可以修改)
-		camera = Camera({ 0.f , PI<float>/2.f, PI<float>/2.f}, this);
+		camera = Camera({ PI<float> , 0.f, PI<float>/2.f}, this);
 
 	}
 

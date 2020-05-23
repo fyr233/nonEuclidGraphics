@@ -207,8 +207,8 @@ void Engine::UpdateCamera()
     Camera & camera = current_world->camera;
 
     // Get mouse position
-    float dyaw = 0.0f;//-mouse_speed * io.MouseDelta.x;
-    float dpitch = 0.0f;//mouse_speed * io.MouseDelta.y;
+    float dyaw = -mouse_speed * io.MouseDelta.x;
+    float dpitch = mouse_speed * io.MouseDelta.y;
 
     // Get keyboard input
     auto keyboardInput = io.KeysDown;
@@ -359,7 +359,7 @@ void Engine::CreateMeshMenu(Object* pobject, std::string* name)
     ImGui::DragFloat3((*name+":Center").c_str(), pobject->center.data, 0.01f);
 
     pobject->center =  current_world->regularize(pobject->center, 0, 0, 0);
-    ImGui::DragFloat((*name + ":Scale").c_str(), &scale, 0.01f, 0.0f, 1.0f);
+    ImGui::DragFloat((*name + ":Scale").c_str(), &scale, 0.01f, 0.0f, 10.0f);
     for (int i = 0; i < 3; i++) pobject->scale(i, i) = scale;
 
     ImGui::DragFloat3((*name + ":Rotation").c_str(), pobject->rotate.data, 1.0f, -180.0f, 180.0f);
