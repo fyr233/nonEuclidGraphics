@@ -188,61 +188,21 @@ tensorf333 nonEuc::WorldExample::OneRecursive::gamma(const vecf3& u)
 	return tensorf333(0.f);
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
-void nonEuc::WorldExample::Helicoid::regularize_ref(vecf3& u, int i, int j, int k)
-{
-	//u[1] = std::fmod(std::fmod(u[0], 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>) + i * 2 * PI<float>;
-}
-
-vecf3 nonEuc::WorldExample::Helicoid::regularize(const vecf3& u, int i, int j, int k)
-{
-	//return { u[0], std::fmod(std::fmod(u[1], 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>) + i * 2 * PI<float>, u[2] };
-	return u;
-}
-
-matf3 nonEuc::WorldExample::Helicoid::metric(const vecf3& u)
-{
-	return matf3{
-		1.0f,	0.0f,	0.0f,
-		0.0f,	1+u[0]*u[0],	0.0f,
-		0.0f,	0.0f,		1.0f,
-	};
-}
-
-tensorf333 nonEuc::WorldExample::Helicoid::gamma(const vecf3& u)
-{
-	auto tmp = 1 + u[0] * u[0];
-	return tensorf333{
-		0.0f, 0.0f, 0.0f,
-		0.0f, -u[0], 0.0f,
-		0.0f, 0.0f, 0.0f,
-
-		0.0f, u[0]/tmp, 0.0f,
-		u[0]/tmp, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-
-		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-	};
-}
-
-/////////////////////////////////////////////////////////////////////////////
-void nonEuc::WorldExample::Hyperbolic::regularize_ref(vecf3& u, int i, int j, int k)
+void nonEuc::WorldExample::Hyperbolic1::regularize_ref(vecf3& u, int i, int j, int k)
 {
 	u[0] = std::fmod(std::fmod(u[0], PI<float>) + PI<float>, PI<float>);
 	u[1] = std::fmod(std::fmod(u[1], 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>);
 	u[2] = abs(u[2] - 1) + 1;
 }
 
-vecf3 nonEuc::WorldExample::Hyperbolic::regularize(const vecf3& u, int i, int j, int k)
+vecf3 nonEuc::WorldExample::Hyperbolic1::regularize(const vecf3& u, int i, int j, int k)
 {
 	return { std::fmod(std::fmod(u[0], PI<float>) + PI<float>, PI<float>),
 		std::fmod(std::fmod(u[1], 2 * PI<float>) + 2 * PI<float>, 2 * PI<float>), abs(u[2] - 1) + 1 };
 }
 
-matf3 nonEuc::WorldExample::Hyperbolic::metric(const vecf3& u)
+matf3 nonEuc::WorldExample::Hyperbolic1::metric(const vecf3& u)
 {
 	float  arc = 0.5*acos(1 / (u[2]*u[2]));
 	float sinarc2 = sin(arc)*sin(arc);
@@ -253,7 +213,7 @@ matf3 nonEuc::WorldExample::Hyperbolic::metric(const vecf3& u)
 	}*u[2] * u[2];
 }
 
-tensorf333 nonEuc::WorldExample::Hyperbolic::gamma(const vecf3& u)
+tensorf333 nonEuc::WorldExample::Hyperbolic1::gamma(const vecf3& u)
 {
 	float a = 0.5* acos(1/(u[2]*u[2]));
 	float sina = sin(a);
@@ -274,44 +234,6 @@ tensorf333 nonEuc::WorldExample::Hyperbolic::gamma(const vecf3& u)
 		0.0f, t*sin(u[0])*sin(u[0]), 0.0f,
 		0.0f, 0.0f, -1/(sina*sina*(pow(u[2],3)+pow(u[2],5))),
 	};
-}
-
-/////////////////////////////////////////////////////////////////////////////
-void nonEuc::WorldExample::Hyperbolic1::regularize_ref(vecf3& u, int i, int j, int k)
-{
-	
-}
-
-vecf3 nonEuc::WorldExample::Hyperbolic1::regularize(const vecf3& u, int i, int j, int k)
-{
-	return u;
-}
-
-matf3 nonEuc::WorldExample::Hyperbolic1::metric(const vecf3& u)
-{
-	float r2 = u.norm2();
-	matf3 rst;
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++)
-		{
-			rst(i, j) = u[i] * u[j] / (r2 * A);
-			if (i == j) rst(i, j) += 1.0f;
-		}
-	return rst;
-}
-
-tensorf333 nonEuc::WorldExample::Hyperbolic1::gamma(const vecf3& u)
-{
-	float r2 = u.norm2();
-	tensorf333 rst;
-	for (int i = 0; i < 3; i ++)
-		for (int k = 0; k < 3; k++)
-			for (int l = 0; l < 3; l++)
-			{
-				rst(i, k, l) = k == l ? (r2-u[k]*u[k]) : (-u[k]*u[l]);
-				rst(i, k, l) *= u[i]/((1+A)*(r2*r2));
-			}
-	return rst;
 }
 
 /////////////////////////////////////////////////////////////////////////////
