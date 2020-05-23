@@ -36,6 +36,7 @@ namespace nonEuc
 		void CreateLightMenu(AreaLight* plight, std::string* name);
 		void CreateMeshMenu(Object* pobject, std::string* name);
 		void CreateLoadMenu();
+		void CreateWorldSelector();
 
 		void ShowImage();
 

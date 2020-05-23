@@ -116,3 +116,74 @@ void World::DeleteObj(Object* pobj)
 	if (!pobj)
 		delete pobj;
 }
+
+World::World(int num)
+{
+	std::shared_ptr<Texture2D> tex = std::make_shared<Texture2D>();
+	tex->Load("../data/test.png");
+	tex->SetTextureImage();
+	switch (num)
+	{
+	case 0:// Euclidean
+		SetWorldExample<nonEuc::WorldExample::Euclidean>();
+		for (int i = -1; i <= 1; i += 2)
+			for (int j = -1; j <= 1; j += 2)
+				for (int k = -1; k <= 1; k += 2)
+					AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::MaterialType::DEFAULT), { (float)i / 2.f, (float)j / 2.f, (float)k / 2.f}, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+		AddAreaLight({ 0.f, 1.f, 0.f }, { 0.3f, 0.f, 0.f }, { 0.f, 0.f, 0.3f }, 50.f, { 1.f,1.f,1.f });
+		camera = Camera({ 0.0f , 0.f, 1.0f }, this);
+		break;
+	case 1:// Gaussian
+		SetWorldExample<nonEuc::WorldExample::Gaussian>();
+		for (int i = -1; i <= 1; i += 2)
+			for (int j = -1; j <= 1; j += 2)
+				for (int k = -1; k <= 1; k += 2)
+					AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::MaterialType::DEFAULT), { (float)i / 2.f, (float)j / 2.f, (float)k / 2.f }, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+		AddAreaLight({ 0.f, 1.f, 0.f }, { 0.3f, 0.f, 0.f }, { 0.f, 0.f, 0.3f }, 50.f, { 1.f,1.f,1.f });
+		camera = Camera({ 0.0f , 0.f, 1.0f }, this);
+		break;
+	case 2:// Hypersphere
+		SetWorldExample<nonEuc::WorldExample::HyperSphere>();
+		AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::MaterialType::DEFAULT), { PI<float>, PI<float> / 2.f, PI<float> / 2.f }, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+		AddAreaLight({ PI<float> / 2.f, PI<float> / 2.f+0.1f, PI<float> / 2.f }, { 0.3f, 0.f, 0.f }, { 0.f, 0.f, 0.3f }, 50.f, { 1.f,1.f,1.f });
+		camera = Camera({ 0.f, PI<float> / 2.f, PI<float> / 2.f }, this);
+		break;
+	case 3:// OneRecursive
+		SetWorldExample<nonEuc::WorldExample::OneRecursive>();
+		AddObj(std::make_shared<Mesh>("../data/ball.obj", tex, Material::MaterialType::DEFAULT), { 0.f, 0.f, 0.f }, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+		AddAreaLight({ 0.f, 1.f, 0.f }, { 0.3f, 0.f, 0.f }, { 0.f, 0.f, 0.3f }, 50.f, { 1.f,1.f,1.f });
+		camera = Camera({ 0.0f , 0.f, 1.0f }, this);
+		break;
+	case 4:// Hyperbolic3
+	{
+		std::shared_ptr<Texture2D> tex = std::make_shared<Texture2D>();
+		tex->Load("../data/blackedge.png");
+		tex->SetTextureImage();
+		SetWorldExample<nonEuc::WorldExample::Hyperbolic3>();
+		auto pmesh = std::make_shared<Mesh>("../data/cube1.obj", tex, Material::MaterialType::DEFAULT);
+		for (int i = 1; i < 25; i++)
+		{
+			AddObj(pmesh, { PI<float> / 2 + 0.1f, PI<float> / 2,log(i * 0.15f + 1) }, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+			AddObj(pmesh, { PI<float> / 2 + 0.1f, PI<float> / 2, -log(i * 0.15f + 1) }, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+
+			AddObj(pmesh, { PI<float> / 2 - 0.1f, PI<float> / 2,log(i * 0.15f + 1) }, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+			AddObj(pmesh, { PI<float> / 2 - 0.1f, PI<float> / 2,-log(i * 0.15f + 1) }, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+
+			if (i % 10 == 0)
+			{
+				AddAreaLight({ 0.0f, PI<float> / 2+0.05f, log(i * 0.15f + 1) }, { 0.f, 0.3f, 0.f }, { 0.f, 0.f, 0.3f }, 50.f, { 1.f,1.f,1.f });
+				AddAreaLight({ 0.0f, PI<float> / 2+0.05f, -log(i * 0.15f + 1) }, { 0.f, 0.3f, 0.f }, { 0.f, 0.f, 0.3f }, 50.f, { 1.f,1.f,1.f });
+			}
+		}
+		AddObj(pmesh, { PI<float> / 2 + 0.1f, PI<float> / 2,0 }, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+		AddObj(pmesh, { PI<float> / 2 - 0.1f, PI<float> / 2,0 }, { 0.05f, 0.05f, 0.05f }, vecf3{ 0.f, 0.f, 0.f });
+		camera = Camera({ PI<float> / 2, PI<float> / 2, 0.0f }, this);
+		break;
+	}
+	case 5:// Schwarzschild
+		SetWorldExample<nonEuc::WorldExample::Schwarzschild>();
+		break;
+	default:
+		break;
+	}
+}
