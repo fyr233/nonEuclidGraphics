@@ -104,41 +104,7 @@ namespace nonEuc
 			static tensorf333 gamma(const vecf3& u);
 		};
 
-		// 螺旋曲面的一个推广
-		class Helicoid : public WorldExampleBase
-		{
-		public:
-			static void regularize_ref(vecf3& u, int i, int j, int k);
-
-			static vecf3 regularize(const vecf3& u, int i, int j, int k);
-
-			//static vecf4 coord(const vecf3& u);
-
-			//static matf43 jacobi(const vecf3& u);
-
-			static matf3 metric(const vecf3& u);
-
-			static tensorf333 gamma(const vecf3& u);
-		};
-
-		// 双曲空间，用了球坐标，有点问题
-		class Hyperbolic : public WorldExampleBase
-		{
-		public:
-			static void regularize_ref(vecf3& u, int i, int j, int k);
-
-			static vecf3 regularize(const vecf3& u, int i, int j, int k);
-
-			//static vecf4 coord(const vecf3& u);
-
-			//static matf43 jacobi(const vecf3& u);
-
-			static matf3 metric(const vecf3& u);
-
-			static tensorf333 gamma(const vecf3& u);
-		};
-
-		// 不用球坐标的双曲空间(退化)
+		// w2-x2-y2-z2=1, 球坐标
 		class Hyperbolic1 : public WorldExampleBase
 		{
 		public:
@@ -153,10 +119,9 @@ namespace nonEuc
 			static matf3 metric(const vecf3& u);
 
 			static tensorf333 gamma(const vecf3& u);
-		
 		};
 
-		// 双曲空间
+		// w2-x2-y2-z2=1，直角坐标
 		class Hyperbolic2 : public WorldExampleBase
 		{
 		public:
@@ -174,7 +139,7 @@ namespace nonEuc
 
 		};
 
-		// 双曲空间(单叶双曲面)
+		// w2-x2-y2-z2=-1
 		class Hyperbolic3 : public WorldExampleBase
 		{
 		public:

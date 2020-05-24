@@ -42,7 +42,7 @@ bool Engine::Init()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    window = glfwCreateWindow(scrwidth, scrheight, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
+    window = glfwCreateWindow(scrwidth, scrheight, "NonEuclidean", NULL, NULL);
     if (window == NULL)
         return false;
     glfwMakeContextCurrent(window);
@@ -310,6 +310,8 @@ void Engine::CreateMainMenu()
         ImGui::ColorEdit4("Background", &clear_color.x);
     }
     ImGui::Checkbox("EditorMenu", &show_editor_menu);
+
+    CreateWorldSelector();
     if (ImGui::Button("LoadMesh"))
         show_load_menu = true;
     ImGui::End();
@@ -407,6 +409,16 @@ void Engine::CreateLoadMenu()
         }
     }
     ImGui::End();
+}
+
+void Engine::CreateWorldSelector()
+{
+    static int idx = -1;
+    if (ImGui::Combo("WorldExamples", &idx, "Euclidean\0Gaussian\0Hypersphere\0OneRecursive\0Hyperbolic\0Schwarzschild\0"))
+    {
+        //delete current_world;
+        current_world.swap(std::make_shared<nonEuc::World>(idx));
+    }
 }
 
 void Engine::ShowImage()

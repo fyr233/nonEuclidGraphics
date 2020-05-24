@@ -41,6 +41,8 @@ namespace nonEuc
 	public:
 
 		World();
+		// 打开默认世界场景
+		World(int num);
 
 		// 使用一个WorldExample来设置世界
 		template<typename TWorldExample>
@@ -80,7 +82,7 @@ namespace nonEuc
 
 	inline World::~World()
 	{
-
+		
 	}
 }
 
