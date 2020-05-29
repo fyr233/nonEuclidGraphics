@@ -417,7 +417,7 @@ void Engine::CreateWorldSelector()
     if (ImGui::Combo("WorldExamples", &idx, "Euclidean\0Gaussian\0Hypersphere\0OneRecursive\0Hyperbolic\0Schwarzschild\0"))
     {
         //delete current_world;
-        current_world.swap(std::make_shared<nonEuc::World>(idx));
+        current_world = std::make_shared<nonEuc::World>(idx);
     }
 }
 
