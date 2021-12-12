@@ -232,7 +232,7 @@ tensorf333 nonEuc::WorldExample::Hyperbolic1::gamma(const vecf3& u)
 
 		t, 0.0f, 0.0f,
 		0.0f, t*sin(u[0])*sin(u[0]), 0.0f,
-		0.0f, 0.0f, -1/(sina*sina*(pow(u[2],3)+pow(u[2],5))),
+		0.0f, 0.0f, float(-1/(sina*sina*(pow(u[2],3)+pow(u[2],5)))),
 	};
 }
 

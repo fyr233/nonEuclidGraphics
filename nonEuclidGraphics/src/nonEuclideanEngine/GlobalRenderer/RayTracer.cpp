@@ -240,7 +240,8 @@ void nonEuc::RayTracer::blocktracer(FastBVH::Traverser<float, Triangle, Intersec
 				{
 					for (int i = ibegin; i < iend; i++)
 						for (int j = jbegin; j < jend; j++)
-							img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(background_color * 256.f));
+							//img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(background_color * 256.f));
+							img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(background_color)) * 256.f;
 					return;
 				}
 			}
@@ -265,7 +266,8 @@ void nonEuc::RayTracer::blocktracer(FastBVH::Traverser<float, Triangle, Intersec
 					rays[0][0].d * w[0][0] + rays[0][1].d * w[0][1] + rays[1][0].d * w[1][0] + rays[1][1].d * w[1][1]
 				};
 				pixel = tracer(ray, traverser, distance);
-				img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(pixel * 256.f));
+				//img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(pixel * 256.f));
+				img.at<cv::Vec3f>(j, i) = cv::Vec3f((float*)&(pixel)) * 256.f;
 			}
 		}
 	}
